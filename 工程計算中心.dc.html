@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F8F6F0; font-family: "Noto Sans TC", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  input:focus-visible, button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(201,162,74,0.45); }
+  ::placeholder { color: #8AA8CE; }
+  .ectr-scroll::-webkit-scrollbar { height: 8px; }
+  .ectr-scroll::-webkit-scrollbar-thumb { background: #CBC5B6; border-radius: 999px; }
+  @keyframes ectrFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes ectrRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#0A1A33"></rect>
+    <g transform="translate(34 30)">
+      <rect x="0" y="14" width="8" height="26" fill="#D9B96E"></rect>
+      <rect x="12" y="6" width="8" height="34" fill="#F5F0E4"></rect>
+      <rect x="24" y="0" width="8" height="40" fill="#D9B96E"></rect>
+      <path d="M-4 40 q10 -7 20 0 t20 0" stroke="#C9A24A" stroke-width="3" fill="none" stroke-linecap="round"></path>
+    </g>
+  </svg>
+</template>
+
+<div style="min-height: 100%; background: #F8F6F0; color: #211F19;">
+
+  <!-- ============ TOP BAR ============ -->
+  <header style="position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid #E2DDD1;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; align-items: center; gap: 13px;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 6px; background: #0A1A33;">
+          <img src="assets/logo-j-mark-light.png" alt="儒鴻結構" width="26" height="22" style="display: block; object-fit: contain;">
+        </div>
+        <div style="line-height: 1.05;">
+          <div style="font-family: 'Archivo', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A7B2A;">Ju Hong Structural</div>
+          <div style="font-family: 'Noto Serif TC', serif; font-size: 19px; font-weight: 600; color: #0A1A33; letter-spacing: -0.01em;">工程計算中心</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onClick="{{ onOpenReview }}" style="position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 4px; border: 1px solid #CBC5B6; background: #FFFFFF; color: #143257; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 160ms cubic-bezier(0.2,0,0.1,1);" style-hover="background: #F8F6F0; border-color: #8C8576;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          審核後台
+          <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}">
+            <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #C9A24A; color: #0A1A33; font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 700;">{{ pendingCount }}</span>
+          </sc-if>
+        </button>
+        <button onClick="{{ onGithubProfile }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 4px; border: 1px solid #CBC5B6; background: #FFFFFF; color: #143257; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 160ms cubic-bezier(0.2,0,0.1,1);" style-hover="background: #F8F6F0; border-color: #8C8576;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+          GitHub
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section style="position: relative; background-color: #0A1A33; background-image: radial-gradient(620px 320px at 100% 0%, rgba(201,162,74,0.16), transparent 62%), linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px); background-size: auto, 28px 28px, 28px 28px; border-bottom: 2px solid #C9A24A;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 54px 40px 48px;">
+      <div style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #D9B96E; margin-bottom: 16px;">Structural Engineering Toolkit</div>
+      <h1 style="font-family: 'Noto Serif TC', serif; font-size: 46px; line-height: 1.1; font-weight: 600; color: #FFFFFF; letter-spacing: -0.02em; margin: 0 0 12px;">統一管理與調用您的計算程式</h1>
+      <p style="font-family: 'Noto Sans TC', sans-serif; font-size: 17px; line-height: 1.6; color: #C2D2E6; max-width: 560px; margin: 0 0 14px;">將部署於 GitHub 的結構計算工具集中於一處——搜尋、分類、收藏，一鍵開啟網頁版或取得本機執行指令。</p>
+      <div style="display: inline-flex; align-items: center; gap: 12px; margin: 0 0 30px;">
+        <span style="width: 28px; height: 2px; background: #C9A24A;"></span>
+        <span style="font-family: 'Noto Sans TC', sans-serif; font-size: 16px; font-weight: 700; color: #D9B96E;">願能讓複雜的工程，多一絲簡單的可能</span>
+      </div>
+
+      <div style="position: relative; max-width: 580px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8AA8CE" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%);" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input type="text" value="{{ query }}" onInput="{{ onSearch }}" placeholder="搜尋工具、規範或標籤（如 AISC、耐震、傾角變位）…" style="width: 100%; padding: 16px 18px 16px 50px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.07); color: #FFFFFF; font-family: 'Noto Sans TC', sans-serif; font-size: 16px; transition: all 160ms;" style-focus="background: rgba(255,255,255,0.12); border-color: #C9A24A;">
+      </div>
+
+      <div style="display: flex; gap: 40px; margin-top: 34px;">
+        <div>
+          <div style="font-family: 'Archivo', sans-serif; font-size: 34px; font-weight: 700; color: #FFFFFF; line-height: 1;">{{ totalTools }}</div>
+          <div style="font-size: 13px; color: #8AA8CE; margin-top: 5px;">計算工具</div>
+        </div>
+        <div style="width: 1px; background: rgba(255,255,255,0.14);"></div>
+        <div>
+          <div style="font-family: 'Archivo', sans-serif; font-size: 34px; font-weight: 700; color: #FFFFFF; line-height: 1;">{{ totalCats }}</div>
+          <div style="font-size: 13px; color: #8AA8CE; margin-top: 5px;">工具分類</div>
+        </div>
+        <div style="width: 1px; background: rgba(255,255,255,0.14);"></div>
+        <div>
+          <div style="font-family: 'Archivo', sans-serif; font-size: 34px; font-weight: 700; color: #FFFFFF; line-height: 1;">{{ lastUpdated }}</div>
+          <div style="font-size: 13px; color: #8AA8CE; margin-top: 5px;">最近更新</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MAIN ============ -->
+  <main style="max-width: 1200px; margin: 0 auto; padding: 36px 40px 80px;">
+
+    <!-- Recently used -->
+    <sc-if value="{{ showRecent }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 14px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A7B2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v5h5"></path><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path><path d="M12 7v5l4 2"></path></svg>
+          <span style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6B6557;">最近使用 · Recently Used</span>
+        </div>
+        <div class="ectr-scroll" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;">
+          <sc-for list="{{ recentViews }}" as="r" hint-placeholder-count="3">
+            <button onClick="{{ r.onClick }}" style="display: inline-flex; align-items: center; gap: 9px; flex-shrink: 0; padding: 10px 16px; border-radius: 999px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #211F19; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 1px 2px rgba(10,26,51,0.06); transition: all 160ms;" style-hover="border-color: #C9A24A; transform: translateY(-1px);">
+              <span style="width: 8px; height: 8px; border-radius: 999px; background: {{ r.langColor }};"></span>{{ r.title }}
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Toolbar: categories + filters -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 24px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 9px;">
+        <sc-for list="{{ catViews }}" as="cat" hint-placeholder-count="4">
+          <button onClick="{{ cat.onClick }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid {{ cat.border }}; background: {{ cat.bg }}; color: {{ cat.color }}; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 160ms cubic-bezier(0.2,0,0.1,1);">
+            {{ cat.name }}<span style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; opacity: 0.7;">{{ cat.count }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button onClick="{{ onToggleFavOnly }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; border-radius: 999px; border: 1px solid {{ favBorder }}; background: {{ favBg }}; color: {{ favColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 160ms;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="{{ favIconFill }}" stroke="{{ favColor }}" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.7l1.2-6.6L2.5 9.5l6.6-.9z"></path></svg>
+          我的最愛
+        </button>
+        <div style="display: flex; align-items: center; background: #EFEBE2; border-radius: 999px; padding: 3px;">
+          <button onClick="{{ onSortRecent }}" style="padding: 6px 13px; border-radius: 999px; border: none; background: {{ sortRecentBg }}; color: {{ sortRecentColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; box-shadow: {{ sortRecentShadow }};">更新</button>
+          <button onClick="{{ onSortName }}" style="padding: 6px 13px; border-radius: 999px; border: none; background: {{ sortNameBg }}; color: {{ sortNameColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; box-shadow: {{ sortNameShadow }};">名稱</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== GROUP: 專業計畫書 PRO ===== -->
+    <sc-if value="{{ hasPro }}" hint-placeholder-val="{{ true }}">
+      <section style="margin-bottom: 44px;">
+        <div style="display: flex; align-items: center; gap: 13px; margin-bottom: 18px;">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 6px; background: #0A1A33; flex-shrink: 0;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="m9 15 2 2 4-4"></path></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+              <h2 style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 600; color: #0A1A33; margin: 0;">專業計畫書</h2>
+              <span style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600; color: #9A7B2A;">{{ proCount }} 項 · 送審計算書 · 計次收費</span>
+            </div>
+            <div style="font-size: 13px; color: #8C8576; margin-top: 1px;">免費試算不限次；產出可送審的正式計畫書時，每份計次扣點</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: 22px;">
+          <sc-for list="{{ proViews }}" as="item" hint-placeholder-count="3">
+            <article style="position: relative; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E2DDD1; border-radius: 6px; box-shadow: 0 2px 6px rgba(10,26,51,0.08); overflow: hidden; transition: transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms;" style-hover="transform: translateY(-3px); box-shadow: 0 16px 40px rgba(10,26,51,0.14);">
+              <div style="height: 3px; background: #C9A24A;"></div>
+              <div style="padding: 20px 22px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: #F7EFDB; border: 1px solid #E3CE96; font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7E641F;">專業版 PRO</span>
+                  <button onClick="{{ item.onFav }}" aria-label="收藏" style="display: inline-flex; padding: 4px; border: none; background: transparent; cursor: pointer; border-radius: 4px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ item.starFill }}" stroke="{{ item.starStroke }}" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.7l1.2-6.6L2.5 9.5l6.6-.9z"></path></svg>
+                  </button>
+                </div>
+                <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A;">{{ item.category }}</div>
+                <div>
+                  <h3 style="font-family: 'Noto Serif TC', serif; font-size: 23px; font-weight: 600; color: #0A1A33; letter-spacing: -0.01em; margin: 0 0 3px;">{{ item.title }}</h3>
+                  <div style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: #8C8576;">{{ item.titleEn }}</div>
+                </div>
+                <p style="font-size: 14px; line-height: 1.6; color: #4B473C; margin: 0;">{{ item.desc }}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px;">
+                  <sc-for list="{{ item.tags }}" as="tag" hint-placeholder-count="3">
+                    <span style="padding: 4px 10px; border-radius: 999px; background: #F8F6F0; border: 1px solid #EFEBE2; font-size: 12px; color: #6B6557;">{{ tag }}</span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="border-top: 1px solid #EFEBE2; padding: 13px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <span style="display: inline-flex; flex-direction: column; line-height: 1.25;">
+                  <span style="font-family: 'Archivo', sans-serif; font-size: 15px; font-weight: 700; color: #0A1A33;">{{ item.price }}</span>
+                  <span style="font-size: 11px; color: #8C8576;">{{ item.priceNote }}</span>
+                </span>
+                <div style="display: flex; gap: 8px;">
+                  <button onClick="{{ item.onGithub }}" aria-label="原始碼" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #4B473C; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0; border-color: #8C8576;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+                  </button>
+                  <button onClick="{{ item.onPrimary }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 0 18px; height: 36px; border-radius: 4px; border: none; background: {{ item.actionBg }}; color: {{ item.actionColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="filter: brightness(1.08);" style-active="transform: translateY(1px);">
+                    {{ item.actionLabel }}
+                    <span style="display: inline-flex;">{{ item.actionIcon }}</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ===== GROUP: 瀏覽器工具 ===== -->
+    <sc-if value="{{ hasWeb }}" hint-placeholder-val="{{ true }}">
+      <section style="margin-bottom: 44px;">
+        <div style="display: flex; align-items: center; gap: 13px; margin-bottom: 18px;">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 6px; background: #0A1A33; flex-shrink: 0;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: baseline; gap: 10px;">
+              <h2 style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 600; color: #0A1A33; margin: 0;">瀏覽器工具</h2>
+              <span style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600; color: #9A7B2A;">{{ webCount }} 項 · 免安裝</span>
+            </div>
+            <div style="font-size: 13px; color: #8C8576; margin-top: 1px;">點「開啟工具」直接在瀏覽器使用，無需下載</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: 22px;">
+          <sc-for list="{{ webViews }}" as="item" hint-placeholder-count="2">
+            <article style="position: relative; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E2DDD1; border-radius: 6px; box-shadow: 0 2px 6px rgba(10,26,51,0.08); overflow: hidden; transition: transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms;" style-hover="transform: translateY(-3px); box-shadow: 0 16px 40px rgba(10,26,51,0.14);">
+              <div style="height: 2px; background: {{ item.sealColor }};"></div>
+              <div style="padding: 20px 22px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span style="display: inline-flex; align-items: center; gap: 9px;">
+                    <span style="display: inline-flex; align-items: center; gap: 7px; font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6557;">
+                      <span style="width: 8px; height: 8px; border-radius: 999px; background: {{ item.langColor }};"></span>{{ item.lang }}
+                    </span>
+                    <sc-if value="{{ item.isCustom }}" hint-placeholder-val="{{ false }}">
+                      <span style="padding: 3px 9px; border-radius: 999px; background: {{ item.statusBg }}; color: {{ item.statusColor }}; font-size: 11px; font-weight: 600;">{{ item.statusLabel }}</span>
+                    </sc-if>
+                  </span>
+                  <button onClick="{{ item.onFav }}" aria-label="收藏" style="display: inline-flex; padding: 4px; border: none; background: transparent; cursor: pointer; border-radius: 4px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ item.starFill }}" stroke="{{ item.starStroke }}" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.7l1.2-6.6L2.5 9.5l6.6-.9z"></path></svg>
+                  </button>
+                </div>
+                <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A;">{{ item.category }}</div>
+                <div>
+                  <h3 style="font-family: 'Noto Serif TC', serif; font-size: 23px; font-weight: 600; color: #0A1A33; letter-spacing: -0.01em; margin: 0 0 3px;">{{ item.title }}</h3>
+                  <div style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: #8C8576;">{{ item.titleEn }}</div>
+                </div>
+                <p style="font-size: 14px; line-height: 1.6; color: #4B473C; margin: 0;">{{ item.desc }}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px;">
+                  <sc-for list="{{ item.tags }}" as="tag" hint-placeholder-count="3">
+                    <span style="padding: 4px 10px; border-radius: 999px; background: #F8F6F0; border: 1px solid #EFEBE2; font-size: 12px; color: #6B6557;">{{ tag }}</span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="border-top: 1px solid #EFEBE2; padding: 13px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6557;">
+                  <span style="width: 6px; height: 6px; border-radius: 999px; background: {{ item.kindDot }};"></span>{{ item.typeLabel }}
+                </span>
+                <div style="display: flex; gap: 8px;">
+                  <sc-if value="{{ item.isCustom }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ item.onEdit }}" aria-label="編輯此工具" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #4B473C; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0; border-color: #8C8576;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                    </button>
+                  </sc-if>
+                  <button onClick="{{ item.onGithub }}" aria-label="原始碼" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #4B473C; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0; border-color: #8C8576;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+                  </button>
+                  <button onClick="{{ item.onPrimary }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 0 18px; height: 36px; border-radius: 4px; border: none; background: {{ item.actionBg }}; color: {{ item.actionColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="filter: brightness(1.08);" style-active="transform: translateY(1px);">
+                    {{ item.actionLabel }}
+                    <span style="display: inline-flex;">{{ item.actionIcon }}</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ===== GROUP: 本機工具 Python ===== -->
+    <sc-if value="{{ hasLocal }}" hint-placeholder-val="{{ true }}">
+      <section style="margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 13px; margin-bottom: 18px;">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 6px; background: #0A1A33; flex-shrink: 0;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: baseline; gap: 10px;">
+              <h2 style="font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 600; color: #0A1A33; margin: 0;">本機工具 · Python</h2>
+              <span style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 600; color: #9A7B2A;">{{ localCount }} 項 · 需下載執行</span>
+            </div>
+            <div style="font-size: 13px; color: #8C8576; margin-top: 1px;">需下載至電腦端執行，按「調用程式」取得安裝與執行指令</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: {{ gridCols }}; gap: 22px;">
+          <sc-for list="{{ localViews }}" as="item" hint-placeholder-count="2">
+            <article style="position: relative; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E2DDD1; border-radius: 6px; box-shadow: 0 2px 6px rgba(10,26,51,0.08); overflow: hidden; transition: transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms;" style-hover="transform: translateY(-3px); box-shadow: 0 16px 40px rgba(10,26,51,0.14);">
+              <div style="height: 2px; background: {{ item.sealColor }};"></div>
+              <div style="padding: 20px 22px 16px; display: flex; flex-direction: column; flex: 1; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <span style="display: inline-flex; align-items: center; gap: 9px;">
+                    <span style="display: inline-flex; align-items: center; gap: 7px; font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6557;">
+                      <span style="width: 8px; height: 8px; border-radius: 999px; background: {{ item.langColor }};"></span>{{ item.lang }}
+                    </span>
+                    <sc-if value="{{ item.isCustom }}" hint-placeholder-val="{{ false }}">
+                      <span style="padding: 3px 9px; border-radius: 999px; background: {{ item.statusBg }}; color: {{ item.statusColor }}; font-size: 11px; font-weight: 600;">{{ item.statusLabel }}</span>
+                    </sc-if>
+                  </span>
+                  <button onClick="{{ item.onFav }}" aria-label="收藏" style="display: inline-flex; padding: 4px; border: none; background: transparent; cursor: pointer; border-radius: 4px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ item.starFill }}" stroke="{{ item.starStroke }}" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.7l1.2-6.6L2.5 9.5l6.6-.9z"></path></svg>
+                  </button>
+                </div>
+                <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A;">{{ item.category }}</div>
+                <div>
+                  <h3 style="font-family: 'Noto Serif TC', serif; font-size: 23px; font-weight: 600; color: #0A1A33; letter-spacing: -0.01em; margin: 0 0 3px;">{{ item.title }}</h3>
+                  <div style="font-family: 'Archivo', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: #8C8576;">{{ item.titleEn }}</div>
+                </div>
+                <p style="font-size: 14px; line-height: 1.6; color: #4B473C; margin: 0;">{{ item.desc }}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px;">
+                  <sc-for list="{{ item.tags }}" as="tag" hint-placeholder-count="3">
+                    <span style="padding: 4px 10px; border-radius: 999px; background: #F8F6F0; border: 1px solid #EFEBE2; font-size: 12px; color: #6B6557;">{{ tag }}</span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="border-top: 1px solid #EFEBE2; padding: 13px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6557;">
+                  <span style="width: 6px; height: 6px; border-radius: 999px; background: {{ item.kindDot }};"></span>{{ item.typeLabel }}
+                </span>
+                <div style="display: flex; gap: 8px;">
+                  <sc-if value="{{ item.isCustom }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ item.onEdit }}" aria-label="編輯此工具" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #4B473C; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0; border-color: #8C8576;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                    </button>
+                  </sc-if>
+                  <button onClick="{{ item.onGithub }}" aria-label="原始碼" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #4B473C; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0; border-color: #8C8576;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+                  </button>
+                  <button onClick="{{ item.onPrimary }}" style="display: inline-flex; align-items: center; gap: 7px; padding: 0 18px; height: 36px; border-radius: 4px; border: none; background: {{ item.actionBg }}; color: {{ item.actionColor }}; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="filter: brightness(1.08);" style-active="transform: translateY(1px);">
+                    {{ item.actionLabel }}
+                    <span style="display: inline-flex;">{{ item.actionIcon }}</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+
+          <sc-if value="{{ showAddCard }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ onAddTool }}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 240px; border: 1.5px dashed #CBC5B6; border-radius: 6px; background: transparent; color: #6B6557; cursor: pointer; font-family: 'Noto Sans TC', sans-serif; transition: all 200ms;" style-hover="border-color: #C9A24A; color: #9A7B2A; background: rgba(201,162,74,0.04);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              <span style="font-size: 15px; font-weight: 500;">新增工具</span>
+              <span style="font-size: 12px; color: #8C8576;">連結另一個 GitHub 專案</span>
+            </button>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; padding: 80px 20px; color: #8C8576;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#CBC5B6" stroke-width="1.6" stroke-linecap="round" style="margin-bottom: 14px;" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <div style="font-family: 'Noto Serif TC', serif; font-size: 20px; color: #4B473C; margin-bottom: 6px;">找不到符合的工具</div>
+        <div style="font-size: 14px;">試試其他關鍵字，或清除分類與篩選。</div>
+      </div>
+    </sc-if>
+  </main>
+
+  <!-- ============ MODAL: 調用本機 Python ============ -->
+  <sc-if value="{{ hasModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position: fixed; inset: 0; z-index: 50; background: rgba(6,15,34,0.55); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 24px;">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 560px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 16px 40px rgba(10,26,51,0.14); overflow: hidden;">
+        <div style="height: 2px; background: #C9A24A;"></div>
+        <div style="padding: 24px 26px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A; margin-bottom: 5px;">{{ modal.typeLabel }}</div>
+            <h3 style="font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; color: #0A1A33; margin: 0;">{{ modal.title }}</h3>
+            <div style="font-family: 'Archivo', sans-serif; font-size: 12px; color: #8C8576; margin-top: 2px;">{{ modal.titleEn }}</div>
+          </div>
+          <button onClick="{{ closeModal }}" aria-label="關閉" style="display: inline-flex; padding: 6px; border: none; background: transparent; color: #6B6557; cursor: pointer; border-radius: 4px;" style-hover="background: #F8F6F0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 20px 26px 26px;">
+          <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6557; margin-bottom: 8px;">1 · 安裝相依套件</div>
+          <div style="font-family: 'Menlo', 'Consolas', monospace; font-size: 13px; color: #C2D2E6; background: #0A1A33; border-radius: 6px; padding: 13px 16px; margin-bottom: 18px; overflow-x: auto;"><span style="color: #8AA8CE;">$</span> {{ modal.install }}</div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6557;">2 · 執行計算</span>
+            <button onClick="{{ onCopy }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #143257; font-family: 'Noto Sans TC', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              {{ copyLabel }}
+            </button>
+          </div>
+          <div style="font-family: 'Menlo', 'Consolas', monospace; font-size: 13px; color: #E6CE96; background: #0A1A33; border-radius: 6px; padding: 13px 16px; margin-bottom: 18px; overflow-x: auto;"><span style="color: #8AA8CE;">$</span> {{ modal.cmd }}</div>
+
+          <div style="background: #F8F6F0; border: 1px solid #EFEBE2; border-radius: 6px; padding: 13px 15px; font-size: 13px; line-height: 1.6; color: #4B473C; margin-bottom: 22px;">{{ modal.note }}</div>
+
+          <div style="display: flex; gap: 10px;">
+            <button onClick="{{ modal.onGithub }}" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 4px; border: 1px solid #143257; background: #0E2546; color: #FFFFFF; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="background: #143257;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"></path></svg>
+              開啟原始碼
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ MODAL: 產出計畫書 付費 ============ -->
+  <sc-if value="{{ hasPay }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePay }}" style="position: fixed; inset: 0; z-index: 55; background: rgba(6,15,34,0.55); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 24px;">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 480px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 16px 40px rgba(10,26,51,0.16); overflow: hidden;">
+        <div style="height: 2px; background: #C9A24A;"></div>
+        <div style="padding: 24px 26px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+          <div>
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; background: #F7EFDB; border: 1px solid #E3CE96; font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7E641F; margin-bottom: 10px;">專業版 PRO</span>
+            <h3 style="font-family: 'Noto Serif TC', serif; font-size: 23px; font-weight: 600; color: #0A1A33; margin: 0;">{{ pay.title }}</h3>
+            <div style="font-family: 'Archivo', sans-serif; font-size: 12px; color: #8C8576; margin-top: 2px;">{{ pay.titleEn }}</div>
+          </div>
+          <button onClick="{{ closePay }}" aria-label="關閉" style="display: inline-flex; padding: 6px; border: none; background: transparent; color: #6B6557; cursor: pointer; border-radius: 4px;" style-hover="background: #F8F6F0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 18px 26px 26px;">
+          <div style="display: flex; align-items: baseline; gap: 8px;">
+            <span style="font-family: 'Archivo', sans-serif; font-size: 30px; font-weight: 700; color: #0A1A33;">{{ pay.price }}</span>
+            <span style="font-size: 13px; color: #6B6557;">{{ pay.priceNote }}</span>
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: #4B473C; margin: 8px 0 18px;">免費試算不限次數；確認結果後，產出可送審的正式計畫書時，每份計次扣點。</p>
+
+          <div style="background: #F8F6F0; border: 1px solid #EFEBE2; border-radius: 6px; padding: 12px 15px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 13px; color: #6B6557;">目前剩餘點數</span>
+            <span style="font-family: 'Archivo', sans-serif; font-size: 16px; font-weight: 700; color: #0A1A33;">0</span>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+            <button onClick="{{ onTrial }}" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 44px; border-radius: 4px; border: 1px solid #CBC5B6; background: #FFFFFF; color: #143257; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="background: #F8F6F0;">免費試算</button>
+            <button onClick="{{ onBuy }}" style="flex: 1.4; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 44px; border-radius: 4px; border: none; background: #C9A24A; color: #0A1A33; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 160ms;" style-hover="filter: brightness(1.06);" style-active="transform: translateY(1px);">購買點數 · 產出計畫書</button>
+          </div>
+
+          <div style="display: flex; gap: 9px; align-items: flex-start; padding: 11px 13px; background: #FBF7EE; border: 1px solid #EADFC4; border-radius: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A7B2A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><path d="M12 9v4M12 17h.01"></path></svg>
+            <span style="font-size: 12px; line-height: 1.55; color: #6B6557;">本工具僅為輔助計算，產出之計畫書仍須由專業技師簽證並負最終責任。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ MODAL: 新增工具 ============ -->
+  <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeAdd }}" style="position: fixed; inset: 0; z-index: 60; background: rgba(6,15,34,0.55); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; overflow-y: auto;">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 600px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 16px 40px rgba(10,26,51,0.18); overflow: hidden;">
+        <div style="height: 2px; background: #C9A24A;"></div>
+        <div style="padding: 24px 28px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A; margin-bottom: 5px;">{{ addKicker }}</div>
+            <h3 style="font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; color: #0A1A33; margin: 0;">{{ addTitle }}</h3>
+            <div style="font-size: 13px; color: #8C8576; margin-top: 3px;">{{ addSubtitle }}</div>
+          </div>
+          <button onClick="{{ closeAdd }}" aria-label="關閉" style="display: inline-flex; padding: 6px; border: none; background: transparent; color: #6B6557; cursor: pointer; border-radius: 4px;" style-hover="background: #F8F6F0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 20px 28px 26px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">工具名稱 <span style="color: #9A5A4B;">*</span></label>
+              <input value="{{ form.title }}" onInput="{{ formH.title }}" placeholder="例如：基樁承載力計算" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">英文名稱</label>
+              <input value="{{ form.titleEn }}" onInput="{{ formH.titleEn }}" placeholder="Pile Capacity Calc" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Archivo', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">分類</label>
+              <input value="{{ form.category }}" onInput="{{ formH.category }}" list="ectr-cats" placeholder="選擇或自訂" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+              <datalist id="ectr-cats">
+                <sc-for list="{{ catOptions }}" as="c" hint-placeholder-count="3">
+                  <option value="{{ c }}"></option>
+                </sc-for>
+              </datalist>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">執行方式</label>
+              <select value="{{ form.kind }}" onChange="{{ formH.kind }}" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+                <option value="web">網頁版（瀏覽器直接開）</option>
+                <option value="cli">本機 Python · 指令稿</option>
+                <option value="lib">本機 Python · 套件</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">GitHub 連結 <span style="color: #9A5A4B;">*</span></label>
+            <input value="{{ form.repo }}" onInput="{{ formH.repo }}" placeholder="https://github.com/USER/REPO" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Menlo', monospace; font-size: 13px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+          </div>
+
+          <sc-if value="{{ formIsWeb }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top: 14px;">
+              <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">開啟網址（GitHub Pages 等）</label>
+              <input value="{{ form.url }}" onInput="{{ formH.url }}" placeholder="https://user.github.io/repo/（留空則開 GitHub）" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Menlo', monospace; font-size: 13px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ formIsLocal }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+              <div>
+                <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">安裝指令</label>
+                <input value="{{ form.install }}" onInput="{{ formH.install }}" placeholder="pip install -r requirements.txt" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Menlo', monospace; font-size: 13px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">執行指令</label>
+                <input value="{{ form.cmd }}" onInput="{{ formH.cmd }}" placeholder="python main.py" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Menlo', monospace; font-size: 13px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top: 14px;">
+            <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">說明</label>
+            <input value="{{ form.desc }}" onInput="{{ formH.desc }}" placeholder="這個工具做什麼、依據哪個規範" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label style="display: block; font-size: 12px; font-weight: 500; color: #4B473C; margin-bottom: 5px;">標籤（逗號分隔）</label>
+            <input value="{{ form.tags }}" onInput="{{ formH.tags }}" placeholder="ACI 318-19, 基礎, 承載力" style="width: 100%; padding: 10px 12px; border: 1px solid #CBC5B6; border-radius: 4px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; background: #FCFBF8;" style-focus="border-color: #C9A24A;">
+          </div>
+
+          <sc-if value="{{ hasFormError }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 16px; padding: 10px 14px; background: #FBF1EE; border: 1px solid #E8C9C0; border-radius: 4px; font-size: 13px; color: #9A5A4B;">{{ formError }}</div>
+          </sc-if>
+
+          <sc-if value="{{ isEditing }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 18px; padding: 14px 16px; background: #F8F6F0; border: 1px solid #EFEBE2; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+              <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 13px; font-weight: 600; color: #211F19;">公開工具庫狀態：{{ reviewStatusLabel }}</div>
+                <div style="font-size: 12px; color: #8C8576; margin-top: 3px; line-height: 1.5;">{{ reviewStatusHint }}</div>
+              </div>
+              <sc-if value="{{ hasReviewAction }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ onReviewAction }}" style="flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; padding: 0 16px; height: 40px; border-radius: 4px; border: 1px solid #C9A24A; background: #FFFFFF; color: #7E641F; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="background: #FBF7EE;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>
+                  {{ reviewActionLabel }}
+                </button>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <div style="display: flex; gap: 10px; margin-top: 22px;">
+            <sc-if value="{{ showDeleteBtn }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onDeleteFromEdit }}" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; padding: 0 16px; height: 44px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #9A5A4B; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 160ms;" style-hover="background: #FBF1EE; border-color: #C58A7C;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M10 11v6M14 11v6"></path></svg>
+                刪除
+              </button>
+            </sc-if>
+            <button onClick="{{ closeAdd }}" style="flex: 0 0 auto; padding: 0 20px; height: 44px; border-radius: 4px; border: 1px solid #CBC5B6; background: #FFFFFF; color: #4B473C; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="background: #F8F6F0;">取消</button>
+            <button onClick="{{ onSubmitAdd }}" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 4px; border: none; background: #0E2546; color: #FFFFFF; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #143257;" style-active="transform: translateY(1px);">
+              <span style="display: inline-flex;">{{ submitIcon }}</span>
+              {{ submitLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ MODAL: 審核後台 Review Queue ============ -->
+  <sc-if value="{{ reviewOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeReview }}" style="position: fixed; inset: 0; z-index: 65; background: rgba(6,15,34,0.55); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; overflow-y: auto;">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 640px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 16px 40px rgba(10,26,51,0.18); overflow: hidden;">
+        <div style="height: 2px; background: #C9A24A;"></div>
+        <div style="padding: 24px 28px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="font-family: 'Archivo', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9A7B2A; margin-bottom: 5px;">Review Queue</div>
+            <h3 style="font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; color: #0A1A33; margin: 0;">審核後台</h3>
+            <div style="font-size: 13px; color: #8C8576; margin-top: 3px;">通過的工具會公開於工具庫；退回則回到提交者的私人清單</div>
+          </div>
+          <button onClick="{{ closeReview }}" aria-label="關閉" style="display: inline-flex; padding: 6px; border: none; background: transparent; color: #6B6557; cursor: pointer; border-radius: 4px;" style-hover="background: #F8F6F0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 20px 28px 26px;">
+          <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <sc-for list="{{ pendingViews }}" as="p" hint-placeholder-count="2">
+                <div style="border: 1px solid #E2DDD1; border-radius: 6px; padding: 15px 16px; display: flex; align-items: center; gap: 14px;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 4px;">
+                      <span style="width: 8px; height: 8px; border-radius: 999px; background: {{ p.langColor }}; flex-shrink: 0;"></span>
+                      <span style="font-family: 'Noto Serif TC', serif; font-size: 17px; font-weight: 600; color: #0A1A33;">{{ p.title }}</span>
+                      <span style="padding: 2px 8px; border-radius: 999px; background: #F7EFDB; color: #7E641F; font-size: 11px; font-weight: 600;">{{ p.category }}</span>
+                    </div>
+                    <button onClick="{{ p.onRepo }}" style="border: none; background: transparent; padding: 0; font-family: 'Menlo', monospace; font-size: 12px; color: #295892; cursor: pointer; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block;">{{ p.repo }}</button>
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                    <button onClick="{{ p.onReject }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; height: 38px; border-radius: 4px; border: 1px solid #E2DDD1; background: #FFFFFF; color: #9A5A4B; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 160ms;" style-hover="background: #FBF1EE; border-color: #C58A7C;">退回</button>
+                    <button onClick="{{ p.onApprove }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; height: 38px; border-radius: 4px; border: none; background: #2E6B45; color: #FFFFFF; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 160ms;" style-hover="filter: brightness(1.08);" style-active="transform: translateY(1px);">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                      通過
+                    </button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noPending }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align: center; padding: 40px 20px; color: #8C8576;">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#CBC5B6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px;" aria-hidden="true"><path d="m9 11 3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <div style="font-family: 'Noto Serif TC', serif; font-size: 18px; color: #4B473C; margin-bottom: 4px;">目前沒有待審核的工具</div>
+              <div style="font-size: 13px;">使用者在編輯工具時按「提交送審」，項目就會出現在這裡。</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gold&quot;,&quot;navy&quot;],&quot;default&quot;:&quot;gold&quot;,&quot;tsType&quot;:&quot;'gold'|'navy'&quot;,&quot;section&quot;:&quot;外觀&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;comfortable&quot;,&quot;tsType&quot;:&quot;'comfortable'|'compact'&quot;,&quot;section&quot;:&quot;外觀&quot;},&quot;showRecent&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;功能&quot;},&quot;allowDelete&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;共用權限&quot;}}">
+class Component extends DCLogic {
+  blankForm() { return { title: '', titleEn: '', category: '', desc: '', tags: '', repo: '', kind: 'web', url: '', install: '', cmd: '', note: '' }; }
+  state = { query: '', category: '全部', favOnly: false, sort: 'updated', favs: [], recents: [], customTools: [], modalId: null, copied: false, addOpen: false, editId: null, payId: null, reviewOpen: false, formError: '', form: { title: '', titleEn: '', category: '', desc: '', tags: '', repo: '', kind: 'web', url: '', install: '', cmd: '', note: '' } };
+
+  PRO_TOOLS = [
+    {
+      id: 'formwork-shoring', tier: 'pro',
+      title: '模板支撐計畫',
+      titleEn: 'Formwork Shoring Plan',
+      category: '假設工程',
+      desc: '依營造安全衛生設施標準檢核模板支撐架之強度、垂直載重與側向力，自動彙整並產出可送審的支撐計畫計算書。',
+      tags: ['營造安全衛生設施標準', '模板支撐', '送審計畫書'],
+      lang: 'HTML', kind: 'pro',
+      price: 'NT$ 300', priceNote: '每份計畫書 · 免費試算',
+      repo: 'https://github.com/YJ-chen0830/formwork',
+      url: 'https://yj-chen0830.github.io/formwork/', install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'rebar-lp', tier: 'pro',
+      title: '鋼筋算料最佳化',
+      titleEn: 'Rebar Cut Optimization',
+      category: '鋼筋工程',
+      desc: '以線性規劃最小化鋼筋損耗，依各構件需求求最佳下料組合，產出下料表與採購清單，降低廢料成本。',
+      tags: ['線性規劃', '下料最佳化', '鋼筋', '損耗控管'],
+      lang: 'HTML', kind: 'pro',
+      price: 'NT$ 200', priceNote: '每份下料表 · 免費試算',
+      repo: 'https://github.com/YJ-chen0830/rebar-optimize',
+      url: 'https://yj-chen0830.github.io/rebar-optimize/', install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'scaffold-plan', tier: 'pro',
+      title: '施工架支撐計畫',
+      titleEn: 'Scaffolding Support Plan',
+      category: '假設工程',
+      desc: '施工架與支撐架之穩定性、載重與連接件檢核，依規範產出符合送審格式的施工架計畫書。',
+      tags: ['施工架', '支撐架', '穩定檢核', '送審計畫書'],
+      lang: 'HTML', kind: 'pro',
+      price: 'NT$ 300', priceNote: '每份計畫書 · 免費試算',
+      repo: 'https://github.com/YJ-chen0830/scaffold',
+      url: 'https://yj-chen0830.github.io/scaffold/', install: '', cmd: '', note: '', updated: '2026-07',
+    },
+  ];
+
+  TOOLS = [
+    {
+      id: 'seismic-bracket',
+      title: '耐震固定座計算書',
+      titleEn: 'Seismic Bracket Calc',
+      category: '耐震設計',
+      desc: '半導體設備耐震固定座檢核：依 ASCE 7-16 求地震力、LRFD 載重組合與螺栓／混凝土錐體破壞，輸出 Word 計算書。',
+      tags: ['ASCE 7-16', 'AISC 360-16', 'ACI 318-19', '半導體設備'],
+      lang: 'Python',
+      kind: 'cli',
+      repo: 'https://github.com/YJ-chen0830/seismic-bracket-py',
+      url: null,
+      install: 'pip install -r requirements.txt',
+      cmd: 'python gen_report.py 設備清單.xlsx',
+      note: '從「共用參數」與「設備清單」工作表讀取地震／材料／螺栓參數，輸出 SeismicBracket_CalcReport_<時間>.docx。亦相容 JSON 輸入，或不帶參數執行示範資料。',
+      updated: '2025-11',
+    },
+    {
+      id: 'steel-lrfd',
+      title: '鋼結構 LRFD 計算器',
+      titleEn: 'Steel LRFD Calculator',
+      category: '鋼結構',
+      desc: 'AISC 360-16 梁柱強度檢核引擎：壓力、拉力、強弱軸撓曲與 H1 交互作用，並繪製 P-M 交互曲線。',
+      tags: ['AISC 360-16', 'LRFD', '梁柱', 'P-M 曲線'],
+      lang: 'Python',
+      kind: 'lib',
+      repo: 'https://github.com/YJ-chen0830/steel-lrfd-calculator',
+      url: null,
+      install: 'pip install -r requirements.txt',
+      cmd: 'python calc_report.py',
+      note: '可作為套件 import（core.py 提供 BeamColumnLRFD 引擎、sections_db 斷面庫），或直接執行 calc_report.py 產生含 P-M 圖的報告。單位採 mm／MPa／kN。',
+      updated: '2025-10',
+    },
+    {
+      id: 'slope-deflection',
+      title: '傾角變位法分析',
+      titleEn: 'Slope-Deflection Method',
+      category: '結構分析',
+      desc: '連續梁與剛架的傾角變位法求解：互動式輸入桿件與載重，即時繪製彎矩圖與變位圖。',
+      tags: ['傾角變位法', '靜不定', 'React', '互動'],
+      lang: 'React',
+      kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/SA_SlopeDeflectionMethod',
+      url: 'https://yj-chen0830.github.io/SA_SlopeDeflectionMethod/',
+      install: '',
+      cmd: '',
+      note: '',
+      updated: '2026-01',
+    },
+    {
+      id: 'rc-column-pm',
+      title: 'RC 柱 P-M 互動圖',
+      titleEn: 'RC Column P-M Interaction',
+      category: '鋼筋混凝土',
+      desc: '矩形 RC 柱 P-M 互動圖：應變相容法掃描中性軸、Whitney 等效應力塊求 Pn／Mn，套用 ACI 318-19 強度折減係數 φ，繪製 φPn–φMn 設計包絡線並檢核需求點。',
+      tags: ['ACI 318-19', '應變相容法', 'P-M 互動圖', 'RC 柱'],
+      lang: 'HTML',
+      kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/RC-Column-PM-Interaction',
+      url: 'https://yj-chen0830.github.io/RC-Column-PM-Interaction/',
+      install: '',
+      cmd: '',
+      note: '',
+      updated: '2026-06',
+    },
+    {
+      id: 'matrix-toolkit',
+      title: '矩陣計算工具',
+      titleEn: 'Matrix Toolkit',
+      category: '數值計算',
+      desc: '線性代數工具箱：LU 分解求反矩陣與行列式、解線性方程組 Ax=b，並以 QR 演算法迭代求特徵值與特徵向量。',
+      tags: ['反矩陣', '行列式', '線性方程組', 'QR 特徵值'],
+      lang: 'HTML',
+      kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/matrix-computing',
+      url: 'https://yj-chen0830.github.io/matrix-computing/',
+      install: '',
+      cmd: '',
+      note: '',
+      updated: '2026-06',
+    },
+    {
+      id: 'beam-smd',
+      title: '梁剪力彎矩圖',
+      titleEn: 'Beam Shear & Moment',
+      category: '結構分析',
+      desc: '可簡單用來判斷簡支、懸臂之彎矩及剪力，互動繪製剪力圖與彎矩圖。',
+      tags: ['簡支梁', '懸臂梁', '剪力圖', '彎矩圖'],
+      lang: 'HTML',
+      kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/beam-shear-and-moment-diagram',
+      url: 'https://yj-chen0830.github.io/beam-shear-and-moment-diagram/',
+      install: '',
+      cmd: '',
+      note: '',
+      updated: '2026-06',
+    },
+    {
+      id: 'seismic-wind',
+      title: '設計地震力風力簡單評估',
+      titleEn: 'Seismic & Wind Quick Check',
+      category: '耐震設計',
+      desc: '依台灣現行耐震及風力規範進行簡單分析，地震力僅考慮水平向（最大地震力）。',
+      tags: ['耐震規範', '風力規範', '水平地震力'],
+      lang: 'HTML',
+      kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/seismic-wind-simple-design',
+      url: 'https://yj-chen0830.github.io/seismic-wind-simple-design/',
+      install: '',
+      cmd: '',
+      note: '',
+      updated: '2026-06',
+    },
+    {
+      id: 'hydraulics',
+      title: '水力計算',
+      titleEn: 'Hydraulics Calculator',
+      category: '水利工程',
+      desc: '明渠與管流水力計算：以曼寧公式求流速、流量與水深，供排水與下水道斷面初步檢核。',
+      tags: ['曼寧公式', '明渠流', '管流', '排水'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/hydraulics',
+      url: 'https://yj-chen0830.github.io/hydraulics/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'runoff',
+      title: '逕流量計算',
+      titleEn: 'Runoff Estimation',
+      category: '水利工程',
+      desc: '以合理化公式（Q=CIA）推估集水區逕流量，供雨水下水道與滯洪設施容量初步評估。',
+      tags: ['合理化公式', '逕流係數', '雨水下水道', '滯洪'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/runoff',
+      url: 'https://yj-chen0830.github.io/runoff/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'foundation',
+      title: '基礎承載力計算',
+      titleEn: 'Foundation Bearing',
+      category: '大地工程',
+      desc: '淺基礎極限與容許承載力計算，考慮土壤參數與安全係數，輸出承載檢核結果。',
+      tags: ['淺基礎', '承載力', '安全係數', '大地'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/foundation',
+      url: 'https://yj-chen0830.github.io/foundation/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'load-combo',
+      title: '載重組合產生器',
+      titleEn: 'Load Combinations',
+      category: '結構分析',
+      desc: '依規範自動列出 LRFD／ASD 載重組合，涵蓋靜載、活載、地震與風力，方便帶入分析。',
+      tags: ['LRFD', 'ASD', '載重組合', '規範'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/load-combo',
+      url: 'https://yj-chen0830.github.io/load-combo/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'rc-beam-deflection',
+      title: 'RC 梁撓度計算',
+      titleEn: 'RC Beam Deflection',
+      category: '鋼筋混凝土',
+      desc: '依 ACI 有效慣性矩（Ie）計算 RC 梁瞬時與長期撓度，並與規範容許值比較。',
+      tags: ['ACI 318', '撓度', '有效慣性矩', 'RC 梁'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/RC-Beams-deflection',
+      url: 'https://yj-chen0830.github.io/RC-Beams-deflection/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'rebar-splice',
+      title: '鋼筋搭接長度',
+      titleEn: 'Rebar Splice Length',
+      category: '鋼筋混凝土',
+      desc: '依 ACI 318 計算鋼筋伸展與搭接（續接）長度，區分拉力、壓力與位置修正係數。',
+      tags: ['ACI 318', '搭接長度', '伸展長度', '鋼筋'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/rebar-splice.html',
+      url: 'https://yj-chen0830.github.io/rebar-splice.html/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+    {
+      id: 'rc-beam-steel',
+      title: 'RC 梁鋼筋設計',
+      titleEn: 'RC Beam Steel Design',
+      category: '鋼筋混凝土',
+      desc: '依 ACI 318 進行 RC 梁撓曲鋼筋設計：求所需鋼筋量、檢核最小／最大鋼筋比與鋼筋排置。',
+      tags: ['ACI 318', '撓曲設計', '鋼筋比', 'RC 梁'],
+      lang: 'HTML', kind: 'web',
+      repo: 'https://github.com/YJ-chen0830/RC-Beam-Steel-Design',
+      url: 'https://yj-chen0830.github.io/RC-Beam-Steel-Design/',
+      install: '', cmd: '', note: '', updated: '2026-07',
+    },
+  ];
+
+  componentDidMount() {
+    try {
+      const f = JSON.parse(localStorage.getItem('ectr_favs') || '[]');
+      const r = JSON.parse(localStorage.getItem('ectr_recents') || '[]');
+      const c = JSON.parse(localStorage.getItem('ectr_custom_tools') || '[]');
+      this.setState({ favs: Array.isArray(f) ? f : [], recents: Array.isArray(r) ? r : [], customTools: Array.isArray(c) ? c : [] });
+    } catch (e) {}
+  }
+
+  persist(favs, recents) {
+    try {
+      if (favs) localStorage.setItem('ectr_favs', JSON.stringify(favs));
+      if (recents) localStorage.setItem('ectr_recents', JSON.stringify(recents));
+    } catch (e) {}
+  }
+
+  toggleFav(id) {
+    this.setState(s => {
+      const favs = s.favs.includes(id) ? s.favs.filter(x => x !== id) : [id, ...s.favs];
+      this.persist(favs, null);
+      return { favs };
+    });
+  }
+
+  recordUse(id) {
+    this.setState(s => {
+      const recents = [id, ...s.recents.filter(x => x !== id)].slice(0, 6);
+      this.persist(null, recents);
+      return { recents };
+    });
+  }
+
+  openWeb(t) { this.recordUse(t.id); window.open(t.url || t.repo, '_blank', 'noopener'); }
+  openGithub(t) { window.open(t.repo, '_blank', 'noopener'); }
+  openModal(t) { this.recordUse(t.id); this.setState({ modalId: t.id, copied: false }); }
+  closeModal() { this.setState({ modalId: null, copied: false }); }
+  openPay(t) { this.recordUse(t.id); this.setState({ payId: t.id }); }
+  closePay() { this.setState({ payId: null }); }
+
+  setStatus(id, status) {
+    this.setState(s => {
+      const customTools = s.customTools.map(t => t.id === id ? Object.assign({}, t, { status }) : t);
+      this.persistCustom(customTools);
+      return { customTools };
+    });
+  }
+  submitForReview(id) { this.setStatus(id, 'pending'); }
+  withdrawReview(id) { this.setStatus(id, 'private'); }
+  approveTool(id) { this.setStatus(id, 'approved'); }
+  rejectTool(id) { this.setStatus(id, 'private'); }
+  openReview() { this.setState({ reviewOpen: true }); }
+  closeReview() { this.setState({ reviewOpen: false }); }
+  copyCmd(cmd) {
+    try { navigator.clipboard.writeText(cmd); } catch (e) {}
+    this.setState({ copied: true });
+    setTimeout(() => this.setState({ copied: false }), 1600);
+  }
+
+  persistCustom(list) { try { localStorage.setItem('ectr_custom_tools', JSON.stringify(list)); } catch (e) {} }
+  openAdd() { this.setState({ addOpen: true, editId: null, formError: '', form: this.blankForm() }); }
+  openEdit(t) {
+    this.setState({
+      addOpen: true, editId: t.id, formError: '',
+      form: {
+        title: t.title || '', titleEn: t.titleEn || '',
+        category: t.category || '', desc: (t.desc === '（無說明）' ? '' : (t.desc || '')),
+        tags: (t.tags || []).join(', '),
+        repo: t.repo || '', kind: t.kind || 'web',
+        url: t.url || '', install: t.install || '', cmd: t.cmd || '', note: t.note || '',
+      },
+    });
+  }
+  closeAdd() { this.setState({ addOpen: false, editId: null, formError: '' }); }
+  deleteFromEdit() {
+    if (this.props.allowDelete === false) return;
+    const id = this.state.editId;
+    if (!id) return;
+    if (typeof confirm === 'function' && !confirm('確定要刪除此工具嗎？')) return;
+    this.setState(s => {
+      const customTools = s.customTools.filter(t => t.id !== id);
+      this.persistCustom(customTools);
+      return { customTools, addOpen: false, editId: null, formError: '', form: this.blankForm(), modalId: s.modalId === id ? null : s.modalId };
+    });
+  }
+  submitAdd() {
+    const F = this.state.form;
+    if (!F.title.trim()) { this.setState({ formError: '請輸入工具名稱' }); return; }
+    if (!F.repo.trim()) { this.setState({ formError: '請輸入 GitHub 連結' }); return; }
+    const tags = F.tags.split(/[,，\s]+/).map(x => x.trim()).filter(Boolean);
+    if (this.state.editId) {
+      const patch = {
+        title: F.title.trim(), titleEn: F.titleEn.trim(),
+        category: F.category.trim() || '其他',
+        desc: F.desc.trim() || '（無說明）', tags,
+        lang: F.kind === 'web' ? 'HTML' : 'Python', kind: F.kind,
+        repo: F.repo.trim(),
+        url: F.kind === 'web' ? (F.url.trim() || F.repo.trim()) : null,
+        install: F.install.trim() || 'pip install -r requirements.txt',
+        cmd: F.cmd.trim() || 'python main.py',
+        note: F.note.trim() || '請參考原始碼 README 取得實際輸入與輸出說明。',
+        updated: new Date().toISOString().slice(0, 7),
+      };
+      this.setState(s => {
+        const customTools = s.customTools.map(t => t.id === s.editId ? Object.assign({}, t, patch) : t);
+        this.persistCustom(customTools);
+        return { customTools, addOpen: false, editId: null, formError: '', form: this.blankForm() };
+      });
+      return;
+    }
+    const tool = {
+      id: 'custom-' + Date.now(), custom: true,
+      title: F.title.trim(), titleEn: F.titleEn.trim(),
+      category: F.category.trim() || '其他',
+      desc: F.desc.trim() || '（無說明）', tags,
+      lang: F.kind === 'web' ? 'HTML' : 'Python', kind: F.kind,
+      repo: F.repo.trim(),
+      url: F.kind === 'web' ? (F.url.trim() || F.repo.trim()) : null,
+      install: F.install.trim() || 'pip install -r requirements.txt',
+      cmd: F.cmd.trim() || 'python main.py',
+      note: F.note.trim() || '請參考原始碼 README 取得實際輸入與輸出說明。',
+      updated: new Date().toISOString().slice(0, 7),
+    };
+    this.setState(s => {
+      const customTools = [...s.customTools, tool];
+      this.persistCustom(customTools);
+      return { customTools, addOpen: false, formError: '', form: this.blankForm() };
+    });
+  }
+  deleteCustom(id) {
+    this.setState(s => {
+      const customTools = s.customTools.filter(t => t.id !== id);
+      this.persistCustom(customTools);
+      return { customTools, modalId: s.modalId === id ? null : s.modalId };
+    });
+  }
+
+  renderVals() {
+    const accent = this.props.accent ?? 'gold';
+    const density = this.props.density ?? 'comfortable';
+    const showRecentProp = this.props.showRecent ?? true;
+
+    const actionBg = accent === 'navy' ? '#0E2546' : '#C9A24A';
+    const actionColor = accent === 'navy' ? '#FFFFFF' : '#0A1A33';
+    const gridCols = density === 'compact'
+      ? 'repeat(auto-fill, minmax(290px, 1fr))'
+      : 'repeat(auto-fill, minmax(360px, 1fr))';
+
+    const langColor = l => (l === 'Python' ? '#C9A24A' : '#295892');
+    const kindLabel = (k, lang) => (k === 'web' ? '網頁版 · ' + lang : k === 'cli' ? '本機 · CLI' : '本機 · 套件');
+    const kindDot = k => (k === 'web' ? '#2E6B45' : '#9A7B2A');
+
+    const arrowIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
+      React.createElement('path', { d: 'M7 17 17 7M9 7h8v8' }));
+    const playIcon = React.createElement('svg', { width: 13, height: 13, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true },
+      React.createElement('path', { d: 'M8 5v14l11-7z' }));
+    const reportIcon = React.createElement('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
+      React.createElement('path', { d: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' }),
+      React.createElement('path', { d: 'M14 2v6h6' }),
+      React.createElement('path', { d: 'm9 15 2 2 4-4' }));
+
+    const statusMeta = st => ({
+      label: st === 'pending' ? '審核中' : st === 'approved' ? '已上架' : '私人',
+      color: st === 'pending' ? '#7E641F' : st === 'approved' ? '#2E6B45' : '#6B6557',
+      bg: st === 'pending' ? '#F7EFDB' : st === 'approved' ? '#E7F0EA' : '#EFEBE2',
+    });
+
+    const enrich = t => {
+      const isFav = this.state.favs.includes(t.id);
+      const isPro = t.tier === 'pro';
+      const st = t.status || 'private';
+      const sm = statusMeta(st);
+      return Object.assign({}, t, {
+        isFav,
+        isPro,
+        status: st,
+        statusLabel: sm.label,
+        statusColor: sm.color,
+        statusBg: sm.bg,
+        price: t.price || '',
+        priceNote: t.priceNote || '',
+        langColor: langColor(t.lang),
+        sealColor: isFav ? '#C9A24A' : '#E2DDD1',
+        starFill: isFav ? '#C9A24A' : 'none',
+        starStroke: isFav ? '#C9A24A' : '#ADA796',
+        typeLabel: kindLabel(t.kind, t.lang),
+        kindDot: kindDot(t.kind),
+        actionLabel: isPro ? '產出計畫書' : (t.kind === 'web' ? '開啟工具' : '調用程式'),
+        actionIcon: isPro ? reportIcon : (t.kind === 'web' ? arrowIcon : playIcon),
+        actionBg: isPro ? '#C9A24A' : actionBg,
+        actionColor: isPro ? '#0A1A33' : actionColor,
+        isCustom: !!t.custom,
+        onFav: () => this.toggleFav(t.id),
+        onGithub: () => this.openGithub(t),
+        onDelete: () => this.deleteCustom(t.id),
+        onEdit: () => this.openEdit(t),
+        onPrimary: isPro ? () => this.openPay(t) : (t.kind === 'web' ? () => this.openWeb(t) : () => this.openModal(t)),
+      });
+    };
+
+    const dedup = this.state.customTools.filter(c => !this.TOOLS.some(b => b.title === c.title || b.repo === c.repo));
+    const ALL = this.TOOLS.concat(this.PRO_TOOLS).concat(dedup);
+    const q = this.state.query.trim().toLowerCase();
+    let list = ALL.filter(t => {
+      if (this.state.category !== '全部' && t.category !== this.state.category) return false;
+      if (this.state.favOnly && !this.state.favs.includes(t.id)) return false;
+      if (q) {
+        const hay = (t.title + ' ' + t.titleEn + ' ' + t.desc + ' ' + t.tags.join(' ') + ' ' + t.category).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    if (this.state.sort === 'name') list = list.slice().sort((a, b) => a.titleEn.localeCompare(b.titleEn));
+    else list = list.slice().sort((a, b) => b.updated.localeCompare(a.updated));
+
+    const toolViews = list.map(enrich);
+    const proViews = toolViews.filter(t => t.isPro);
+    const webViews = toolViews.filter(t => !t.isPro && t.kind === 'web');
+    const localViews = toolViews.filter(t => !t.isPro && t.kind !== 'web');
+
+    const catOrder = ['水利工程', '大地工程', '假設工程', '鋼筋工程', '耐震設計', '鋼結構', '鋼筋混凝土', '數值計算', '結構分析'];
+    const present = [...new Set(ALL.map(t => t.category))];
+    const ordered = catOrder.filter(c => present.includes(c)).concat(present.filter(c => !catOrder.includes(c)));
+    const cats = ['全部', ...ordered];
+    const catViews = cats.map(c => {
+      const active = this.state.category === c;
+      return {
+        name: c,
+        count: c === '全部' ? ALL.length : ALL.filter(t => t.category === c).length,
+        active,
+        bg: active ? '#0E2546' : '#FFFFFF',
+        color: active ? '#FFFFFF' : '#4B473C',
+        border: active ? '#0E2546' : '#E2DDD1',
+        onClick: () => this.setState({ category: c }),
+      };
+    });
+
+    const recentViews = this.state.recents
+      .map(id => ALL.find(t => t.id === id))
+      .filter(Boolean)
+      .map(t => ({
+        id: t.id,
+        title: t.title,
+        langColor: langColor(t.lang),
+        onClick: t.kind === 'web' ? () => this.openWeb(t) : () => this.openModal(t),
+      }));
+
+    const favOn = this.state.favOnly;
+    const sortRecentActive = this.state.sort === 'updated';
+
+    const modalTool = this.state.modalId ? ALL.find(t => t.id === this.state.modalId) : null;
+    const modal = modalTool ? enrich(modalTool) : null;
+
+    const payTool = this.state.payId ? ALL.find(t => t.id === this.state.payId) : null;
+    const pay = payTool ? enrich(payTool) : null;
+
+    const F = this.state.form;
+    const fh = k => (e => this.setState(s => ({ form: { ...s.form, [k]: e.target.value }, formError: '' })));
+
+    const isEditing = !!this.state.editId;
+    const allowDelete = this.props.allowDelete ?? true;
+
+    const editingTool = this.state.editId ? this.state.customTools.find(t => t.id === this.state.editId) : null;
+    const editStatus = editingTool ? (editingTool.status || 'private') : 'private';
+    const reviewStatusLabel = editStatus === 'pending' ? '待審核' : editStatus === 'approved' ? '已上架（公開）' : '私人（僅存本機）';
+    const reviewStatusHint = editStatus === 'pending' ? '已送出，等待管理員審核通過後公開。'
+      : editStatus === 'approved' ? '已通過審核，顯示於公開工具庫。'
+      : '目前只有你看得到。提交後經審核通過，才會出現在公開工具庫。';
+    const reviewActionLabel = editStatus === 'pending' ? '取消送審' : '提交送審';
+    const hasReviewAction = editStatus !== 'approved';
+    const onReviewAction = () => {
+      if (!this.state.editId) return;
+      if (editStatus === 'pending') this.withdrawReview(this.state.editId);
+      else this.submitForReview(this.state.editId);
+      this.closeAdd();
+    };
+
+    const pendingViews = this.state.customTools
+      .filter(t => (t.status || 'private') === 'pending')
+      .map(t => ({
+        id: t.id,
+        title: t.title,
+        titleEn: t.titleEn || '',
+        category: t.category || '其他',
+        repo: t.repo,
+        langColor: langColor(t.lang),
+        onApprove: () => this.approveTool(t.id),
+        onReject: () => this.rejectTool(t.id),
+        onRepo: () => window.open(t.repo, '_blank', 'noopener'),
+      }));
+    const checkIcon = React.createElement('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
+      React.createElement('path', { d: 'M20 6 9 17l-5-5' }));
+    const plusIcon = React.createElement('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true },
+      React.createElement('path', { d: 'M12 5v14M5 12h14' }));
+
+    return {
+      isEditing,
+      showDeleteBtn: isEditing && allowDelete,
+      reviewStatusLabel,
+      reviewStatusHint,
+      reviewActionLabel,
+      hasReviewAction,
+      onReviewAction,
+      reviewOpen: this.state.reviewOpen,
+      onOpenReview: () => this.openReview(),
+      closeReview: () => this.closeReview(),
+      pendingViews,
+      pendingCount: pendingViews.length,
+      hasPending: pendingViews.length > 0,
+      noPending: pendingViews.length === 0,
+      addKicker: isEditing ? 'Edit Tool' : 'Add Tool',
+      addTitle: isEditing ? '編輯計算工具' : '新增一個計算工具',
+      addSubtitle: isEditing ? '修改後會立即更新清單，並儲存在此瀏覽器中' : '填寫後會立即加入清單，並儲存在此瀏覽器中',
+      submitLabel: isEditing ? '儲存變更' : '加入清單',
+      submitIcon: isEditing ? checkIcon : plusIcon,
+      onDeleteFromEdit: () => this.deleteFromEdit(),
+      query: this.state.query,
+      onSearch: e => this.setState({ query: e.target.value }),
+      totalTools: ALL.length,
+      totalCats: cats.length - 1,
+      lastUpdated: '2026.07',
+
+      showRecent: showRecentProp && recentViews.length > 0,
+      recentViews,
+
+      catViews,
+
+      onToggleFavOnly: () => this.setState(s => ({ favOnly: !s.favOnly })),
+      favBg: favOn ? '#F7EFDB' : '#FFFFFF',
+      favColor: favOn ? '#7E641F' : '#4B473C',
+      favBorder: favOn ? '#D9B96E' : '#E2DDD1',
+      favIconFill: favOn ? '#C9A24A' : 'none',
+
+      onSortRecent: () => this.setState({ sort: 'updated' }),
+      onSortName: () => this.setState({ sort: 'name' }),
+      sortRecentBg: sortRecentActive ? '#FFFFFF' : 'transparent',
+      sortRecentColor: sortRecentActive ? '#0A1A33' : '#6B6557',
+      sortRecentShadow: sortRecentActive ? '0 1px 2px rgba(10,26,51,0.10)' : 'none',
+      sortNameBg: !sortRecentActive ? '#FFFFFF' : 'transparent',
+      sortNameColor: !sortRecentActive ? '#0A1A33' : '#6B6557',
+      sortNameShadow: !sortRecentActive ? '0 1px 2px rgba(10,26,51,0.10)' : 'none',
+
+      gridCols,
+      toolViews,
+      proViews,
+      proCount: proViews.length,
+      hasPro: proViews.length > 0,
+      webViews,
+      localViews,
+      webCount: webViews.length,
+      localCount: localViews.length,
+      hasWeb: webViews.length > 0,
+      hasLocal: localViews.length > 0,
+      hasResults: toolViews.length > 0,
+      noResults: toolViews.length === 0,
+      showAddCard: this.state.category === '全部' && q === '' && !this.state.favOnly,
+      onAddTool: () => this.openAdd(),
+
+      addOpen: this.state.addOpen,
+      closeAdd: () => this.closeAdd(),
+      onSubmitAdd: () => this.submitAdd(),
+      form: F,
+      formH: { title: fh('title'), titleEn: fh('titleEn'), category: fh('category'), desc: fh('desc'), tags: fh('tags'), repo: fh('repo'), kind: fh('kind'), url: fh('url'), install: fh('install'), cmd: fh('cmd'), note: fh('note') },
+      formIsWeb: F.kind === 'web',
+      formIsLocal: F.kind !== 'web',
+      formError: this.state.formError,
+      hasFormError: !!this.state.formError,
+      catOptions: ordered,
+
+      hasModal: !!modal,
+      modal,
+      closeModal: () => this.closeModal(),
+      stop: e => e.stopPropagation(),
+
+      hasPay: !!pay,
+      pay,
+      closePay: () => this.closePay(),
+      onBuy: () => { try { alert('原型示意：此處將串接金流，購買點數後即可產出正式計畫書。'); } catch (e) {} },
+      onTrial: pay ? () => window.open(payTool.url || payTool.repo, '_blank', 'noopener') : () => {},
+      onCopy: modal ? () => this.copyCmd(modal.cmd) : () => {},
+      copyLabel: this.state.copied ? '已複製 ✓' : '複製指令',
+
+      onGithubProfile: () => window.open('https://github.com/YJ-chen0830', '_blank', 'noopener'),
+    };
+  }
+}
+</script>
+</body>
+</html>
