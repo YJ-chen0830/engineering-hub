@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工程計算中心 · Ju Hong Structural</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#F8F6F0;color:#211F19;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+
+/* ── TOP BAR ── */
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid #E2DDD1;}
+.nav{max-width:1200px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.brand{display:flex;align-items:center;gap:13px;}
+.brand-icon{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:6px;background:#0A1A33;font-size:20px;line-height:1;}
+.brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;}
+.brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
+.nav-btns{display:flex;gap:10px;}
+.nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;}
+.nav-btn:hover{background:#F8F6F0;border-color:#8C8576;}
+
+/* ── HERO ── */
+.hero{background-color:#0A1A33;background-image:radial-gradient(620px 320px at 100% 0%,rgba(201,162,74,.16),transparent 62%),linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px;border-bottom:2px solid #C9A24A;}
+.hero-inner{max-width:1200px;margin:0 auto;padding:50px 40px 44px;}
+.hero-eyebrow{font-family:"Archivo",sans-serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#D9B96E;margin-bottom:14px;}
+.hero h1{font-family:"Noto Serif TC",serif;font-size:42px;line-height:1.1;font-weight:600;color:#fff;letter-spacing:-.02em;margin:0 0 10px;}
+.hero-sub{font-size:16px;line-height:1.6;color:#C2D2E6;max-width:520px;margin:0 0 20px;}
+.hero-tagline{display:flex;align-items:center;gap:12px;margin-bottom:30px;}
+.hero-tagline span:first-child{width:24px;height:2px;background:#C9A24A;display:inline-block;flex-shrink:0;}
+.hero-tagline-text{font-size:15px;font-weight:700;color:#D9B96E;}
+.stats{display:flex;gap:36px;}
+.stat-num{font-family:"Archivo",sans-serif;font-size:32px;font-weight:700;color:#fff;line-height:1;}
+.stat-label{font-size:12px;color:#8AA8CE;margin-top:4px;}
+.stat-div{width:1px;background:rgba(255,255,255,.14);}
+
+/* ── MAIN ── */
+main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
+
+/* ── SECTION ── */
+.section{margin-bottom:48px;}
+.section-hdr{display:flex;align-items:center;gap:13px;margin-bottom:18px;}
+.section-icon{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:#0A1A33;flex-shrink:0;}
+.section-title{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600;color:#0A1A33;}
+.section-meta{font-family:"Archivo",sans-serif;font-size:12px;font-weight:600;color:#9A7B2A;}
+.section-desc{font-size:13px;color:#8C8576;margin-top:2px;}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
+  .hero h1{font-size:28px;}
+  .nav{padding:12px 18px;}
+  .hero-inner,.main-pad{padding-left:18px;padding-right:18px;}
+  main{padding:24px 18px 60px;}
+  .stats{gap:18px;}.stat-num{font-size:26px;}
+  .nav-btns .nav-btn:first-child{display:none;}
+}
+
+/* ── CARD ── */
+.card{display:flex;flex-direction:column;background:#fff;border:1px solid #E2DDD1;border-radius:6px;box-shadow:0 2px 6px rgba(10,26,51,.07);overflow:hidden;transition:transform 200ms cubic-bezier(.16,1,.3,1),box-shadow 200ms;}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(10,26,51,.13);}
+.card-seal{height:3px;}
+.card-body{padding:18px 20px 14px;display:flex;flex-direction:column;flex:1;gap:10px;}
+.card-top{display:flex;align-items:center;justify-content:space-between;}
+.card-lang{display:inline-flex;align-items:center;gap:6px;font-family:"Archivo",sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6B6557;}
+.lang-dot{width:8px;height:8px;border-radius:999px;display:inline-block;flex-shrink:0;}
+.badge{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
+.badge-pro{background:#F7EFDB;border:1px solid #E3CE96;color:#7E641F;}
+.badge-py{background:#E8F0FB;border:1px solid #B8CFF5;color:#1A4A9A;}
+.card-cat{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9A7B2A;}
+.card-title{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;margin:0 0 1px;line-height:1.2;}
+.card-title-en{font-family:"Archivo",sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em;color:#8C8576;}
+.card-desc{font-size:13px;line-height:1.6;color:#4B473C;flex:1;}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;padding-top:4px;}
+.tag{padding:3px 9px;border-radius:999px;background:#F8F6F0;border:1px solid #EFEBE2;font-size:11px;color:#6B6557;}
+.card-foot{border-top:1px solid #EFEBE2;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.type-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#6B6557;flex-shrink:0;}
+.type-dot{width:6px;height:6px;border-radius:999px;display:inline-block;flex-shrink:0;}
+.btn-open{display:inline-flex;align-items:center;gap:6px;padding:0 16px;height:34px;border-radius:4px;border:none;background:#0A1A33;color:#fff;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:600;transition:all 160ms;cursor:pointer;white-space:nowrap;}
+.btn-open:hover{filter:brightness(1.12);}
+.btn-open:active{transform:translateY(1px);}
+.btn-open-gold{background:#B8902A;}
+.btn-code{display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:34px;border-radius:4px;border:1px solid #E2DDD1;background:#fff;color:#4B473C;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;}
+.btn-code:hover{background:#F8F6F0;border-color:#8C8576;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid #E2DDD1;padding:26px 40px;text-align:center;font-size:13px;color:#ADA796;}
+footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="brand-icon">📐</div>
+      <div>
+        <div class="brand-text-sub">Ju Hong Structural</div>
+        <div class="brand-text-main">工程計算中心</div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener" class="nav-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-6.7-4.35-9.3-8.2C1.1 10.4 1.7 7 4.6 5.7c2.2-1 4.6-.2 5.9 1.6L12 9l1.5-1.7c1.3-1.8 3.7-2.6 5.9-1.6 2.9 1.3 3.5 4.7 1.9 7.1C18.7 16.65 12 21 12 21z"/></svg>
+        贊助支持
+      </a>
+      <a href="https://github.com/YJ-chen0830" target="_blank" rel="noopener" class="nav-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Structural Engineering Toolkit</div>
+    <h1>統一管理與調用您的計算程式</h1>
+    <p class="hero-sub">將部署於 GitHub 的結構計算工具集中於一處——分類整理，一鍵開啟網頁版工具。</p>
+    <div class="hero-tagline">
+      <span></span>
+      <span class="hero-tagline-text">願能讓複雜的工程，多一絲簡單的可能</span>
+    </div>
+    <div class="stats">
+      <div><div class="stat-num">17</div><div class="stat-label">計算工具</div></div>
+      <div class="stat-div"></div>
+      <div><div class="stat-num">5</div><div class="stat-label">工具分類</div></div>
+      <div class="stat-div"></div>
+      <div><div class="stat-num">2025</div><div class="stat-label">持續更新</div></div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+<!-- ===== 1. 進度管理 ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">進度管理</h2>
+        <span class="section-meta">2 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">工程進度排程、桿狀圖繪製與 S 曲線分析</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">SCHEDULE · 進度排程</div>
+        <div><h3 class="card-title">進度網狀圖</h3><div class="card-title-en">ADM Network + Gantt + S-Curve</div></div>
+        <p class="card-desc">箭頭圖法（ADM）網狀圖自動計算 ES/EF/LS/LF，同步產生桿狀圖與 S 曲線，支援貼上匯入工項與 PDF 輸出。</p>
+        <div class="card-tags"><span class="tag">ADM</span><span class="tag">桿狀圖</span><span class="tag">S曲線</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/adm-and-Scurve/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">SCHEDULE · 進度排程</div>
+        <div><h3 class="card-title">計畫書產生器</h3><div class="card-title-en">Project Plan Builder</div></div>
+        <p class="card-desc">快速產生工程計畫書架構，整合工項清單與時程規劃，一鍵輸出正式格式 PDF。</p>
+        <div class="card-tags"><span class="tag">計畫書</span><span class="tag">工項清單</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/Plan-Builder/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 2. 施工計劃書 ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">施工計劃書</h2>
+        <span class="section-meta">2 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">施工架與模板工程計劃書自動產出，符合送審格式</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#3B7DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">SAFETY · 施工安全</div>
+        <div><h3 class="card-title">施工架計劃書</h3><div class="card-title-en">Scaffold Safety Plan</div></div>
+        <p class="card-desc">輸入構架尺寸與載重條件，自動計算施工架強度並產出符合勞安規範的正式計劃書 PDF。</p>
+        <div class="card-tags"><span class="tag">施工架</span><span class="tag">勞安規範</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/scaffold/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#3B7DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">SAFETY · 施工安全</div>
+        <div><h3 class="card-title">模板計劃書</h3><div class="card-title-en">Formwork Safety Plan</div></div>
+        <p class="card-desc">樓板與牆面模板設計計算，自動產出符合規範的模板施工計劃書，含支撐系統設計。</p>
+        <div class="card-tags"><span class="tag">模板工程</span><span class="tag">支撐系統</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/formwork/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 3. 結構計算 ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V10l7-7 7 7v10"/><path d="M9 20v-5h6v5"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">結構計算</h2>
+        <span class="section-meta">9 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">RC 構件設計、載重組合、地震風力、結構分析工具</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · RC 構件</div>
+        <div><h3 class="card-title">RC 梁撓度計算</h3><div class="card-title-en">RC Beam Deflection</div></div>
+        <p class="card-desc">依 ACI 規範計算 RC 梁短期與長期撓度，輸入斷面尺寸、配筋與跨度，即時驗算撓度限制。</p>
+        <div class="card-tags"><span class="tag">RC梁</span><span class="tag">撓度</span><span class="tag">ACI</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/RC-Beams-deflection/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · RC 構件</div>
+        <div><h3 class="card-title">RC 梁斷面設計</h3><div class="card-title-en">RC Beam Steel Design</div></div>
+        <p class="card-desc">依 ACI 318 設計 RC 梁受拉、受壓鋼筋，輸入彎矩需求與斷面限制，計算所需鋼筋量。</p>
+        <div class="card-tags"><span class="tag">RC梁</span><span class="tag">斷面設計</span><span class="tag">ACI 318</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/RC-Beam-Steel-Design/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · RC 構件</div>
+        <div><h3 class="card-title">RC 柱 P-M 互動圖</h3><div class="card-title-en">RC Column P-M Interaction</div></div>
+        <p class="card-desc">繪製 RC 柱軸力–彎矩互動圖，輸入斷面尺寸與配筋，確認載重點是否在容許範圍內。</p>
+        <div class="card-tags"><span class="tag">RC柱</span><span class="tag">P-M圖</span><span class="tag">互動圖</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/RC-Column-PM-Interaction/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 鋼筋</div>
+        <div><h3 class="card-title">鋼筋搭接長度</h3><div class="card-title-en">Rebar Splice Length</div></div>
+        <p class="card-desc">依規範計算鋼筋搭接、錨定與開發長度，支援多種鋼筋號數與混凝土強度組合。</p>
+        <div class="card-tags"><span class="tag">搭接長度</span><span class="tag">錨定</span><span class="tag">開發長度</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/rebar-splice.html/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 載重</div>
+        <div><h3 class="card-title">載重組合計算</h3><div class="card-title-en">Load Combination</div></div>
+        <p class="card-desc">依 ACI / AISC / 台灣規範自動計算各種載重組合，快速找出設計控制組合。</p>
+        <div class="card-tags"><span class="tag">載重組合</span><span class="tag">ACI</span><span class="tag">AISC</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/load-combo/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 分析</div>
+        <div><h3 class="card-title">梁剪力彎矩圖</h3><div class="card-title-en">Beam Shear &amp; Moment Diagram</div></div>
+        <p class="card-desc">輸入梁跨、支承條件與載重，即時繪製剪力圖與彎矩圖，顯示最大值位置與數值。</p>
+        <div class="card-tags"><span class="tag">剪力圖</span><span class="tag">彎矩圖</span><span class="tag">靜定梁</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/beam-shear-and-moment-diagram/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 分析</div>
+        <div><h3 class="card-title">傾角變位法分析</h3><div class="card-title-en">Slope Deflection Method</div></div>
+        <p class="card-desc">以傾角變位法分析靜不定梁與框架，自動建立方程組求解各節點轉角與桿端彎矩。</p>
+        <div class="card-tags"><span class="tag">傾角變位法</span><span class="tag">靜不定</span><span class="tag">框架分析</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/SA_SlopeDeflectionMethod/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 地震風力</div>
+        <div><h3 class="card-title">地震風力簡易評估</h3><div class="card-title-en">Seismic &amp; Wind Simple Design</div></div>
+        <p class="card-desc">依台灣規範快速估算建築物地震力與風力設計基底剪力，輸出各樓層橫力分配。</p>
+        <div class="card-tags"><span class="tag">地震力</span><span class="tag">風力</span><span class="tag">基底剪力</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/seismic-wind-simple-design/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 基礎</div>
+        <div><h3 class="card-title">基礎承載力計算</h3><div class="card-title-en">Foundation Design</div></div>
+        <p class="card-desc">獨立基腳與聯合基腳承載力計算，輸入土壤參數與柱載重，驗算安全係數與沉陷量。</p>
+        <div class="card-tags"><span class="tag">基礎設計</span><span class="tag">承載力</span><span class="tag">沉陷量</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/foundation/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 4. 水利計算 ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 12 2 17a10 10 0 0 0 20 0C22 12 17.52 2 12 2z"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">水利計算</h2>
+        <span class="section-meta">2 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">雨水逕流與渠道水力分析工具</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">HYDRAULICS · 逕流</div>
+        <div><h3 class="card-title">雨水逕流計算</h3><div class="card-title-en">Stormwater Runoff</div></div>
+        <p class="card-desc">以合理化公式計算設計流量，輸入匯水面積、逕流係數與降雨強度，即時輸出排水設計參考。</p>
+        <div class="card-tags"><span class="tag">逕流係數</span><span class="tag">合理化公式</span><span class="tag">排水設計</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/runoff/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">HYDRAULICS · 渠道</div>
+        <div><h3 class="card-title">水力計算</h3><div class="card-title-en">Hydraulic Analysis</div></div>
+        <p class="card-desc">矩形、梯形、圓形斷面渠道水力計算，曼寧公式求流速與流量，含水面線分析。</p>
+        <div class="card-tags"><span class="tag">曼寧公式</span><span class="tag">渠道設計</span><span class="tag">水面線</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/hydraulics/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 5. 材料 & 數值工具 ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">材料 &amp; 數值工具</h2>
+        <span class="section-meta">2 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">鋼筋優化裁切、矩陣數值計算</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">MATERIAL · 鋼筋</div>
+        <div><h3 class="card-title">鋼筋裁切優化</h3><div class="card-title-en">Rebar Cutting Optimizer</div></div>
+        <p class="card-desc">輸入所需鋼筋規格與長度清單，以演算法求最佳裁切組合，最小化廢料損耗率。</p>
+        <div class="card-tags"><span class="tag">鋼筋裁切</span><span class="tag">廢料最小化</span><span class="tag">最佳化</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/rebar-optimize/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">MATH · 數值計算</div>
+        <div><h3 class="card-title">矩陣計算工具</h3><div class="card-title-en">Matrix Computing</div></div>
+        <p class="card-desc">支援矩陣加減乘、行列式、反矩陣、特徵值等操作，適合結構分析數值計算輔助。</p>
+        <div class="card-tags"><span class="tag">矩陣運算</span><span class="tag">反矩陣</span><span class="tag">特徵值</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/matrix-computing/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 6. 本機工具 Python ===== -->
+<section class="section">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">本機工具 · Python</h2>
+        <span class="section-meta">2 項 · 需下載執行</span>
+      </div>
+      <div class="section-desc">需下載至電腦端執行，點「取得程式碼」前往 GitHub 取得安裝說明</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#3572A5;"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-lang"><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
+          <span class="badge badge-py">本機執行</span>
+        </div>
+        <div class="card-cat">STEEL · 鋼構設計</div>
+        <div><h3 class="card-title">鋼構 LRFD 計算</h3><div class="card-title-en">Steel LRFD Calculator</div></div>
+        <p class="card-desc">依 AISC LRFD 規範計算鋼構件強度，支援 H 型鋼斷面資料庫，自動產出計算報告。</p>
+        <div class="card-tags"><span class="tag">AISC</span><span class="tag">LRFD</span><span class="tag">鋼構設計</span><span class="tag">Python</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#3572A5;"></span>本機 Python</span>
+        <a href="https://github.com/YJ-chen0830/steel-lrfd-calculator" target="_blank" rel="noopener" class="btn-code">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+          取得程式碼
+        </a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#3572A5;"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-lang"><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
+          <span class="badge badge-py">本機執行</span>
+        </div>
+        <div class="card-cat">STRUCTURE · 地震</div>
+        <div><h3 class="card-title">地震支架設計</h3><div class="card-title-en">Seismic Bracket Python</div></div>
+        <p class="card-desc">地震用支架結構計算 Python 工具，批次處理多組工況並輸出計算報告。</p>
+        <div class="card-tags"><span class="tag">地震支架</span><span class="tag">批次計算</span><span class="tag">Python</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#3572A5;"></span>本機 Python</span>
+        <a href="https://github.com/YJ-chen0830/seismic-bracket-py" target="_blank" rel="noopener" class="btn-code">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+          取得程式碼
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2025 Ju Hong Structural · 儒鴻結構 &nbsp;|&nbsp;
+    <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener">☕ 贊助支持</a> &nbsp;|&nbsp;
+    <a href="https://github.com/YJ-chen0830" target="_blank" rel="noopener">GitHub</a>
+  </p>
+  <p style="margin-top:6px;font-size:11px;">工具均免費使用；如果覺得有幫助，歡迎小額贊助讓開發持續進行。</p>
+</footer>
+
+</body>
+</html>
