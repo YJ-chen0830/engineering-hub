@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>專案工作流中心 | JRH Engineering Hub</title>
+<style>
+  :root{--navy:#0b1f3a;--navy2:#13284a;--gold:#c9a14a;--gold2:#e0bf6e;--bg:#f5f3ee;--ink:#1c2530;--line:#d8d2c2;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Noto Sans TC","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#f5f3ee;padding:28px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  header h1{margin:0;font-size:22px;}
+  header span{color:var(--gold2);font-size:13px;display:block;margin-top:4px;}
+  header a{color:var(--gold2);font-size:13px;text-decoration:none;border:1px solid var(--gold);border-radius:7px;padding:8px 16px;}
+  header a:hover{background:rgba(201,161,74,.15);}
+  main{max-width:900px;margin:0 auto;padding:28px 20px 60px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:20px;}
+  .card h2{font-size:14.5px;margin:0 0 18px;color:var(--navy);font-weight:700;border-bottom:2px solid var(--gold);padding-bottom:10px;}
+  select{padding:9px 12px;border:1.5px solid var(--line);border-radius:7px;font-size:14px;background:#fafaf8;min-width:220px;}
+  select:focus{outline:none;border-color:var(--gold);}
+  .proj-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .progress-wrap{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;}
+  .progress-bar{flex:1;height:10px;background:#eee;border-radius:5px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:5px;transition:width .3s;}
+  .progress-text{font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;}
+  .tool-list{display:grid;gap:10px;}
+  .tool-row{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:9px;padding:13px 16px;background:#fafaf8;}
+  .tool-row.done{background:#f0f7f1;border-color:#bcd9c2;}
+  .tool-status{font-size:20px;width:28px;text-align:center;}
+  .tool-info{flex:1;}
+  .tool-name{font-size:14px;font-weight:700;color:var(--navy);}
+  .tool-date{font-size:11.5px;color:#888;margin-top:2px;}
+  .tool-open{padding:8px 18px;border:none;border-radius:7px;background:var(--navy);color:#fff;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;}
+  .tool-open:hover{background:var(--navy2);}
+  .tool-row.done .tool-open{background:var(--gold);color:var(--navy);}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .btn{padding:10px 18px;border:none;border-radius:7px;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .btn-navy{background:var(--navy);color:#fff;}
+  .btn-gold{background:var(--gold);color:var(--navy);}
+  .btn-line{background:#fff;border:1.5px solid var(--line);color:#555;}
+  .btn:hover{filter:brightness(1.08);}
+  .note{font-size:11.5px;color:#999;margin-top:14px;line-height:1.75;background:#f9f7f2;border-radius:6px;padding:9px 12px;}
+  .empty{color:#999;font-size:13.5px;text-align:center;padding:30px 10px;line-height:2;}
+  .empty a{color:var(--navy);font-weight:700;}
+  table{width:100%;border-collapse:collapse;margin-top:10px;}
+  th{background:var(--navy);color:#f5f3ee;font-weight:600;font-size:12px;padding:9px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);}
+  #printArea{display:none;}
+  @media print{
+    header,.no-print{display:none!important;}
+    body{background:#fff;font-size:9pt;}
+    main{padding:0;max-width:100%;}
+    .card{box-shadow:none;border:none;padding:0;}
+    #printArea{display:block!important;}
+    #screenArea{display:none!important;}
+    h2.print-title{font-size:14pt;color:#0b1f3a;text-align:center;margin:10pt 0 4pt;}
+    .print-sub{text-align:center;font-size:10pt;color:#555;margin-bottom:14pt;}
+    table{border:1pt solid #999;}
+    th{font-size:9pt!important;padding:6pt 8pt!important;background:#0b1f3a!important;color:#fff!important;}
+    td{font-size:9.5pt!important;padding:6pt 8pt!important;border:1pt solid #ccc!important;}
+    @page{margin:18mm 15mm;size:A4;}
+  }
+</style>
+<script src="https://yj-chen0830.github.io/jrh-core/jrh-core.js?v=1" defer></script>
+</head>
+<body data-tool="wf">
+<header>
+  <div>
+    <h1>📁 專案工作流中心</h1>
+    <span>Project Workflow · 一案多計算書進度管理</span>
+  </div>
+  <a href="https://yj-chen0830.github.io/engineering-hub/">← 回工具中心</a>
+</header>
+<main>
+
+<div id="screenArea">
+<div class="card no-print">
+  <h2>目前專案</h2>
+  <div class="proj-row">
+    <select id="projSel"></select>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <span class="progress-text" id="progText">0 / 0</span>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-gold" onclick="printChecklist()">🖨 列印檢核總表</button>
+    <button class="btn btn-navy" onclick="exportJSON()">⬇ 匯出專案 JSON</button>
+    <button class="btn btn-line" onclick="document.getElementById('impFile').click()">⬆ 匯入專案 JSON</button>
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importJSON(this)">
+  </div>
+  <div class="note">
+    專案資料儲存在本瀏覽器（localStorage）。換電腦或瀏覽器時，用「匯出 / 匯入」搬移全部專案與進度。<br>
+    在各工具填好專案資訊按「💾 儲存專案」後，這裡就會出現該專案。
+  </div>
+</div>
+
+<div class="card">
+  <h2>計算書清單</h2>
+  <div class="tool-list" id="toolList"></div>
+</div>
+</div>
+
+<div id="printArea">
+  <h2 class="print-title" id="pt-title">專案計算書檢核總表</h2>
+  <div class="print-sub" id="pt-sub"></div>
+  <table>
+    <thead><tr><th style="width:8%">項次</th><th>計算書名稱</th><th style="width:18%">狀態</th><th style="width:20%">產出日期</th><th style="width:20%">備註</th></tr></thead>
+    <tbody id="pt-body"></tbody>
+  </table>
+  <div style="margin-top:20pt;font-size:8pt;color:#888;">本表由 JRH Engineering Hub 專案工作流中心產出 · https://yj-chen0830.github.io/engineering-hub/</div>
+</div>
+
+</main>
+<script>
+var TOOLS=[
+  {code:'sc', name:'施工架施工計畫計算書', url:'https://yj-chen0830.github.io/scaffold/'},
+  {code:'fw', name:'模板支撐施工計畫計算書', url:'https://yj-chen0830.github.io/formwork/'},
+  {code:'ro', name:'逕流廢水削減計畫計算書', url:'https://yj-chen0830.github.io/runoff/'},
+  {code:'rb', name:'鋼筋算料最佳化計算書', url:'https://yj-chen0830.github.io/rebar-optimize/'},
+  {code:'fn', name:'基礎承載力估算計算書', url:'https://yj-chen0830.github.io/foundation/'},
+  {code:'hyd',name:'一維水理分析計算書', url:'https://yj-chen0830.github.io/hydraulics/'}
+];
+function getJSON(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch(e){return{};}}
+function currentProj(){return document.getElementById('projSel').value;}
+
+function refreshProjects(){
+  var projects=Object.keys(getJSON('jrh_projects')).sort();
+  var sel=document.getElementById('projSel');
+  var keep=sel.value;
+  if(!projects.length){
+    sel.innerHTML='<option value="">（尚無已存專案）</option>';
+  }else{
+    sel.innerHTML=projects.map(function(n){return '<option>'+n.replace(/</g,'&lt;')+'</option>';}).join('');
+    if(keep&&projects.indexOf(keep)>=0)sel.value=keep;
+  }
+  render();
+}
+
+function render(){
+  var proj=currentProj();
+  var wf=getJSON('jrh_wf')[proj]||{};
+  var list=document.getElementById('toolList');
+  if(!proj){
+    list.innerHTML='<div class="empty">尚未建立任何專案。<br>請先到任一工具（如 <a href="https://yj-chen0830.github.io/scaffold/">施工架計算</a>）填寫專案資訊並按「💾 儲存專案」。</div>';
+    document.getElementById('progFill').style.width='0%';
+    document.getElementById('progText').textContent='0 / '+TOOLS.length;
+    return;
+  }
+  var done=0;
+  list.innerHTML=TOOLS.map(function(t){
+    var rec=wf[t.code];
+    if(rec)done++;
+    var href=t.url+'?proj='+encodeURIComponent(proj);
+    return '<div class="tool-row'+(rec?' done':'')+'">'+
+      '<div class="tool-status">'+(rec?'✅':'⬜')+'</div>'+
+      '<div class="tool-info"><div class="tool-name">'+t.name+'</div>'+
+      '<div class="tool-date">'+(rec?'已產出 · '+rec.date:'尚未產出')+'</div></div>'+
+      '<a class="tool-open" href="'+href+'" target="_blank" rel="noopener">'+(rec?'重新開啟':'開始計算')+' →</a>'+
+      '</div>';
+  }).join('');
+  var pct=Math.round(done/TOOLS.length*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progText').textContent=done+' / '+TOOLS.length;
+}
+
+function printChecklist(){
+  var proj=currentProj();
+  if(!proj){alert('請先選擇專案。');return;}
+  var wf=getJSON('jrh_wf')[proj]||{};
+  var projData=(getJSON('jrh_projects')[proj])||{};
+  document.getElementById('pt-title').textContent=proj+'　計算書檢核總表';
+  var sub=[];
+  if(projData['pj-loc'])sub.push('工程地點：'+projData['pj-loc']);
+  if(projData['pj-contractor'])sub.push('承造廠商：'+projData['pj-contractor']);
+  var d=new Date();
+  sub.push('產表日期：'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+  document.getElementById('pt-sub').textContent=sub.join('　｜　');
+  document.getElementById('pt-body').innerHTML=TOOLS.map(function(t,i){
+    var rec=wf[t.code];
+    return '<tr><td>'+(i+1)+'</td><td>'+t.name+'</td><td>'+(rec?'✔ 已產出':'－ 未產出')+'</td><td>'+(rec?rec.date:'')+'</td><td></td></tr>';
+  }).join('');
+  var old=document.title;
+  document.title=proj+'_計算書檢核總表';
+  window.addEventListener('afterprint',function(){document.title=old;},{once:true});
+  window.print();
+}
+
+function exportJSON(){
+  var data={
+    exported:new Date().toISOString(),
+    jrh_projects:getJSON('jrh_projects'),
+    jrh_wf:getJSON('jrh_wf')
+  };
+  var blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='jrh-projects-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJSON(input){
+  var file=input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      var data=JSON.parse(reader.result);
+      if(!data.jrh_projects)throw new Error('格式不符');
+      var cur=getJSON('jrh_projects');
+      Object.keys(data.jrh_projects).forEach(function(k){cur[k]=data.jrh_projects[k];});
+      localStorage.setItem('jrh_projects',JSON.stringify(cur));
+      var curWf=getJSON('jrh_wf');
+      Object.keys(data.jrh_wf||{}).forEach(function(k){
+        curWf[k]=Object.assign(curWf[k]||{},data.jrh_wf[k]);
+      });
+      localStorage.setItem('jrh_wf',JSON.stringify(curWf));
+      refreshProjects();
+      alert('匯入完成！共 '+Object.keys(data.jrh_projects).length+' 個專案（同名專案已覆蓋，進度已合併）。');
+    }catch(e){alert('匯入失敗：'+e.message);}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('projSel').addEventListener('change',render);
+window.addEventListener('storage',refreshProjects);
+window.addEventListener('pageshow',refreshProjects);
+refreshProjects();
+</script>
+</body>
+</html>
