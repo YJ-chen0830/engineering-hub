@@ -114,12 +114,20 @@
 </main>
 <script>
 var TOOLS=[
+  {code:'pb', name:'工程計畫書（Plan Builder）', url:'https://yj-chen0830.github.io/Plan-Builder/'},
   {code:'sc', name:'施工架施工計畫計算書', url:'https://yj-chen0830.github.io/scaffold/'},
   {code:'fw', name:'模板支撐施工計畫計算書', url:'https://yj-chen0830.github.io/formwork/'},
   {code:'ro', name:'逕流廢水削減計畫計算書', url:'https://yj-chen0830.github.io/runoff/'},
   {code:'rb', name:'鋼筋算料最佳化計算書', url:'https://yj-chen0830.github.io/rebar-optimize/'},
   {code:'fn', name:'基礎承載力估算計算書', url:'https://yj-chen0830.github.io/foundation/'},
-  {code:'hyd',name:'一維水理分析計算書', url:'https://yj-chen0830.github.io/hydraulics/'}
+  {code:'hyd',name:'一維水理分析計算書', url:'https://yj-chen0830.github.io/hydraulics/'},
+  {code:'lc', name:'載重組合計算書', url:'https://yj-chen0830.github.io/load-combo/'},
+  {code:'sw', name:'地震風力簡易評估計算書', url:'https://yj-chen0830.github.io/seismic-wind-simple-design/'},
+  {code:'bsm',name:'梁剪力彎矩圖計算書', url:'https://yj-chen0830.github.io/beam-shear-and-moment-diagram/'},
+  {code:'rcb',name:'RC 梁斷面設計計算書', url:'https://yj-chen0830.github.io/RC-Beam-Steel-Design/'},
+  {code:'rcd',name:'RC 梁撓度計算書', url:'https://yj-chen0830.github.io/RC-Beams-deflection/'},
+  {code:'rcpm',name:'RC 柱 P-M 互動圖計算書', url:'https://yj-chen0830.github.io/RC-Column-PM-Interaction/'},
+  {code:'spl',name:'鋼筋搭接長度計算書', url:'https://yj-chen0830.github.io/rebar-splice.html/'}
 ];
 function getJSON(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch(e){return{};}}
 function currentProj(){return document.getElementById('projSel').value;}
