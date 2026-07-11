@@ -132,7 +132,9 @@ var TOOLS=[
   {code:'rcd',name:'RC 梁撓度計算書', url:'https://yj-chen0830.github.io/RC-Beams-deflection/'},
   {code:'rcpm',name:'RC 柱 P-M 互動圖計算書', url:'https://yj-chen0830.github.io/RC-Column-PM-Interaction/'},
   {code:'spl',name:'鋼筋搭接長度計算書', url:'https://yj-chen0830.github.io/rebar-splice.html/'},
-  {code:'stc',name:'鋼構接合計算書', url:'https://yj-chen0830.github.io/steel-connection/'}
+  {code:'stc',name:'鋼構接合計算書', url:'https://yj-chen0830.github.io/steel-connection/'},
+  {code:'dwt',name:'降水計畫計算書', url:'https://yj-chen0830.github.io/dewatering/'},
+  {code:'dr', name:'雨水下水道及揚程計算書', url:'https://yj-chen0830.github.io/drainage/'}
 ];
 function getJSON(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch(e){return{};}}
 function currentProj(){return document.getElementById('projSel').value;}
