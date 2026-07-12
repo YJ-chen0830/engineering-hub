@@ -34,7 +34,7 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 .brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;}
 .brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
 .nav-btns{display:flex;gap:10px;}
-.nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;}
+.nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .nav-btn:hover{background:#F8F6F0;border-color:#8C8576;}
 
 /* ── HERO ── */
@@ -50,6 +50,29 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 .stat-num{font-family:"Archivo",sans-serif;font-size:32px;font-weight:700;color:#fff;line-height:1;}
 .stat-label{font-size:12px;color:#8AA8CE;margin-top:4px;}
 .stat-div{width:1px;background:rgba(255,255,255,.14);}
+
+/* ── TOOLBAR (search + category filter) ── */
+.toolbar{position:sticky;top:0;z-index:15;background:rgba(248,246,240,.94);backdrop-filter:blur(8px);border-bottom:1px solid #E2DDD1;}
+.toolbar-inner{max-width:1200px;margin:0 auto;padding:16px 40px;display:flex;flex-direction:column;gap:12px;}
+.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #CBC5B6;border-radius:6px;padding:0 14px;height:44px;max-width:480px;transition:border-color 160ms,box-shadow 160ms;}
+.search-box:focus-within{border-color:#9A7B2A;box-shadow:0 0 0 3px rgba(154,123,42,.13);}
+.search-box svg{flex-shrink:0;color:#8C8576;}
+.search-box input{flex:1;border:none;outline:none;background:transparent;font-family:"Noto Sans TC",sans-serif;font-size:14px;color:#211F19;min-width:0;}
+.search-box input::placeholder{color:#ADA796;}
+.search-kbd{flex-shrink:0;font-family:"Archivo",sans-serif;font-size:11px;color:#ADA796;border:1px solid #E2DDD1;border-radius:4px;padding:2px 6px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;border:1px solid #CBC5B6;background:#fff;color:#4B473C;font-family:"Noto Sans TC",sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;transition:all 160ms;white-space:nowrap;}
+.chip:hover{border-color:#9A7B2A;color:#0A1A33;}
+.chip.active{background:#0A1A33;border-color:#0A1A33;color:#fff;}
+.search-result-count{font-family:"Archivo",sans-serif;font-size:12px;color:#8C8576;white-space:nowrap;}
+.no-results{display:none;text-align:center;padding:60px 20px;color:#8C8576;}
+.no-results.show{display:block;}
+.no-results-title{font-family:"Noto Serif TC",serif;font-size:18px;color:#0A1A33;margin-bottom:8px;}
+@media(max-width:600px){
+  .toolbar-inner{padding:12px 18px;}
+  .search-box{max-width:none;}
+  .search-kbd{display:none;}
+}
 
 /* ── MAIN ── */
 main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
@@ -155,10 +178,36 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </div>
 </section>
 
+<!-- ── TOOLBAR: SEARCH + CATEGORY FILTER ── -->
+<div class="toolbar" id="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="toolSearch" placeholder="搜尋工具名稱、標籤、關鍵字…" autocomplete="off">
+      <span class="search-kbd">/</span>
+      <span class="search-result-count" id="searchCount"></span>
+    </div>
+    <div class="chip-row" id="chipRow">
+      <button class="chip active" data-cat="all">全部 50</button>
+      <button class="chip" data-cat="progress">進度管理 5</button>
+      <button class="chip" data-cat="construction">施工計劃書 11</button>
+      <button class="chip" data-cat="structure">結構計算 22</button>
+      <button class="chip" data-cat="hydraulics">水利計算 6</button>
+      <button class="chip" data-cat="materials">材料 &amp; 數值工具 4</button>
+      <button class="chip" data-cat="python">本機工具 · Python 2</button>
+    </div>
+  </div>
+</div>
+
 <main>
 
+<div class="no-results" id="noResults">
+  <div class="no-results-title">找不到符合的工具</div>
+  <p>試試其他關鍵字，或清除搜尋條件查看全部 50 個工具。</p>
+</div>
+
 <!-- ===== 1. 進度管理 ===== -->
-<section class="section">
+<section class="section" data-cat="progress" id="sec-progress">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
@@ -252,7 +301,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 </section>
 
 <!-- ===== 2. 施工計劃書 ===== -->
-<section class="section">
+<section class="section" data-cat="construction" id="sec-construction">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
@@ -436,7 +485,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 </section>
 
 <!-- ===== 3. 結構計算 ===== -->
-<section class="section">
+<section class="section" data-cat="structure" id="sec-structure">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V10l7-7 7 7v10"/><path d="M9 20v-5h6v5"/></svg>
@@ -785,7 +834,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 </section>
 
 <!-- ===== 4. 水利計算 ===== -->
-<section class="section">
+<section class="section" data-cat="hydraulics" id="sec-hydraulics">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 12 2 17a10 10 0 0 0 20 0C22 12 17.52 2 12 2z"/></svg>
@@ -894,7 +943,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 </section>
 
 <!-- ===== 5. 材料 & 數值工具 ===== -->
-<section class="section">
+<section class="section" data-cat="materials" id="sec-materials">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -973,7 +1022,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 </section>
 
 <!-- ===== 6. 本機工具 Python ===== -->
-<section class="section">
+<section class="section" data-cat="python" id="sec-python">
   <div class="section-hdr">
     <div class="section-icon">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
@@ -1043,6 +1092,81 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </p>
   <p style="margin-top:6px;font-size:11px;">工具均免費使用；如果覺得有幫助，歡迎小額贊助讓開發持續進行。</p>
 </footer>
+
+<script>
+(function(){
+  var sections=Array.prototype.slice.call(document.querySelectorAll('.section[data-cat]'));
+  var searchInput=document.getElementById('toolSearch');
+  var chipRow=document.getElementById('chipRow');
+  var countEl=document.getElementById('searchCount');
+  var noResults=document.getElementById('noResults');
+  var TOTAL=50;
+  var activeCat='all';
+
+  sections.forEach(function(sec){
+    sec.querySelectorAll('.card').forEach(function(card){
+      var title=card.querySelector('.card-title');
+      var titleEn=card.querySelector('.card-title-en');
+      var desc=card.querySelector('.card-desc');
+      var tags=card.querySelectorAll('.tag');
+      var text=[title?title.textContent:'',titleEn?titleEn.textContent:'',desc?desc.textContent:''];
+      tags.forEach(function(t){text.push(t.textContent);});
+      card.dataset.search=text.join(' ').toLowerCase();
+    });
+  });
+
+  function setHeaderOffset(){
+    var header=document.querySelector('header');
+    var toolbar=document.getElementById('toolbar');
+    if(header&&toolbar)toolbar.style.top=header.offsetHeight+'px';
+  }
+
+  function applyFilters(){
+    var q=searchInput.value.trim().toLowerCase();
+    var visibleTotal=0;
+    sections.forEach(function(sec){
+      var catMatch=(activeCat==='all'||sec.dataset.cat===activeCat);
+      var cards=sec.querySelectorAll('.card');
+      var visibleInSec=0;
+      cards.forEach(function(card){
+        var match=catMatch&&(!q||card.dataset.search.indexOf(q)>=0);
+        card.style.display=match?'':'none';
+        if(match)visibleInSec++;
+      });
+      sec.style.display=(catMatch&&visibleInSec>0)?'':'none';
+      visibleTotal+=visibleInSec;
+    });
+    countEl.textContent=(q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+TOTAL+' 項工具'):'';
+    noResults.classList.toggle('show',visibleTotal===0);
+  }
+
+  searchInput.addEventListener('input',applyFilters);
+
+  chipRow.addEventListener('click',function(e){
+    var btn=e.target.closest('.chip');
+    if(!btn)return;
+    chipRow.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
+    btn.classList.add('active');
+    activeCat=btn.dataset.cat;
+    applyFilters();
+  });
+
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(e.key==='/'&&tag!=='input'&&tag!=='textarea'){
+      e.preventDefault();
+      searchInput.focus();
+    }else if(e.key==='Escape'&&document.activeElement===searchInput){
+      searchInput.value='';
+      applyFilters();
+      searchInput.blur();
+    }
+  });
+
+  setHeaderOffset();
+  window.addEventListener('resize',setHeaderOffset);
+})();
+</script>
 
 </body>
 </html>
