@@ -42,6 +42,17 @@
   .note{font-size:11.5px;color:#999;margin-top:14px;line-height:1.75;background:#f9f7f2;border-radius:6px;padding:9px 12px;}
   .empty{color:#999;font-size:13.5px;text-align:center;padding:30px 10px;line-height:2;}
   .empty a{color:var(--navy);font-weight:700;}
+  .chain-card{border:1px solid var(--line);border-radius:9px;padding:15px 17px;background:#fafaf8;margin-bottom:12px;}
+  .chain-card:last-child{margin-bottom:0;}
+  .chain-title{font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+  .chain-desc{font-size:12px;color:#777;margin-bottom:11px;line-height:1.6;}
+  .chain-flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+  .chain-chip{display:inline-block;padding:6px 13px;border-radius:999px;background:#fff;border:1.5px solid var(--navy);color:var(--navy);font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;transition:all 140ms;}
+  .chain-chip:hover{background:var(--navy);color:#fff;}
+  .chain-chip.hub{border-style:dashed;border-color:var(--gold);color:#8a6d1f;}
+  .chain-chip.hub:hover{background:var(--gold);color:var(--navy);}
+  .chain-arrow{color:var(--gold);font-size:15px;flex-shrink:0;}
+  .chain-fan{display:flex;flex-wrap:wrap;gap:8px;padding-left:4px;border-left:2px dashed var(--line);margin-left:2px;}
   table{width:100%;border-collapse:collapse;margin-top:10px;}
   th{background:var(--navy);color:#f5f3ee;font-weight:600;font-size:12px;padding:9px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);}
@@ -93,6 +104,98 @@
     專案資料儲存在本瀏覽器（localStorage）。換電腦或瀏覽器時，用「匯出 / 匯入」搬移全部專案與進度。<br>
     在各工具填好專案資訊按「💾 儲存專案」後，這裡就會出現該專案。
   </div>
+</div>
+
+<div class="card no-print">
+  <h2>建議工作流程 · 組合技</h2>
+
+  <div class="chain-card">
+    <div class="chain-title">💧 基地排水與保水規劃</div>
+    <div class="chain-desc">從逕流量估算一路串到法規保水量檢核，四項工具依序銜接同一場址的水理設計。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/runoff/" target="_blank" rel="noopener">逕流廢水削減計畫</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/drainage/" target="_blank" rel="noopener">雨水下水道及揚程</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/detention-pond/" target="_blank" rel="noopener">雨水滯洪池容量設計</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/site-retention-design/" target="_blank" rel="noopener">基地保水設計</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">📅 進度管控三部曲</div>
+    <div class="chain-desc">先排網狀圖抓出關鍵路徑，再檢視尖峰人力負荷，最後評估趕工成本是否划算。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/adm-and-Scurve/" target="_blank" rel="noopener">進度網狀圖與S曲線</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/resource-loading/" target="_blank" rel="noopener">資源負荷計算</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/schedule-crashing/" target="_blank" rel="noopener">工期趕工成本分析</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">🕳️ 大地降水鏈</div>
+    <div class="chain-desc">先由現場抽水試驗反算含水層參數，再據以設計井點降水系統。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/pumping-test-analysis/" target="_blank" rel="noopener">抽水試驗分析</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/dewatering/" target="_blank" rel="noopener">降水計畫</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">🏗️ 基礎沉陷鏈</div>
+    <div class="chain-desc">群樁效率折減後的容許承載力確認無虞後，接續估算長期壓密沉陷量。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/pile-group-settlement/" target="_blank" rel="noopener">基樁群樁效率與沉陷</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/settlement-calc/" target="_blank" rel="noopener">地層壓密沉陷量估算</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">📐 結構分析 → RC 設計</div>
+    <div class="chain-desc">先求出梁的剪力彎矩圖，再進行斷面配筋設計與撓度檢核。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/beam-shear-and-moment-diagram/" target="_blank" rel="noopener">梁剪力彎矩圖</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/RC-Beam-Steel-Design/" target="_blank" rel="noopener">RC 梁斷面設計</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/RC-Beams-deflection/" target="_blank" rel="noopener">RC 梁撓度計算</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">🔩 桁架分析 → 鋼構接合設計</div>
+    <div class="chain-desc">桁架分析求出各桿件內力後，接續進行接點與螺栓群的接合設計。</div>
+    <div class="chain-flow">
+      <a class="chain-chip" href="https://yj-chen0830.github.io/truss-analysis/" target="_blank" rel="noopener">桁架分析</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/steel-connection/" target="_blank" rel="noopener">鋼構接合計算</a>
+      <span class="chain-arrow">→</span>
+      <a class="chain-chip" href="https://yj-chen0830.github.io/bolt-group-eccentric/" target="_blank" rel="noopener">螺栓群偏心接合分析</a>
+    </div>
+  </div>
+
+  <div class="chain-card">
+    <div class="chain-title">⚖️ 載重組合為結構設計主線</div>
+    <div class="chain-desc">先完成載重組合計算，其結果是以下各結構設計工具共同的輸入條件。</div>
+    <div class="chain-flow">
+      <a class="chain-chip hub" href="https://yj-chen0830.github.io/load-combo/" target="_blank" rel="noopener">載重組合計算</a>
+      <span class="chain-arrow">⇒</span>
+      <div class="chain-fan">
+        <a class="chain-chip" href="https://yj-chen0830.github.io/RC-Beam-Steel-Design/" target="_blank" rel="noopener">RC 梁斷面設計</a>
+        <a class="chain-chip" href="https://yj-chen0830.github.io/RC-Column-PM-Interaction/" target="_blank" rel="noopener">RC 柱 P-M 互動圖</a>
+        <a class="chain-chip" href="https://yj-chen0830.github.io/rc-shear-wall/" target="_blank" rel="noopener">RC 剪力牆設計</a>
+        <a class="chain-chip" href="https://yj-chen0830.github.io/steel-connection/" target="_blank" rel="noopener">鋼構接合計算</a>
+        <a class="chain-chip" href="https://yj-chen0830.github.io/retaining-wall/" target="_blank" rel="noopener">擋土牆設計</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">這些是常見的多工具串接情境，依實際案例彈性調整順序即可；點擊任一節點即可直接開啟該工具。</div>
 </div>
 
 <div class="card">
