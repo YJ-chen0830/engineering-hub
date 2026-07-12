@@ -145,7 +145,20 @@ var TOOLS=[
   {code:'trs',name:'桁架分析計算書', url:'https://yj-chen0830.github.io/truss-analysis/'},
   {code:'beg',name:'螺栓群偏心接合分析計算書', url:'https://yj-chen0830.github.io/bolt-group-eccentric/'},
   {code:'ew', name:'土方開挖回填計算書', url:'https://yj-chen0830.github.io/earthwork-volume/'},
-  {code:'dp', name:'雨水滯洪池容量設計計算書', url:'https://yj-chen0830.github.io/detention-pond/'}
+  {code:'dp', name:'雨水滯洪池容量設計計算書', url:'https://yj-chen0830.github.io/detention-pond/'},
+  {code:'bpd',name:'鋼柱柱腳基板設計計算書', url:'https://yj-chen0830.github.io/base-plate-design/'},
+  {code:'pgs',name:'基樁群樁效率與沉陷計算書', url:'https://yj-chen0830.github.io/pile-group-settlement/'},
+  {code:'abd',name:'混凝土錨栓設計計算書', url:'https://yj-chen0830.github.io/anchor-bolt-design/'},
+  {code:'pta',name:'抽水試驗分析計算書', url:'https://yj-chen0830.github.io/pumping-test-analysis/'},
+  {code:'rl', name:'資源負荷計算書', url:'https://yj-chen0830.github.io/resource-loading/'},
+  {code:'scr',name:'工期趕工成本分析計算書', url:'https://yj-chen0830.github.io/schedule-crashing/'},
+  {code:'twd',name:'木結構梁設計計算書', url:'https://yj-chen0830.github.io/timber-beam-design/'},
+  {code:'sor',name:'樓板開孔補強設計計算書', url:'https://yj-chen0830.github.io/slab-opening-reinforcement/'},
+  {code:'srd',name:'基地保水設計計算書', url:'https://yj-chen0830.github.io/site-retention-design/'},
+  {code:'see',name:'土壤沖蝕與泥砂生產量估算計算書', url:'https://yj-chen0830.github.io/soil-erosion-estimate/'},
+  {code:'tcb',name:'塔式起重機基礎反力計算書', url:'https://yj-chen0830.github.io/tower-crane-base/'},
+  {code:'gtd',name:'灌漿配比與數量計算書', url:'https://yj-chen0830.github.io/grouting-design/'},
+  {code:'cps',name:'混凝土澆置排程估算計算書', url:'https://yj-chen0830.github.io/concrete-pour-schedule/'}
 ];
 function getJSON(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch(e){return{};}}
 function currentProj(){return document.getElementById('projSel').value;}
