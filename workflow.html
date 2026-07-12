@@ -140,7 +140,12 @@ var TOOLS=[
   {code:'slb',name:'RC 樓板設計計算書', url:'https://yj-chen0830.github.io/rc-slab-design/'},
   {code:'rw', name:'擋土牆設計計算書', url:'https://yj-chen0830.github.io/retaining-wall/'},
   {code:'ssb',name:'邊坡穩定分析計算書', url:'https://yj-chen0830.github.io/slope-stability/'},
-  {code:'stl',name:'地層壓密沉陷量估算計算書', url:'https://yj-chen0830.github.io/settlement-calc/'}
+  {code:'stl',name:'地層壓密沉陷量估算計算書', url:'https://yj-chen0830.github.io/settlement-calc/'},
+  {code:'rsw',name:'RC 剪力牆設計計算書', url:'https://yj-chen0830.github.io/rc-shear-wall/'},
+  {code:'trs',name:'桁架分析計算書', url:'https://yj-chen0830.github.io/truss-analysis/'},
+  {code:'beg',name:'螺栓群偏心接合分析計算書', url:'https://yj-chen0830.github.io/bolt-group-eccentric/'},
+  {code:'ew', name:'土方開挖回填計算書', url:'https://yj-chen0830.github.io/earthwork-volume/'},
+  {code:'dp', name:'雨水滯洪池容量設計計算書', url:'https://yj-chen0830.github.io/detention-pond/'}
 ];
 function getJSON(k){try{return JSON.parse(localStorage.getItem(k))||{};}catch(e){return{};}}
 function currentProj(){return document.getElementById('projSel').value;}
