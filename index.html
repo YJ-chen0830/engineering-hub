@@ -169,7 +169,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <span class="hero-tagline-text">願能讓複雜的工程，多一絲簡單的可能</span>
     </div>
     <div class="stats">
-      <div><div class="stat-num">50</div><div class="stat-label">計算工具</div></div>
+      <div><div class="stat-num">51</div><div class="stat-label">計算工具</div></div>
       <div class="stat-div"></div>
       <div><div class="stat-num">5</div><div class="stat-label">工具分類</div></div>
       <div class="stat-div"></div>
@@ -188,12 +188,12 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <span class="search-result-count" id="searchCount"></span>
     </div>
     <div class="chip-row" id="chipRow">
-      <button class="chip active" data-cat="all">全部 50</button>
+      <button class="chip active" data-cat="all">全部 51</button>
       <button class="chip" data-cat="progress">進度管理 5</button>
       <button class="chip" data-cat="construction">施工計劃書 11</button>
       <button class="chip" data-cat="structure">結構計算 22</button>
       <button class="chip" data-cat="hydraulics">水利計算 6</button>
-      <button class="chip" data-cat="materials">材料 &amp; 數值工具 4</button>
+      <button class="chip" data-cat="materials">材料 &amp; 數值工具 5</button>
       <button class="chip" data-cat="python">本機工具 · Python 2</button>
     </div>
   </div>
@@ -203,7 +203,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
 <div class="no-results" id="noResults">
   <div class="no-results-title">找不到符合的工具</div>
-  <p>試試其他關鍵字，或清除搜尋條件查看全部 50 個工具。</p>
+  <p>試試其他關鍵字，或清除搜尋條件查看全部 51 個工具。</p>
 </div>
 
 <!-- ===== 1. 進度管理 ===== -->
@@ -951,7 +951,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     <div>
       <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
         <h2 class="section-title">材料 &amp; 數值工具</h2>
-        <span class="section-meta">4 項 · 免費使用</span>
+        <span class="section-meta">5 項 · 免費使用</span>
       </div>
       <div class="section-desc">鋼筋優化裁切、矩陣數值計算</div>
     </div>
@@ -1015,6 +1015,21 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <div class="card-foot">
         <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
         <a href="https://yj-chen0830.github.io/weld-size-table/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">REFERENCE · 速查表</div>
+        <div><h3 class="card-title">螺栓強度速查表</h3><div class="card-title-en">Bolt Strength &amp; Capacity Reference</div></div>
+        <p class="card-desc">依 AISC 360 LRFD 計算 A325/A490 常用螺栓尺寸之單剪、雙剪與拉力設計強度速查表。</p>
+        <div class="card-tags"><span class="tag">螺栓強度</span><span class="tag">AISC 360</span><span class="tag">速查表</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/bolt-strength-table/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
       </div>
     </article>
 
@@ -1100,7 +1115,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   var chipRow=document.getElementById('chipRow');
   var countEl=document.getElementById('searchCount');
   var noResults=document.getElementById('noResults');
-  var TOTAL=50;
+  var TOTAL=51;
   var activeCat='all';
 
   sections.forEach(function(sec){
