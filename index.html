@@ -128,6 +128,46 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 /* ── FOOTER ── */
 footer{border-top:1px solid #E2DDD1;padding:26px 40px;text-align:center;font-size:13px;color:#ADA796;}
 footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
+
+/* ── AUTH / USER MENU ── */
+.user-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;border-radius:999px;border:1px solid #CBC5B6;background:#fff;font-family:"Noto Sans TC",sans-serif;font-size:13px;color:#143257;cursor:pointer;transition:all 160ms;}
+.user-chip:hover{border-color:#8C8576;background:#F8F6F0;}
+.user-chip-avatar{width:22px;height:22px;border-radius:999px;background:#0A1A33;color:#D9B96E;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,51,.55);z-index:100;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff;border-radius:8px;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(10,26,51,.28);}
+.modal-box.modal-wide{max-width:640px;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #E2DDD1;}
+.modal-hdr h3{font-family:"Noto Serif TC",serif;font-size:18px;color:#0A1A33;font-weight:600;}
+.modal-close{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:#8C8576;font-size:18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:#F8F6F0;color:#0A1A33;}
+.modal-body{padding:22px 24px;}
+.modal-body label{display:block;font-size:12.5px;font-weight:600;color:#4B473C;margin:14px 0 6px;}
+.modal-body label:first-child{margin-top:0;}
+.modal-body input,.modal-body select,.modal-body textarea{width:100%;padding:10px 12px;border:1px solid #CBC5B6;border-radius:5px;font-family:"Noto Sans TC",sans-serif;font-size:14px;color:#211F19;background:#fff;}
+.modal-body input:focus,.modal-body select:focus,.modal-body textarea:focus{outline:none;border-color:#9A7B2A;box-shadow:0 0 0 3px rgba(154,123,42,.13);}
+.modal-body .field-hint{font-size:11.5px;color:#8C8576;margin-top:4px;}
+.modal-row{display:flex;gap:12px;}
+.modal-row>div{flex:1;}
+.modal-error{display:none;background:#FBEAE6;border:1px solid #E3B3A6;color:#9A5A4B;font-size:12.5px;padding:8px 12px;border-radius:5px;margin-bottom:12px;}
+.modal-error.show{display:block;}
+.modal-submit{width:100%;padding:11px;border:none;border-radius:5px;background:#0A1A33;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;}
+.modal-submit:hover{filter:brightness(1.12);}
+.modal-divider{display:flex;align-items:center;gap:10px;margin:18px 0;color:#ADA796;font-size:12px;}
+.modal-divider::before,.modal-divider::after{content:'';flex:1;height:1px;background:#E2DDD1;}
+.oauth-btn{width:100%;padding:10px;border:1px solid #CBC5B6;border-radius:5px;background:#fff;color:#211F19;font-size:13.5px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:8px;}
+.oauth-btn:hover{background:#F8F6F0;}
+.modal-switch{text-align:center;font-size:12.5px;color:#8C8576;margin-top:16px;}
+.modal-switch a{color:#9A7B2A;font-weight:600;cursor:pointer;}
+.status-pill{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
+.status-private{background:#EFEBE2;color:#6B6557;}
+.status-pending{background:#F7EFDB;color:#7E641F;}
+.status-approved{background:#E7F0EA;color:#2E6B45;}
+.mine-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #EFEBE2;}
+.mine-row:last-child{border-bottom:none;}
+.mine-empty{text-align:center;color:#8C8576;font-size:13px;padding:30px 0;}
 </style>
 </head>
 <body>
@@ -154,6 +194,9 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
         GitHub
       </a>
+      <button type="button" id="addToolBtn" class="nav-btn" onclick="Tools.openAddModal()">＋ 新增工具</button>
+      <button type="button" id="mineBtn" class="nav-btn" onclick="Tools.openMineModal()">我的工具</button>
+      <button type="button" id="authSlot" class="nav-btn" onclick="Auth.onAuthSlotClick()">登入</button>
     </div>
   </div>
 </header>
@@ -1142,7 +1185,134 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </div>
 </section>
 
+<!-- ===== 動態工具（登入使用者提交、已核准者） ===== -->
+<section class="section" data-cat="dynamic" id="sec-dynamic" style="display:none;">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">社群新增工具</h2>
+        <span class="section-meta" id="dynamicMeta">0 項</span>
+      </div>
+      <div class="section-desc">使用者登入後提交、經核准公開的工具</div>
+    </div>
+  </div>
+  <div class="grid" id="dynamicGrid"></div>
+</section>
+
 </main>
+
+<!-- ===== 登入 / 註冊 Modal ===== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3 id="authModalTitle">登入</h3>
+      <button type="button" class="modal-close" onclick="Auth.closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-error" id="authError"></div>
+
+      <button type="button" class="oauth-btn" onclick="Auth.googleLogin()">
+        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4c-7.7 0-14.4 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.6C29.6 35 26.9 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.6 5.6C41.8 35.6 44 30.2 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+        使用 Google 登入
+      </button>
+      <button type="button" class="oauth-btn" onclick="Auth.facebookLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.97.93-1.97 1.89v2.25h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+        使用 Facebook 登入
+      </button>
+
+      <div class="modal-divider">或使用 email</div>
+
+      <label>Email</label>
+      <input type="email" id="authEmail" placeholder="you@example.com">
+      <label>密碼</label>
+      <input type="password" id="authPassword" placeholder="至少 8 碼">
+
+      <button type="button" class="modal-submit" id="authSubmitBtn" onclick="Auth.submitPassword()">登入</button>
+      <div class="modal-switch">
+        <span id="authSwitchText">還沒有帳號？</span>
+        <a onclick="Auth.toggleMode()" id="authSwitchLink">註冊一個</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 新增工具 Modal ===== -->
+<div class="modal-overlay" id="addToolModal">
+  <div class="modal-box modal-wide">
+    <div class="modal-hdr">
+      <h3>新增工具</h3>
+      <button type="button" class="modal-close" onclick="Tools.closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-error" id="addToolError"></div>
+
+      <label>工具名稱 *</label>
+      <input type="text" id="atTitle" placeholder="例如：基樁承載力計算">
+      <label>英文名稱</label>
+      <input type="text" id="atTitleEn" placeholder="Pile Capacity Calc">
+      <div class="modal-row">
+        <div>
+          <label>分類</label>
+          <input type="text" id="atCategory" list="atCatList" placeholder="選擇或自訂">
+          <datalist id="atCatList">
+            <option value="progress">進度管理</option>
+            <option value="construction">施工計劃書</option>
+            <option value="structure">結構計算</option>
+            <option value="hydraulics">水利計算</option>
+            <option value="materials">材料 & 數值工具</option>
+          </datalist>
+        </div>
+        <div>
+          <label>執行方式</label>
+          <select id="atKind" onchange="Tools.onKindChange()">
+            <option value="web">網頁版（瀏覽器直接開）</option>
+            <option value="cli">本機 Python · 指令稿</option>
+            <option value="lib">本機 Python · 套件</option>
+          </select>
+        </div>
+      </div>
+      <label>GitHub 連結 *</label>
+      <input type="text" id="atRepo" placeholder="https://github.com/USER/REPO">
+      <div id="atWebFields">
+        <label>開啟網址</label>
+        <input type="text" id="atUrl" placeholder="https://user.github.io/repo/（留空則開 GitHub）">
+      </div>
+      <div id="atLocalFields" class="modal-row" style="display:none;">
+        <div>
+          <label>安裝指令</label>
+          <input type="text" id="atInstall" placeholder="pip install -r requirements.txt">
+        </div>
+        <div>
+          <label>執行指令</label>
+          <input type="text" id="atCmd" placeholder="python main.py">
+        </div>
+      </div>
+      <label>說明</label>
+      <input type="text" id="atDesc" placeholder="這個工具做什麼、依據哪個規範">
+      <label>標籤（逗號分隔）</label>
+      <input type="text" id="atTags" placeholder="ACI 318-19, 基礎, 承載力">
+
+      <button type="button" class="modal-submit" onclick="Tools.submitAdd()">加入我的清單</button>
+      <div class="field-hint" style="margin-top:10px;text-align:center;">送出後為私人工具，僅你自己看得到（目前尚未提供公開送審功能）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 我的工具 Modal ===== -->
+<div class="modal-overlay" id="mineModal">
+  <div class="modal-box modal-wide">
+    <div class="modal-hdr">
+      <h3>我的工具</h3>
+      <button type="button" class="modal-close" onclick="Tools.closeMineModal()">✕</button>
+    </div>
+    <div class="modal-body" id="mineBody">
+      <div class="mine-empty">載入中…</div>
+    </div>
+  </div>
+</div>
 
 <footer>
   <p>© 2025 Ju Hong Structural · 儒鴻結構 &nbsp;|&nbsp;
@@ -1160,20 +1330,28 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   var chipRow=document.getElementById('chipRow');
   var countEl=document.getElementById('searchCount');
   var noResults=document.getElementById('noResults');
-  var TOTAL=54;
+  var BASE_TOTAL=54;
   var activeCat='all';
 
-  sections.forEach(function(sec){
-    sec.querySelectorAll('.card').forEach(function(card){
-      var title=card.querySelector('.card-title');
-      var titleEn=card.querySelector('.card-title-en');
-      var desc=card.querySelector('.card-desc');
-      var tags=card.querySelectorAll('.tag');
-      var text=[title?title.textContent:'',titleEn?titleEn.textContent:'',desc?desc.textContent:''];
-      tags.forEach(function(t){text.push(t.textContent);});
-      card.dataset.search=text.join(' ').toLowerCase();
+  function indexCards(){
+    sections.forEach(function(sec){
+      sec.querySelectorAll('.card').forEach(function(card){
+        var title=card.querySelector('.card-title');
+        var titleEn=card.querySelector('.card-title-en');
+        var desc=card.querySelector('.card-desc');
+        var tags=card.querySelectorAll('.tag');
+        var text=[title?title.textContent:'',titleEn?titleEn.textContent:'',desc?desc.textContent:''];
+        tags.forEach(function(t){text.push(t.textContent);});
+        card.dataset.search=text.join(' ').toLowerCase();
+      });
     });
-  });
+  }
+  indexCards();
+
+  function currentTotal(){
+    var dynCount=document.querySelectorAll('#dynamicGrid .card').length;
+    return BASE_TOTAL+dynCount;
+  }
 
   function setHeaderOffset(){
     var header=document.querySelector('header');
@@ -1196,7 +1374,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       sec.style.display=(catMatch&&visibleInSec>0)?'':'none';
       visibleTotal+=visibleInSec;
     });
-    countEl.textContent=(q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+TOTAL+' 項工具'):'';
+    countEl.textContent=(q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+currentTotal()+' 項工具'):'';
     noResults.classList.toggle('show',visibleTotal===0);
   }
 
@@ -1225,6 +1403,339 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
   setHeaderOffset();
   window.addEventListener('resize',setHeaderOffset);
+
+  // Exposed so dynamically-fetched (API-backed) tool cards, inserted after
+  // this script already ran, get indexed for search and their section's
+  // visibility recomputed — see Tools.renderDynamic() below.
+  window.HubSearch={rescan:function(){indexCards();applyFilters();}};
+})();
+</script>
+
+<!-- ===== Google Identity Services / Facebook SDK ===== -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+<script>
+(function(){
+  var API_BASE='https://cloud-sync-mvp-production.up.railway.app';
+
+  // Fill these in once the Google Cloud Console / Meta for Developers apps
+  // are set up — until then, the buttons show a friendly "not configured"
+  // message instead of erroring against an uninitialized SDK.
+  var GOOGLE_CLIENT_ID='';
+  var FACEBOOK_APP_ID='';
+
+  var TOKEN_KEY='ectr_token', EMAIL_KEY='ectr_email';
+
+  function getToken(){return localStorage.getItem(TOKEN_KEY);}
+  function getEmail(){return localStorage.getItem(EMAIL_KEY);}
+  function setSession(token,email){localStorage.setItem(TOKEN_KEY,token);localStorage.setItem(EMAIL_KEY,email);}
+  function clearSession(){localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(EMAIL_KEY);}
+  function isLoggedIn(){return !!getToken();}
+
+  // fetch wrapper: attaches the JWT if present, and clears the session on a
+  // 401 (expired/invalid token) so the header UI falls back to "登入".
+  function apiFetch(path,opts){
+    opts=opts||{};
+    opts.headers=opts.headers||{};
+    var token=getToken();
+    if(token)opts.headers['Authorization']='Bearer '+token;
+    return fetch(API_BASE+path,opts).then(function(res){
+      if(res.status===401&&token){clearSession();updateHeaderUI();}
+      return res;
+    });
+  }
+
+  function updateHeaderUI(){
+    var slot=document.getElementById('authSlot');
+    if(isLoggedIn()){
+      slot.textContent=getEmail();
+      slot.title='點一下登出';
+    }else{
+      slot.textContent='登入';
+      slot.title='';
+    }
+  }
+
+  // ── Auth modal ──
+  var authMode='login'; // 'login' | 'signup'
+
+  function openAuthModal(){
+    document.getElementById('authError').classList.remove('show');
+    document.getElementById('authEmail').value='';
+    document.getElementById('authPassword').value='';
+    document.getElementById('authModal').classList.add('show');
+  }
+  function closeAuthModal(){document.getElementById('authModal').classList.remove('show');}
+
+  function toggleAuthMode(){
+    authMode=authMode==='login'?'signup':'login';
+    document.getElementById('authModalTitle').textContent=authMode==='login'?'登入':'註冊';
+    document.getElementById('authSubmitBtn').textContent=authMode==='login'?'登入':'註冊';
+    document.getElementById('authSwitchText').textContent=authMode==='login'?'還沒有帳號？':'已經有帳號了？';
+    document.getElementById('authSwitchLink').textContent=authMode==='login'?'註冊一個':'直接登入';
+    document.getElementById('authError').classList.remove('show');
+  }
+
+  function showAuthError(msg){
+    var el=document.getElementById('authError');
+    el.textContent=msg;
+    el.classList.add('show');
+  }
+
+  function submitPassword(){
+    var email=document.getElementById('authEmail').value.trim();
+    var password=document.getElementById('authPassword').value;
+    if(!email||!password){showAuthError('請輸入 email 與密碼');return;}
+    var path=authMode==='login'?'/api/auth/login':'/api/auth/signup';
+    apiFetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:password})})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){showAuthError(r.data.error||'發生錯誤，請稍後再試');return;}
+        setSession(r.data.token,r.data.email);
+        updateHeaderUI();
+        closeAuthModal();
+        Tools.refreshDynamic();
+      })
+      .catch(function(){showAuthError('無法連線到伺服器');});
+  }
+
+  function onAuthSlotClick(){
+    if(isLoggedIn()){
+      clearSession();
+      updateHeaderUI();
+      Tools.refreshDynamic();
+      return;
+    }
+    authMode='login';
+    document.getElementById('authModalTitle').textContent='登入';
+    document.getElementById('authSubmitBtn').textContent='登入';
+    document.getElementById('authSwitchText').textContent='還沒有帳號？';
+    document.getElementById('authSwitchLink').textContent='註冊一個';
+    openAuthModal();
+  }
+
+  // ── Google login ──
+  var googleInited=false;
+  function handleGoogleCredentialResponse(response){
+    apiFetch('/api/auth/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:response.credential})})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){showAuthError(r.data.error||'Google 登入失敗');return;}
+        setSession(r.data.token,r.data.email);
+        updateHeaderUI();
+        closeAuthModal();
+        Tools.refreshDynamic();
+      })
+      .catch(function(){showAuthError('無法連線到伺服器');});
+  }
+  function googleLogin(){
+    if(!GOOGLE_CLIENT_ID){showAuthError('Google 登入尚未設定，請改用 email 登入');return;}
+    if(typeof google==='undefined'||!google.accounts){showAuthError('Google 登入元件尚未載入，請稍後再試');return;}
+    if(!googleInited){
+      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredentialResponse});
+      googleInited=true;
+    }
+    google.accounts.id.prompt();
+  }
+
+  // ── Facebook login ──
+  var fbInited=false;
+  function ensureFbInit(){
+    if(fbInited||typeof FB==='undefined')return;
+    FB.init({appId:FACEBOOK_APP_ID,cookie:true,xfbml:false,version:'v21.0'});
+    fbInited=true;
+  }
+  function facebookLogin(){
+    if(!FACEBOOK_APP_ID){showAuthError('Facebook 登入尚未設定，請改用 email 登入');return;}
+    if(typeof FB==='undefined'){showAuthError('Facebook 登入元件尚未載入，請稍後再試');return;}
+    ensureFbInit();
+    FB.login(function(response){
+      if(!response.authResponse){showAuthError('已取消 Facebook 登入');return;}
+      apiFetch('/api/auth/facebook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({accessToken:response.authResponse.accessToken})})
+        .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+        .then(function(r){
+          if(!r.ok){showAuthError(r.data.error||'Facebook 登入失敗');return;}
+          setSession(r.data.token,r.data.email);
+          updateHeaderUI();
+          closeAuthModal();
+          Tools.refreshDynamic();
+        })
+        .catch(function(){showAuthError('無法連線到伺服器');});
+    },{scope:'email'});
+  }
+
+  window.Auth={
+    openModal:openAuthModal,
+    closeModal:closeAuthModal,
+    toggleMode:toggleAuthMode,
+    submitPassword:submitPassword,
+    onAuthSlotClick:onAuthSlotClick,
+    googleLogin:googleLogin,
+    facebookLogin:facebookLogin,
+    isLoggedIn:isLoggedIn,
+    apiFetch:apiFetch
+  };
+
+  // ── Tools: submit / mine / dynamic public list ──
+  var CATEGORY_LABEL={progress:'進度管理',construction:'施工計劃書',structure:'結構計算',hydraulics:'水利計算',materials:'材料 & 數值工具'};
+
+  function openAddModal(){
+    if(!Auth.isLoggedIn()){
+      showAuthError('請先登入才能新增工具');
+      Auth.openModal();
+      return;
+    }
+    document.getElementById('addToolError').classList.remove('show');
+    ['atTitle','atTitleEn','atCategory','atRepo','atUrl','atInstall','atCmd','atDesc','atTags'].forEach(function(id){
+      document.getElementById(id).value='';
+    });
+    document.getElementById('atKind').value='web';
+    onKindChange();
+    document.getElementById('addToolModal').classList.add('show');
+  }
+  function closeAddModal(){document.getElementById('addToolModal').classList.remove('show');}
+
+  function onKindChange(){
+    var isWeb=document.getElementById('atKind').value==='web';
+    document.getElementById('atWebFields').style.display=isWeb?'':'none';
+    document.getElementById('atLocalFields').style.display=isWeb?'none':'flex';
+  }
+
+  function showAddToolError(msg){
+    var el=document.getElementById('addToolError');
+    el.textContent=msg;
+    el.classList.add('show');
+  }
+
+  function submitAdd(){
+    var title=document.getElementById('atTitle').value.trim();
+    var repo=document.getElementById('atRepo').value.trim();
+    if(!title){showAddToolError('請輸入工具名稱');return;}
+    if(!repo){showAddToolError('請輸入 GitHub 連結');return;}
+
+    var kind=document.getElementById('atKind').value;
+    var category=document.getElementById('atCategory').value.trim()||'materials';
+    var tags=document.getElementById('atTags').value.split(/[,，\s]+/).map(function(s){return s.trim();}).filter(Boolean);
+
+    var payload={
+      title:title,
+      titleEn:document.getElementById('atTitleEn').value.trim()||null,
+      category:category,
+      desc:document.getElementById('atDesc').value.trim()||null,
+      tags:tags,
+      lang:kind==='web'?'HTML':'Python',
+      kind:kind,
+      repo:repo,
+      url:kind==='web'?(document.getElementById('atUrl').value.trim()||repo):null,
+      install:kind==='web'?null:(document.getElementById('atInstall').value.trim()||'pip install -r requirements.txt'),
+      cmd:kind==='web'?null:(document.getElementById('atCmd').value.trim()||'python main.py')
+    };
+
+    Auth.apiFetch('/api/tools',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){showAddToolError(r.data.error||'新增失敗，請稍後再試');return;}
+        closeAddModal();
+        // Show the result directly in "我的工具" instead of a blocking
+        // alert() — the new tool is private, so this is the only place
+        // the submitter can actually see it right now.
+        openMineModal();
+      })
+      .catch(function(){showAddToolError('無法連線到伺服器');});
+  }
+
+  // ── 我的工具 ──
+  function openMineModal(){
+    if(!Auth.isLoggedIn()){
+      Auth.openModal();
+      return;
+    }
+    var body=document.getElementById('mineBody');
+    body.innerHTML='<div class="mine-empty">載入中…</div>';
+    document.getElementById('mineModal').classList.add('show');
+    Auth.apiFetch('/api/tools/mine')
+      .then(function(res){return res.json();})
+      .then(function(list){
+        if(!list.length){body.innerHTML='<div class="mine-empty">還沒有提交任何工具。</div>';return;}
+        var statusLabel={private:'私人',pending:'審核中',approved:'已上架'};
+        body.innerHTML=list.map(function(t){
+          return '<div class="mine-row">'
+            +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#8C8576;">'+escapeHtml(t.category||'')+'</div></div>'
+            +'<span class="status-pill status-'+t.status+'">'+(statusLabel[t.status]||t.status)+'</span>'
+            +'</div>';
+        }).join('');
+      })
+      .catch(function(){body.innerHTML='<div class="mine-empty">載入失敗，請稍後再試。</div>';});
+  }
+  function closeMineModal(){document.getElementById('mineModal').classList.remove('show');}
+
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // ── 動態公開工具（GET /api/tools，approved only，不需登入）──
+  function cardHtml(t){
+    var url=t.url||t.repo||'#';
+    var langLabel=t.lang||'HTML';
+    var langColor=langLabel==='Python'?'#3572A5':'#f1e05a';
+    return '<article class="card">'
+      +'<div class="card-seal" style="background:#C9A24A;"></div>'
+      +'<div class="card-body">'
+      +'<div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:'+langColor+';"></span>'+escapeHtml(langLabel)+'</span></div>'
+      +'<div class="card-cat">'+escapeHtml((CATEGORY_LABEL[t.category]||t.category||'').toUpperCase())+'</div>'
+      +'<div><h3 class="card-title">'+escapeHtml(t.title)+'</h3><div class="card-title-en">'+escapeHtml(t.titleEn||'')+'</div></div>'
+      +'<p class="card-desc">'+escapeHtml(t.desc||'')+'</p>'
+      +'<div class="card-tags">'+(t.tags||[]).map(function(tag){return '<span class="tag">'+escapeHtml(tag)+'</span>';}).join('')+'</div>'
+      +'</div>'
+      +'<div class="card-foot">'
+      +'<span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>'
+      +'<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>'
+      +'</div>'
+      +'</article>';
+  }
+
+  function renderDynamic(list){
+    var grid=document.getElementById('dynamicGrid');
+    var section=document.getElementById('sec-dynamic');
+    grid.innerHTML=list.map(cardHtml).join('');
+    document.getElementById('dynamicMeta').textContent=list.length+' 項';
+    section.style.display=list.length?'':'none';
+    if(window.HubSearch)window.HubSearch.rescan();
+  }
+
+  function refreshDynamic(){
+    fetch(API_BASE+'/api/tools')
+      .then(function(res){return res.json();})
+      .then(renderDynamic)
+      .catch(function(){/* silently skip — static 54 tools still work fine */});
+  }
+
+  window.Tools={
+    openAddModal:openAddModal,
+    closeAddModal:closeAddModal,
+    onKindChange:onKindChange,
+    submitAdd:submitAdd,
+    openMineModal:openMineModal,
+    closeMineModal:closeMineModal,
+    refreshDynamic:refreshDynamic
+  };
+
+  document.querySelectorAll('.modal-overlay').forEach(function(overlay){
+    overlay.addEventListener('click',function(e){
+      if(e.target===overlay)overlay.classList.remove('show');
+    });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      document.querySelectorAll('.modal-overlay.show').forEach(function(o){o.classList.remove('show');});
+    }
+  });
+
+  updateHeaderUI();
+  refreshDynamic();
 })();
 </script>
 
