@@ -91,11 +91,19 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 @media(max-width:600px){
   .grid{grid-template-columns:1fr;}
   .hero h1{font-size:28px;}
-  .nav{padding:12px 18px;}
+  .nav{padding:12px 18px;flex-wrap:wrap;row-gap:8px;}
   .hero-inner,.main-pad{padding-left:18px;padding-right:18px;}
   main{padding:24px 18px 60px;}
   .stats{gap:18px;}.stat-num{font-size:26px;}
-  .nav-btns .nav-btn:first-child{display:none;}
+  /* 專案工作流／贊助支持／GitHub already reachable from the footer —
+     hide them here so 新增工具／我的工具／登入 (the actual account
+     actions) have room instead of overflowing off-screen. */
+  .nav-btns .nav-btn:nth-child(1),
+  .nav-btns .nav-btn:nth-child(2),
+  .nav-btns .nav-btn:nth-child(3){display:none;}
+  .nav-btns{flex-wrap:wrap;gap:8px;row-gap:8px;justify-content:flex-end;}
+  .nav-btns .nav-btn{padding:7px 11px;font-size:12.5px;}
+  #authSlot{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;}
 }
 
 /* ── CARD ── */
