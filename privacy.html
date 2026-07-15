@@ -25,13 +25,16 @@ li{margin-bottom:4px;}
 <div class="wrap">
   <a class="back" href="index.html">← 返回工程計算中心</a>
   <h1>隱私權說明</h1>
-  <p class="updated">最後更新：2026-07-11</p>
+  <p class="updated">最後更新：2026-07-15</p>
 
-  <p>本頁說明「工程計算中心」（以下稱本站）及其所連結之各項計算工具，在您使用時蒐集哪些個人資料、如何使用，以及您可以如何行使自己的權利。</p>
+  <p>本頁說明「工程計算中心」（以下稱本站）及其所連結之各項計算工具、與本站的會員登入功能，在您使用時蒐集哪些個人資料、如何使用，以及您可以如何行使自己的權利。</p>
 
   <h2>一、蒐集的資料</h2>
   <ul>
-    <li><strong>Email 地址</strong>：部分工具在輸出 PDF / 計算書前，會請您留下 Email 才能繼續使用。</li>
+    <li><strong>Email 地址</strong>：部分工具在輸出 PDF / 計算書前，會請您留下 Email 才能繼續使用；本站首頁的登入/註冊功能也會使用您的 Email 作為帳號。</li>
+    <li><strong>密碼（雜湊後）</strong>：若您以 Email + 密碼方式註冊本站帳號，我們僅儲存密碼經加密雜湊運算後的結果，不會儲存或有能力還原您的原始密碼。</li>
+    <li><strong>第三方登入識別資訊</strong>：若您選擇「使用 Google 登入」或「使用 Facebook 登入」，我們會從該服務取得您已驗證的 Email 與一組不重複的帳號識別碼，用來建立或對應本站帳號，不會取得您的密碼。</li>
+    <li><strong>您主動提交的工具資訊</strong>：登入後使用「新增工具」功能時，您填寫的工具名稱、說明、GitHub 連結等內容。</li>
     <li><strong>功能興趣意向</strong>：Email 視窗中「是否對進階功能有興趣」的選填回答（是 / 否）。</li>
     <li><strong>意見回饋內容</strong>：您透過站上「意見回饋」功能主動送出的文字。</li>
     <li>本站<strong>不會</strong>主動蒐集您的計算輸入內容——各工具的計算資料僅儲存在您自己瀏覽器的 localStorage，不會回傳伺服器。</li>
@@ -39,23 +42,29 @@ li{margin-bottom:4px;}
 
   <h2>二、使用目的</h2>
   <ul>
+    <li>提供帳號登入、識別使用者身分</li>
+    <li>讓您管理自己新增/提交的工具</li>
     <li>新工具上線、重大更新的通知</li>
     <li>了解使用者對特定功能的需求，作為後續開發的參考</li>
     <li>回覆您主動提出的意見回饋</li>
   </ul>
-  <p>我們不會將您的 Email 用於前述目的以外的用途，也不會出售或提供給第三方行銷使用。</p>
+  <p>我們不會將您的 Email 或帳號資料用於前述目的以外的用途，也不會出售或提供給第三方行銷使用。</p>
 
   <h2>三、儲存方式</h2>
-  <p>資料透過 Google Apps Script 記錄於本站作者管理的 Google 試算表，作為輕量後端使用；您的 Email 同時會存放在您瀏覽器的 localStorage，以便同一瀏覽器下次造訪各工具時不需重複輸入。</p>
+  <p>工具意見回饋 / PDF 解鎖 email 等輕量資料透過 Google Apps Script 記錄於本站作者管理的 Google 試算表；您的 Email 同時會存放在您瀏覽器的 localStorage，以便同一瀏覽器下次造訪各工具時不需重複輸入。</p>
+  <p>會員登入帳號（Email、雜湊後密碼、Google/Facebook 識別碼、您提交的工具資料）則儲存於本站自建、託管於 Railway 平台的資料庫，僅用於前述登入與工具管理功能。</p>
 
-  <h2>四、您的權利</h2>
+  <h2>四、第三方登入服務</h2>
+  <p>若您選擇使用 Google 或 Facebook 登入，該服務會依其自身隱私權政策處理您的資料，本站僅取得該服務回傳、您已授權分享的 Email 與帳號識別碼。您可以隨時至 <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google 帳戶權限管理</a>或 <a href="https://www.facebook.com/settings?tab=business_tools" target="_blank" rel="noopener">Facebook 應用程式設定</a>頁面，自行撤銷本站的存取授權。</p>
+
+  <h2>五、您的權利與資料刪除</h2>
   <ul>
     <li>您可以在 Email 輸入視窗選擇「略過」，不留下任何資料即可繼續使用（部分功能可能受限）。</li>
-    <li>清除瀏覽器的 localStorage，即可移除本機保存的 Email 與已填寫的計算資料。</li>
-    <li>如需查詢、更正或要求刪除我們保存的資料，歡迎透過 <a href="https://github.com/YJ-chen0830" target="_blank" rel="noopener">GitHub</a> 或 <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener">Ko-fi</a> 私訊聯繫我們，我們會儘速處理。</li>
+    <li>清除瀏覽器的 localStorage，即可移除本機保存的 Email、登入憑證與已填寫的計算資料。</li>
+    <li><strong>如需刪除您的會員帳號與所有相關資料</strong>（包含 Email、密碼雜湊、第三方登入識別碼、您提交的工具資料），或查詢、更正我們保存的任何資料，請透過 <a href="https://github.com/YJ-chen0830" target="_blank" rel="noopener">GitHub</a> 或 <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener">Ko-fi</a> 私訊聯繫我們，並附上您的註冊 Email，我們會在確認身分後盡速刪除，並回覆處理結果。</li>
   </ul>
 
-  <h2>五、本說明的更新</h2>
+  <h2>六、本說明的更新</h2>
   <p>本說明可能隨服務調整而更新，異動時會更新上方的「最後更新」日期。</p>
 </div>
 </body>
