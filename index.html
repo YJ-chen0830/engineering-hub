@@ -221,7 +221,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <span class="hero-tagline-text">願能讓複雜的工程，多一絲簡單的可能</span>
     </div>
     <div class="stats">
-      <div><div class="stat-num">54</div><div class="stat-label">計算工具</div></div>
+      <div><div class="stat-num">64</div><div class="stat-label">計算工具</div></div>
       <div class="stat-div"></div>
       <div><div class="stat-num">5</div><div class="stat-label">工具分類</div></div>
       <div class="stat-div"></div>
@@ -240,11 +240,12 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <span class="search-result-count" id="searchCount"></span>
     </div>
     <div class="chip-row" id="chipRow">
-      <button class="chip active" data-cat="all">全部 54</button>
+      <button class="chip active" data-cat="all">全部 64</button>
       <button class="chip" data-cat="progress">進度管理 5</button>
       <button class="chip" data-cat="construction">施工計劃書 11</button>
-      <button class="chip" data-cat="structure">結構計算 24</button>
-      <button class="chip" data-cat="hydraulics">水利計算 6</button>
+      <button class="chip" data-cat="structure">結構計算 29</button>
+      <button class="chip" data-cat="hydraulics">水利計算 8</button>
+      <button class="chip" data-cat="environmental">環工計算 3</button>
       <button class="chip" data-cat="materials">材料 &amp; 數值工具 6</button>
       <button class="chip" data-cat="python">本機工具 · Python 2</button>
     </div>
@@ -255,7 +256,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
 <div class="no-results" id="noResults">
   <div class="no-results-title">找不到符合的工具</div>
-  <p>試試其他關鍵字，或清除搜尋條件查看全部 54 個工具。</p>
+  <p>試試其他關鍵字，或清除搜尋條件查看全部 64 個工具。</p>
 </div>
 
 <!-- ===== 1. 進度管理 ===== -->
@@ -545,7 +546,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     <div>
       <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
         <h2 class="section-title">結構計算</h2>
-        <span class="section-meta">24 項 · 免費使用</span>
+        <span class="section-meta">29 項 · 免費使用</span>
       </div>
       <div class="section-desc">RC 構件設計、載重組合、地震風力、結構分析工具</div>
     </div>
@@ -782,6 +783,81 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
+        <div><h3 class="card-title">土壤液化評估</h3><div class="card-title-en">Soil Liquefaction Potential Assessment</div></div>
+        <p class="card-desc">依簡化 Seed-Idriss 法（SPT-N 基準）計算循環應力比與液化安全係數。</p>
+        <div class="card-tags"><span class="tag">土壤液化</span><span class="tag">SPT</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/soil-liquefaction-assessment/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 大地工程</div>
+        <div><h3 class="card-title">單樁軸向承載力計算</h3><div class="card-title-en">Single Pile Axial Capacity</div></div>
+        <p class="card-desc">α法（黏土）／β法（砂土）計算單樁摩擦力與端承力，含容許承載力驗算。</p>
+        <div class="card-tags"><span class="tag">單樁承載力</span><span class="tag">α法β法</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/single-pile-capacity/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 大地工程</div>
+        <div><h3 class="card-title">地下室浮力（揚壓力）檢核</h3><div class="card-title-en">Basement Uplift (Buoyancy) Check</div></div>
+        <p class="card-desc">高地下水位情況下地下室結構抗浮安全係數驗算，計算所需額外抵抗力。</p>
+        <div class="card-tags"><span class="tag">抗浮檢核</span><span class="tag">揚壓力</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/basement-uplift-check/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 地質調查</div>
+        <div><h3 class="card-title">土壤分類（USCS）</h3><div class="card-title-en">Unified Soil Classification System</div></div>
+        <p class="card-desc">依統一土壤分類系統（USCS）流程判定土壤分類代號，附完整判定路徑說明。</p>
+        <div class="card-tags"><span class="tag">USCS</span><span class="tag">土壤分類</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/soil-classification-uscs/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 地質調查</div>
+        <div><h3 class="card-title">場址分類與地盤反應譜</h3><div class="card-title-en">Site Classification &amp; Design Response Spectrum</div></div>
+        <p class="card-desc">依平均剪力波速 Vs30 判定場址分類，並建構簡化設計反應譜（NEHRP/ASCE 7 基準）。</p>
+        <div class="card-tags"><span class="tag">場址分類</span><span class="tag">反應譜</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/seismic-site-classification/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">STRUCTURE · 大地工程</div>
         <div><h3 class="card-title">地層壓密沉陷量估算</h3><div class="card-title-en">Settlement Calculation</div></div>
         <p class="card-desc">2:1 應力分布法估算即時沉陷與一次壓密沉陷，含正常壓密/過壓密分支判定。</p>
         <div class="card-tags"><span class="tag">壓密沉陷</span><span class="tag">2:1應力分布法</span><span class="tag">PDF輸出</span></div>
@@ -924,7 +1000,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     <div>
       <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
         <h2 class="section-title">水利計算</h2>
-        <span class="section-meta">6 項 · 免費使用</span>
+        <span class="section-meta">8 項 · 免費使用</span>
       </div>
       <div class="section-desc">雨水逕流與渠道水力分析工具</div>
     </div>
@@ -1021,10 +1097,104 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       </div>
     </article>
 
+    <article class="card">
+      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">HYDRAULICS · 水文分析</div>
+        <div><h3 class="card-title">洪水頻率分析</h3><div class="card-title-en">Flood Frequency Analysis (Gumbel)</div></div>
+        <p class="card-desc">以 Gumbel 極值分布推估各重現期設計洪峰流量，含 2~200 年對照表。</p>
+        <div class="card-tags"><span class="tag">頻率分析</span><span class="tag">Gumbel分布</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/flood-frequency-analysis/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">HYDRAULICS · 管線設計</div>
+        <div><h3 class="card-title">管線水力損失計算</h3><div class="card-title-en">Pipe Head Loss (Darcy-Weisbach)</div></div>
+        <p class="card-desc">達西-韋巴赫公式（Swamee-Jain 摩擦係數）計算壓力管沿程與局部水頭損失。</p>
+        <div class="card-tags"><span class="tag">達西韋巴赫</span><span class="tag">摩擦係數</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/pipe-head-loss-darcy-weisbach/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
   </div>
 </section>
 
-<!-- ===== 5. 材料 & 數值工具 ===== -->
+<!-- ===== 5. 環工計算 ===== -->
+<section class="section" data-cat="environmental" id="sec-environmental">
+  <div class="section-hdr">
+    <div class="section-icon">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D9B96E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+    </div>
+    <div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <h2 class="section-title">環工計算</h2>
+        <span class="section-meta">3 項 · 免費使用</span>
+      </div>
+      <div class="section-desc">廢污水處理程序設計、化糞池容量估算</div>
+    </div>
+  </div>
+  <div class="grid">
+
+    <article class="card">
+      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">ENVIRONMENTAL · 廢水處理</div>
+        <div><h3 class="card-title">廢水處理槽體設計（活性污泥法）</h3><div class="card-title-en">Activated Sludge Process Design</div></div>
+        <p class="card-desc">依 Metcalf &amp; Eddy 活性污泥法質量平衡設計曝氣槽體積、污泥產量與需氧量。</p>
+        <div class="card-tags"><span class="tag">活性污泥法</span><span class="tag">曝氣槽設計</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/activated-sludge-design/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">ENVIRONMENTAL · 廢水處理</div>
+        <div><h3 class="card-title">混凝沉澱池設計</h3><div class="card-title-en">Coagulation-Flocculation-Sedimentation Basin Design</div></div>
+        <p class="card-desc">快混/膠凝池動力梯度 G 值、Gt 值檢核，沉澱池表面負荷率與堰負荷率計算。</p>
+        <div class="card-tags"><span class="tag">混凝沉澱</span><span class="tag">表面負荷率</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/coagulation-sedimentation-design/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-body">
+        <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
+        <div class="card-cat">ENVIRONMENTAL · 污水處理</div>
+        <div><h3 class="card-title">化糞池設計</h3><div class="card-title-en">Septic Tank Sizing</div></div>
+        <p class="card-desc">依服務人數與停留時間計算化糞池有效容量、污泥貯存容積與清理週期。</p>
+        <div class="card-tags"><span class="tag">化糞池</span><span class="tag">容量估算</span><span class="tag">PDF輸出</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="type-label"><span class="type-dot" style="background:#4B8A5C;"></span>瀏覽器工具</span>
+        <a href="https://yj-chen0830.github.io/septic-tank-design/" target="_blank" rel="noopener" class="btn-open">開啟工具 →</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== 6. 材料 & 數值工具 ===== -->
 <section class="section" data-cat="materials" id="sec-materials">
   <div class="section-hdr">
     <div class="section-icon">
@@ -1133,7 +1303,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </div>
 </section>
 
-<!-- ===== 6. 本機工具 Python ===== -->
+<!-- ===== 7. 本機工具 Python ===== -->
 <section class="section" data-cat="python" id="sec-python">
   <div class="section-hdr">
     <div class="section-icon">
@@ -1353,7 +1523,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   var chipRow=document.getElementById('chipRow');
   var countEl=document.getElementById('searchCount');
   var noResults=document.getElementById('noResults');
-  var BASE_TOTAL=54;
+  var BASE_TOTAL=64;
   var activeCat='all';
 
   function indexCards(){
