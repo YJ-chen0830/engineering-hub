@@ -172,7 +172,8 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 .modal-submit:hover{filter:brightness(1.12);}
 .modal-divider{display:flex;align-items:center;gap:10px;margin:18px 0;color:#ADA796;font-size:12px;}
 .modal-divider::before,.modal-divider::after{content:'';flex:1;height:1px;background:#E2DDD1;}
-.oauth-btn{width:100%;padding:10px;border:1px solid #CBC5B6;border-radius:5px;background:#fff;color:#211F19;font-size:13.5px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:8px;}
+.oauth-btn{width:100%;max-width:400px;padding:10px;border:1px solid #CBC5B6;border-radius:5px;background:#fff;color:#211F19;font-size:13.5px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:8px;}
+#googleBtnContainer{max-width:400px;}
 .oauth-btn:hover{background:#F8F6F0;}
 .modal-switch{text-align:center;font-size:12.5px;color:#8C8576;margin-top:16px;}
 .modal-switch a{color:#9A7B2A;font-weight:600;cursor:pointer;}
@@ -2347,8 +2348,13 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     // width:100%, still visible at this point since we hide it further
     // below) so Google's button always matches at any modal/viewport size,
     // instead of only lining up by coincidence at one specific width.
+    // Google silently caps the rendered button at 400px even if a larger
+    // width is requested, so .oauth-btn/#googleBtnContainer are capped at
+    // max-width:400px in CSS too — otherwise the outer container stays wider
+    // than Google's actual (capped) button and the two buttons look
+    // mismatched even though the numbers "match".
     var fallback=document.getElementById('googleBtnFallback');
-    var btnWidth=Math.round(fallback.clientWidth)||392;
+    var btnWidth=Math.min(400,Math.round(fallback.clientWidth)||392);
     google.accounts.id.renderButton(container,{type:'standard',theme:'outline',size:'large',width:btnWidth,text:'continue_with',logo_alignment:'center'});
     container.style.display='';
     document.getElementById('googleBtnFallback').style.display='none';
