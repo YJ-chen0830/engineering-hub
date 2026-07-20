@@ -67,7 +67,30 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 .search-box input{flex:1;border:none;outline:none;background:transparent;font-family:"Noto Sans TC",sans-serif;font-size:14px;color:#211F19;min-width:0;}
 .search-box input::placeholder{color:#ADA796;}
 .search-kbd{flex-shrink:0;font-family:"Archivo",sans-serif;font-size:11px;color:#ADA796;border:1px solid #E2DDD1;border-radius:4px;padding:2px 6px;}
-.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.toolbar-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;flex:1;}
+.chip-fav{border-color:#E3CE96;color:#7E641F;}
+.chip-fav.active{background:#0A1A33;border-color:#0A1A33;color:#fff;}
+.view-toggle{display:flex;gap:4px;flex-shrink:0;}
+.view-btn{width:32px;height:32px;border-radius:5px;border:1px solid #CBC5B6;background:#fff;color:#8C8576;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:all 160ms;}
+.view-btn:hover{border-color:#8C8576;}
+.view-btn.active{background:#0A1A33;border-color:#0A1A33;color:#fff;}
+.view-btn svg{width:16px;height:16px;}
+
+/* ── LIST VIEW ── */
+body.view-list .grid{display:flex;flex-direction:column;gap:10px;}
+body.view-list .card{flex-direction:row;align-items:center;}
+body.view-list .card:hover{transform:none;}
+body.view-list .card-seal{display:none;}
+body.view-list .star-btn{position:static;margin:0 4px 0 14px;}
+body.view-list .card-body{flex-direction:row;align-items:center;gap:16px;padding:10px 14px;flex:1;min-width:0;}
+body.view-list .card-top,body.view-list .card-title-en,body.view-list .card-desc,body.view-list .card-tags{display:none;}
+body.view-list .card-cat{flex-shrink:0;width:150px;}
+body.view-list .card-title{font-size:14.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+body.view-list .card-foot{border-top:none;border-left:1px solid #EFEBE2;padding:10px 14px;flex-shrink:0;}
+@media(max-width:700px){
+  body.view-list .card-cat{display:none;}
+}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;border:1px solid #CBC5B6;background:#fff;color:#4B473C;font-family:"Noto Sans TC",sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;transition:all 160ms;white-space:nowrap;}
 .chip:hover{border-color:#9A7B2A;color:#0A1A33;}
 .chip.active{background:#0A1A33;border-color:#0A1A33;color:#fff;}
@@ -114,7 +137,12 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 }
 
 /* ── CARD ── */
-.card{display:flex;flex-direction:column;background:#fff;border:1px solid #E2DDD1;border-radius:6px;box-shadow:0 2px 6px rgba(10,26,51,.07);overflow:hidden;transition:transform 200ms cubic-bezier(.16,1,.3,1),box-shadow 200ms;}
+.card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid #E2DDD1;border-radius:6px;box-shadow:0 2px 6px rgba(10,26,51,.07);overflow:hidden;transition:transform 200ms cubic-bezier(.16,1,.3,1),box-shadow 200ms;}
+.star-btn{position:absolute;top:10px;right:10px;z-index:2;width:30px;height:30px;flex-shrink:0;border-radius:999px;border:1px solid #E2DDD1;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ADA796;padding:0;transition:all 160ms;}
+.star-btn:hover{border-color:#C9A24A;color:#C9A24A;background:#fff;}
+.star-btn.is-fav{color:#C9A24A;border-color:#C9A24A;}
+.star-btn.is-fav svg{fill:currentColor;}
+.star-btn svg{width:16px;height:16px;}
 .card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(10,26,51,.13);}
 .card-seal{height:3px;}
 .card-body{padding:18px 20px 14px;display:flex;flex-direction:column;flex:1;gap:10px;}
@@ -247,15 +275,22 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <span class="search-kbd">/</span>
       <span class="search-result-count" id="searchCount"></span>
     </div>
-    <div class="chip-row" id="chipRow">
-      <button class="chip active" data-cat="all">全部 104</button>
-      <button class="chip" data-cat="progress">進度管理 8</button>
-      <button class="chip" data-cat="construction">施工計劃書 18</button>
-      <button class="chip" data-cat="structure">結構計算 45</button>
-      <button class="chip" data-cat="hydraulics">水利計算 15</button>
-      <button class="chip" data-cat="environmental">環工計算 8</button>
-      <button class="chip" data-cat="materials">材料 &amp; 數值工具 8</button>
-      <button class="chip" data-cat="python">本機工具 · Python 2</button>
+    <div class="toolbar-row">
+      <div class="chip-row" id="chipRow">
+        <button class="chip active" data-cat="all">全部 104</button>
+        <button class="chip chip-fav" data-cat="__fav__" id="favChip" style="display:none;">⭐ 我的收藏</button>
+        <button class="chip" data-cat="progress">進度管理 8</button>
+        <button class="chip" data-cat="construction">施工計劃書 18</button>
+        <button class="chip" data-cat="structure">結構計算 45</button>
+        <button class="chip" data-cat="hydraulics">水利計算 15</button>
+        <button class="chip" data-cat="environmental">環工計算 8</button>
+        <button class="chip" data-cat="materials">材料 &amp; 數值工具 8</button>
+        <button class="chip" data-cat="python">本機工具 · Python 2</button>
+      </div>
+      <div class="view-toggle" id="viewToggle">
+        <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+        <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      </div>
     </div>
   </div>
 </div>
@@ -284,7 +319,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 進度排程</div>
@@ -299,7 +334,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 進度排程</div>
@@ -314,7 +349,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 資源管理</div>
@@ -329,7 +364,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 趕工分析</div>
@@ -344,7 +379,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 施工排程</div>
@@ -359,7 +394,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 專案管控</div>
@@ -374,7 +409,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 專案管控</div>
@@ -389,7 +424,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C9A24A;"></div>
+      <div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SCHEDULE · 專案管控</div>
@@ -423,7 +458,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#3B7DD8;"></div>
+      <div class="card-seal" style="background:#3B7DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -438,7 +473,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B7DD8;"></div>
+      <div class="card-seal" style="background:#3B7DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -453,7 +488,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -468,7 +503,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -483,7 +518,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B7DD8;"></div>
+      <div class="card-seal" style="background:#3B7DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -498,7 +533,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#C05050;"></div>
+      <div class="card-seal" style="background:#C05050;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -513,7 +548,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -528,7 +563,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -543,7 +578,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">GEOTECH · 現場試驗</div>
@@ -558,7 +593,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">SAFETY · 施工安全</div>
@@ -573,7 +608,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">MATERIAL · 配比設計</div>
@@ -588,7 +623,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 風險管理</div>
@@ -603,7 +638,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 工程經濟</div>
@@ -618,7 +653,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 索賠分析</div>
@@ -633,7 +668,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 勞工安全衛生</div>
@@ -648,7 +683,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 勞工安全衛生</div>
@@ -663,7 +698,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 工地電力</div>
@@ -678,7 +713,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#B8902A;"></div>
+      <div class="card-seal" style="background:#B8902A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">PLANNING · 消防安全</div>
@@ -712,7 +747,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · RC 構件</div>
@@ -727,7 +762,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · RC 構件</div>
@@ -742,7 +777,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · RC 構件</div>
@@ -757,7 +792,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 鋼筋</div>
@@ -772,7 +807,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 載重</div>
@@ -787,7 +822,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 分析</div>
@@ -802,7 +837,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 分析</div>
@@ -817,7 +852,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 地震風力</div>
@@ -832,7 +867,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 基礎</div>
@@ -847,7 +882,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 結構計算</div>
@@ -862,7 +897,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · RC 構件</div>
@@ -877,7 +912,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -892,7 +927,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -907,7 +942,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -922,7 +957,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -937,7 +972,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -952,7 +987,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -967,7 +1002,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -982,7 +1017,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -997,7 +1032,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1012,7 +1047,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1027,7 +1062,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1042,7 +1077,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1057,7 +1092,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 動力分析</div>
@@ -1072,7 +1107,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 地質調查</div>
@@ -1087,7 +1122,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 地質調查</div>
@@ -1102,7 +1137,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1117,7 +1152,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · RC 構件</div>
@@ -1132,7 +1167,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#7B5EA7;"></div>
+      <div class="card-seal" style="background:#7B5EA7;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 分析</div>
@@ -1147,7 +1182,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 鋼構</div>
@@ -1162,7 +1197,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 鋼構</div>
@@ -1177,7 +1212,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">GEOTECH · 基礎工程</div>
@@ -1192,7 +1227,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 混凝土</div>
@@ -1207,7 +1242,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 木構造</div>
@@ -1222,7 +1257,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#5A6B7A;"></div>
+      <div class="card-seal" style="background:#5A6B7A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 混凝土</div>
@@ -1237,7 +1272,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 橋樑工程</div>
@@ -1252,7 +1287,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 橋樑工程</div>
@@ -1267,7 +1302,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 橋樑工程</div>
@@ -1282,7 +1317,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 橋樑工程</div>
@@ -1297,7 +1332,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 道路工程</div>
@@ -1312,7 +1347,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 道路工程</div>
@@ -1327,7 +1362,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 道路工程</div>
@@ -1342,7 +1377,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1357,7 +1392,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1372,7 +1407,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#8A5C3B;"></div>
+      <div class="card-seal" style="background:#8A5C3B;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">STRUCTURE · 大地工程</div>
@@ -1406,7 +1441,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 逕流</div>
@@ -1421,7 +1456,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 渠道</div>
@@ -1436,7 +1471,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 排水</div>
@@ -1451,7 +1486,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 滯洪</div>
@@ -1466,7 +1501,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 基地保水</div>
@@ -1481,7 +1516,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水土保持</div>
@@ -1496,7 +1531,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水文分析</div>
@@ -1511,7 +1546,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 管線設計</div>
@@ -1526,7 +1561,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 消防給水</div>
@@ -1541,7 +1576,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 污水下水道</div>
@@ -1556,7 +1591,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 污水下水道</div>
@@ -1571,7 +1606,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水土保持</div>
@@ -1586,7 +1621,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水土保持</div>
@@ -1601,7 +1636,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水利工程</div>
@@ -1616,7 +1651,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3B9DD8;"></div>
+      <div class="card-seal" style="background:#3B9DD8;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">HYDRAULICS · 水利工程</div>
@@ -1650,7 +1685,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 廢水處理</div>
@@ -1665,7 +1700,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 廢水處理</div>
@@ -1680,7 +1715,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 污水處理</div>
@@ -1695,7 +1730,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 噪音評估</div>
@@ -1710,7 +1745,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 污水廠</div>
@@ -1725,7 +1760,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 污水廠</div>
@@ -1740,7 +1775,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 污水廠</div>
@@ -1755,7 +1790,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#4E8B5C;"></div>
+      <div class="card-seal" style="background:#4E8B5C;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">ENVIRONMENTAL · 污水廠</div>
@@ -1789,7 +1824,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">MATERIAL · 鋼筋</div>
@@ -1804,7 +1839,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">MATH · 數值計算</div>
@@ -1819,7 +1854,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">REFERENCE · 速查表</div>
@@ -1834,7 +1869,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">REFERENCE · 速查表</div>
@@ -1849,7 +1884,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">REFERENCE · 速查表</div>
@@ -1864,7 +1899,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">REFERENCE · 速查表</div>
@@ -1879,7 +1914,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">MATERIAL · 機電配管</div>
@@ -1894,7 +1929,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#E05C3A;"></div>
+      <div class="card-seal" style="background:#E05C3A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:#f1e05a;"></span>JavaScript</span></div>
         <div class="card-cat">MATERIAL · 電氣</div>
@@ -1928,7 +1963,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   <div class="grid">
 
     <article class="card">
-      <div class="card-seal" style="background:#3572A5;"></div>
+      <div class="card-seal" style="background:#3572A5;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top">
           <span class="card-lang"><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
@@ -1949,7 +1984,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     </article>
 
     <article class="card">
-      <div class="card-seal" style="background:#3572A5;"></div>
+      <div class="card-seal" style="background:#3572A5;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>
       <div class="card-body">
         <div class="card-top">
           <span class="card-lang"><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
@@ -2163,21 +2198,28 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
   function applyFilters(){
     var q=searchInput.value.trim().toLowerCase();
+    // "我的收藏" isn't a real section/category — it cuts across all of
+    // them, so every section stays eligible and the ★ state on each card
+    // does the actual filtering below (see favOk).
+    var favMode=(activeCat==='__fav__');
     var visibleTotal=0;
     sections.forEach(function(sec){
-      var catMatch=(activeCat==='all'||sec.dataset.cat===activeCat);
+      var catMatch=favMode||activeCat==='all'||sec.dataset.cat===activeCat;
       var cards=sec.querySelectorAll('.card');
       var visibleInSec=0;
       cards.forEach(function(card){
-        var match=catMatch&&(!q||card.dataset.search.indexOf(q)>=0);
+        var starBtn=card.querySelector('.star-btn');
+        var favOk=!favMode||(starBtn&&starBtn.classList.contains('is-fav'));
+        var match=catMatch&&favOk&&(!q||card.dataset.search.indexOf(q)>=0);
         card.style.display=match?'':'none';
         if(match)visibleInSec++;
       });
       sec.style.display=(catMatch&&visibleInSec>0)?'':'none';
       visibleTotal+=visibleInSec;
     });
-    countEl.textContent=(q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+currentTotal()+' 項工具'):'';
+    countEl.textContent=favMode?('顯示 '+visibleTotal+' 項收藏工具'):((q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+currentTotal()+' 項工具'):'');
     noResults.classList.toggle('show',visibleTotal===0);
+    noResults.querySelector('.no-results-title').textContent=favMode?'還沒有收藏任何工具':'找不到符合的工具';
   }
 
   searchInput.addEventListener('input',applyFilters);
@@ -2205,6 +2247,25 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
   setHeaderOffset();
   window.addEventListener('resize',setHeaderOffset);
+
+  // ── 檢視模式（方塊／列表）── pure CSS toggle, no backend, remembered
+  // per-browser so a returning visitor keeps their choice.
+  (function(){
+    var toggle=document.getElementById('viewToggle');
+    if(!toggle)return;
+    var KEY='ectr_view_mode';
+    function apply(mode){
+      document.body.classList.toggle('view-list',mode==='list');
+      toggle.querySelectorAll('.view-btn').forEach(function(b){b.classList.toggle('active',b.dataset.view===mode);});
+    }
+    apply(localStorage.getItem(KEY)||'grid');
+    toggle.addEventListener('click',function(e){
+      var btn=e.target.closest('.view-btn');
+      if(!btn)return;
+      localStorage.setItem(KEY,btn.dataset.view);
+      apply(btn.dataset.view);
+    });
+  })();
 
   // Exposed so dynamically-fetched (API-backed) tool cards, inserted after
   // this script already ran, get indexed for search and their section's
@@ -2258,6 +2319,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       slot.title='';
     }
     if(window.Tools&&window.Tools.checkAdminAndRevealStats)window.Tools.checkAdminAndRevealStats();
+    if(window.Tools&&window.Tools.loadFavorites)window.Tools.loadFavorites();
   }
 
   // ── Auth modal ──
@@ -2513,7 +2575,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     var langLabel=t.lang||'HTML';
     var langColor=langLabel==='Python'?'#3572A5':'#f1e05a';
     return '<article class="card">'
-      +'<div class="card-seal" style="background:#C9A24A;"></div>'
+      +'<div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>'
       +'<div class="card-body">'
       +'<div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:'+langColor+';"></span>'+escapeHtml(langLabel)+'</span></div>'
       +'<div class="card-cat">'+escapeHtml((CATEGORY_LABEL[t.category]||t.category||'').toUpperCase())+'</div>'
@@ -2534,6 +2596,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     grid.innerHTML=list.map(cardHtml).join('');
     document.getElementById('dynamicMeta').textContent=list.length+' 項';
     section.style.display=list.length?'':'none';
+    markFavoriteCards();
     if(window.HubSearch)window.HubSearch.rescan();
   }
 
@@ -2542,6 +2605,78 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       .then(function(res){return res.json();})
       .then(renderDynamic)
       .catch(function(){/* silently skip — static 54 tools still work fine */});
+  }
+
+  // ── 我的收藏（★）──
+  // 104個靜態卡片沒有穩定的資料庫id，唯一穩定的識別是「開啟工具」連結本
+  // 身（跟 tool_clicks 用的識別方式一樣），所以收藏是用 tool_url 當 key，
+  // 不是另外發明一套id系統。
+  var favoriteUrls=null; // null＝尚未載入（或未登入）；已登入時是 Set<url>
+
+  function markFavoriteCards(){
+    document.querySelectorAll('.card').forEach(function(card){
+      var link=card.querySelector('.btn-open');
+      var btn=card.querySelector('.star-btn');
+      if(!link||!btn)return;
+      btn.classList.toggle('is-fav',!!(favoriteUrls&&favoriteUrls.has(link.href)));
+    });
+  }
+
+  function updateFavChipVisibility(){
+    var chip=document.getElementById('favChip');
+    if(chip)chip.style.display=isLoggedIn()?'':'none';
+  }
+
+  function loadFavorites(){
+    updateFavChipVisibility();
+    if(!isLoggedIn()){
+      favoriteUrls=null;
+      markFavoriteCards();
+      if(window.HubSearch)window.HubSearch.rescan();
+      return;
+    }
+    apiFetch('/api/favorites')
+      .then(function(res){return res.json();})
+      .then(function(list){
+        favoriteUrls=new Set(list.map(function(f){return f.toolUrl;}));
+        markFavoriteCards();
+        if(window.HubSearch)window.HubSearch.rescan();
+      })
+      .catch(function(){});
+  }
+
+  function toggleFavorite(btn,evt){
+    if(evt)evt.stopPropagation();
+    if(!isLoggedIn()){
+      openAuthModal();
+      return;
+    }
+    var card=btn.closest('.card');
+    var link=card&&card.querySelector('.btn-open');
+    if(!link)return;
+    var url=link.href;
+    var titleEl=card.querySelector('.card-title');
+    var catEl=card.querySelector('.card-cat');
+    var wasFav=btn.classList.contains('is-fav');
+
+    // 樂觀更新畫面，失敗再改回來——收藏這種輕量操作不值得讓使用者等 API。
+    btn.classList.toggle('is-fav',!wasFav);
+    if(!favoriteUrls)favoriteUrls=new Set();
+    if(wasFav)favoriteUrls.delete(url);else favoriteUrls.add(url);
+    if(window.HubSearch)window.HubSearch.rescan();
+
+    var req=wasFav
+      ? apiFetch('/api/favorites',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({toolUrl:url})})
+      : apiFetch('/api/favorites',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+          toolUrl:url,
+          toolTitle:titleEl?titleEl.textContent:'',
+          category:catEl?catEl.textContent:''
+        })});
+    req.catch(function(){
+      btn.classList.toggle('is-fav',wasFav);
+      if(wasFav)favoriteUrls.add(url);else favoriteUrls.delete(url);
+      if(window.HubSearch)window.HubSearch.rescan();
+    });
   }
 
   // ── 使用統計（僅管理員）──
@@ -2614,7 +2749,9 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     openStatsModal:openStatsModal,
     closeStatsModal:closeStatsModal,
     checkAdminAndRevealStats:checkAdminAndRevealStats,
-    refreshDynamic:refreshDynamic
+    refreshDynamic:refreshDynamic,
+    loadFavorites:loadFavorites,
+    toggleFavorite:toggleFavorite
   };
 
   document.querySelectorAll('.modal-overlay').forEach(function(overlay){
