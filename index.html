@@ -2341,7 +2341,14 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     if(typeof google==='undefined'||!google.accounts)return;
     google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredentialResponse});
     var container=document.getElementById('googleBtnContainer');
-    google.accounts.id.renderButton(container,{type:'standard',theme:'outline',size:'large',width:392,text:'continue_with',logo_alignment:'center'});
+    // Google's button API takes a fixed pixel width, not "100%" like our
+    // other oauth buttons' CSS — measure googleBtnFallback (same .oauth-btn,
+    // width:100%, still visible at this point since we hide it further
+    // below) so Google's button always matches at any modal/viewport size,
+    // instead of only lining up by coincidence at one specific width.
+    var fallback=document.getElementById('googleBtnFallback');
+    var btnWidth=Math.round(fallback.clientWidth)||392;
+    google.accounts.id.renderButton(container,{type:'standard',theme:'outline',size:'large',width:btnWidth,text:'continue_with',logo_alignment:'center'});
     container.style.display='';
     document.getElementById('googleBtnFallback').style.display='none';
     googleInited=true;
