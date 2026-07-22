@@ -2052,6 +2052,9 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
       <input type="email" id="authEmail" placeholder="you@example.com">
       <label>密碼</label>
       <input type="password" id="authPassword" placeholder="至少 8 碼">
+      <div id="authForgotRow" style="text-align:right;margin-top:-8px;">
+        <a onclick="Auth.forgotPassword()" style="font-size:12.5px;cursor:pointer;">忘記密碼？</a>
+      </div>
 
       <button type="button" class="modal-submit" id="authSubmitBtn" onclick="Auth.submitPassword()">登入</button>
       <div class="modal-switch">
@@ -2341,13 +2344,30 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     document.getElementById('authSubmitBtn').textContent=authMode==='login'?'登入':'註冊';
     document.getElementById('authSwitchText').textContent=authMode==='login'?'還沒有帳號？':'已經有帳號了？';
     document.getElementById('authSwitchLink').textContent=authMode==='login'?'註冊一個':'直接登入';
+    document.getElementById('authForgotRow').style.display=authMode==='login'?'':'none';
     document.getElementById('authError').classList.remove('show');
   }
 
   function showAuthError(msg){
     var el=document.getElementById('authError');
+    el.style.color='';
+    el.style.background='';
     el.textContent=msg;
     el.classList.add('show');
+  }
+
+  function forgotPassword(){
+    var email=document.getElementById('authEmail').value.trim();
+    if(!email){showAuthError('請先在上面輸入你的 Email，再點忘記密碼');return;}
+    apiFetch('/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+      .then(function(){
+        var el=document.getElementById('authError');
+        el.style.color='#1a6e35';
+        el.style.background='#EAF4EC';
+        el.textContent='如果這個 Email 有註冊過，重設密碼連結已經寄出，請查收信箱（含垃圾郵件夾）。';
+        el.classList.add('show');
+      })
+      .catch(function(){showAuthError('無法連線到伺服器，請稍後再試');});
   }
 
   function submitPassword(){
@@ -2379,6 +2399,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     document.getElementById('authSubmitBtn').textContent='登入';
     document.getElementById('authSwitchText').textContent='還沒有帳號？';
     document.getElementById('authSwitchLink').textContent='註冊一個';
+    document.getElementById('authForgotRow').style.display='';
     openAuthModal();
   }
 
@@ -2464,6 +2485,7 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     closeModal:closeAuthModal,
     toggleMode:toggleAuthMode,
     submitPassword:submitPassword,
+    forgotPassword:forgotPassword,
     onAuthSlotClick:onAuthSlotClick,
     googleLogin:googleLogin,
     facebookLogin:facebookLogin,
