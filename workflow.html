@@ -793,8 +793,16 @@ function renderInTeam(body,team){
   wrap.querySelectorAll('[data-remove]').forEach(function(btn){
     btn.addEventListener('click',function(){
       if(!confirm('確定要把這位成員移出團隊嗎？'))return;
-      window.JRH.cloudApi('/api/teams/members/'+btn.dataset.remove+'/remove',{method:'POST'})
-        .then(function(){renderTeam();})
+      // Separate question rather than folding into the first confirm() —
+      // removing someone and deciding what happens to their submitted
+      // tools are two different decisions, and defaulting the transfer to
+      // "yes" inside one dialog would silently reassign their work.
+      var transferTools=confirm('要把這位成員名下已投稿的工具一併轉移給你嗎？\n\n選「取消」的話，工具仍留在他原本的帳號下，之後可以再手動處理。');
+      window.JRH.cloudApi('/api/teams/members/'+btn.dataset.remove+'/remove',{method:'POST',body:JSON.stringify({transferTools:transferTools})})
+        .then(function(r){
+          if(transferTools&&r.transferredTools)alert('已移除成員，並轉移 '+r.transferredTools+' 項工具的擁有權給你。');
+          renderTeam();
+        })
         .catch(function(e){actionMsg.style.color='#c00';actionMsg.textContent=e.message;});
     });
   });
