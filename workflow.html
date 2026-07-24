@@ -99,7 +99,9 @@
     <button class="btn btn-gold" onclick="combinedPrint()">📑 合併列印計算書</button>
     <button class="btn btn-line" onclick="exportExcel()">⬇ 匯出 Excel</button>
     <button class="btn btn-line" onclick="exportWord()">⬇ 匯出 Word</button>
+    <button class="btn btn-line" onclick="toggleReportConfig()">⚙ 調整合併內容/順序</button>
   </div>
+  <div id="reportConfigBox" style="display:none;margin-top:10px;padding:14px 16px;background:#fafaf8;border:1px solid var(--line);border-radius:9px;"></div>
   <div class="btn-row">
     <button class="btn btn-navy" onclick="exportJSON()">⬇ 匯出專案 JSON</button>
     <button class="btn btn-line" onclick="document.getElementById('impFile').click()">⬆ 匯入專案 JSON</button>
@@ -109,6 +111,11 @@
     專案資料儲存在本瀏覽器（localStorage）。換電腦或瀏覽器時，用「匯出 / 匯入」搬移全部專案與進度，或下方登入帳號用「雲端同步」。<br>
     在各工具填好專案資訊按「💾 儲存專案」後，這裡就會出現該專案；「合併列印」「匯出 Excel/Word」需要先在各工具按過「產出計算書 PDF」，該工具的結果才會被收錄。
   </div>
+</div>
+
+<div class="card no-print" id="revCard">
+  <h2>📝 修訂履歷</h2>
+  <div id="revBody"></div>
 </div>
 
 <div class="card no-print" id="teamCard">
@@ -367,7 +374,50 @@ function render(){
   var pct=Math.round(done/TOOLS.length*100);
   document.getElementById('progFill').style.width=pct+'%';
   document.getElementById('progText').textContent=done+' / '+TOOLS.length;
+  renderRevisions();
+  var rcBox=document.getElementById('reportConfigBox');
+  if(rcBox&&rcBox.style.display!=='none')renderReportConfig();
 }
+
+/* ── 修訂履歷（Rev.A/B/C）──
+   跟 jrh_wf/jrh_records 同一套 key 慣例：依專案名稱分層，append-only 清單
+   （不能編輯/刪除舊紀錄——修訂履歷本來就該是不可竄改的稽核軌跡）。
+   jrh-core.js 的 buildCover() 會讀最新一筆顯示在各工具的 PDF 封面上。 */
+function getRevisions(proj){return (getJSON('jrh_revisions')[proj])||[];}
+function renderRevisions(){
+  var proj=currentProj();
+  var body=document.getElementById('revBody');
+  if(!proj){
+    body.innerHTML='<div class="empty" style="padding:10px;">請先選擇專案。</div>';
+    return;
+  }
+  var revs=getRevisions(proj);
+  var listHtml=revs.length?revs.map(function(r){
+    return '<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #eee;font-size:13px;">'+
+      '<span style="font-weight:700;color:var(--navy);white-space:nowrap;">Rev.'+escHtml(r.rev)+'</span>'+
+      '<span style="color:#999;white-space:nowrap;">'+escHtml(r.date)+'</span>'+
+      '<span style="flex:1;color:#555;">'+escHtml(r.reason)+'</span>'+
+    '</div>';
+  }).reverse().join('') : '<div style="font-size:12.5px;color:#999;padding:6px 0;">這個專案還沒有修訂紀錄。</div>';
+  body.innerHTML=listHtml+
+    '<div class="btn-row" style="margin-top:12px;">'+
+      '<input type="text" id="revLabel" placeholder="版次，例如 A" style="width:90px;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
+      '<input type="text" id="revReason" placeholder="修訂原因" style="flex:1;min-width:180px;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
+      '<button class="btn btn-gold" id="addRevBtn">新增修訂紀錄</button>'+
+    '</div>';
+  document.getElementById('addRevBtn').addEventListener('click',function(){
+    var label=document.getElementById('revLabel').value.trim();
+    var reason=document.getElementById('revReason').value.trim();
+    if(!label||!reason){alert('請填寫版次與修訂原因。');return;}
+    var all=getJSON('jrh_revisions');
+    if(!all[proj])all[proj]=[];
+    var d=new Date();
+    all[proj].push({rev:label,reason:reason,date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')});
+    localStorage.setItem('jrh_revisions',JSON.stringify(all));
+    renderRevisions();
+  });
+}
+function escHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function printChecklist(){
   var proj=currentProj();
@@ -395,7 +445,9 @@ function exportJSON(){
   var data={
     exported:new Date().toISOString(),
     jrh_projects:getJSON('jrh_projects'),
-    jrh_wf:getJSON('jrh_wf')
+    jrh_wf:getJSON('jrh_wf'),
+    jrh_records:getJSON('jrh_records'),
+    jrh_revisions:getJSON('jrh_revisions')
   };
   var blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
   var a=document.createElement('a');
@@ -421,8 +473,26 @@ function importJSON(input){
         curWf[k]=Object.assign(curWf[k]||{},data.jrh_wf[k]);
       });
       localStorage.setItem('jrh_wf',JSON.stringify(curWf));
+      var curRecords=getJSON('jrh_records');
+      Object.keys(data.jrh_records||{}).forEach(function(k){
+        curRecords[k]=Object.assign(curRecords[k]||{},data.jrh_records[k]);
+      });
+      localStorage.setItem('jrh_records',JSON.stringify(curRecords));
+      var curRevisions=getJSON('jrh_revisions');
+      Object.keys(data.jrh_revisions||{}).forEach(function(k){
+        // Append-only list, not a keyed object — merge by concatenating and
+        // de-duping identical entries rather than Object.assign overwriting.
+        var existing=curRevisions[k]||[];
+        var incoming=data.jrh_revisions[k]||[];
+        incoming.forEach(function(r){
+          var dup=existing.some(function(e){return e.rev===r.rev&&e.date===r.date&&e.reason===r.reason;});
+          if(!dup)existing.push(r);
+        });
+        curRevisions[k]=existing;
+      });
+      localStorage.setItem('jrh_revisions',JSON.stringify(curRevisions));
       refreshProjects();
-      alert('匯入完成！共 '+Object.keys(data.jrh_projects).length+' 個專案（同名專案已覆蓋，進度已合併）。');
+      alert('匯入完成！共 '+Object.keys(data.jrh_projects).length+' 個專案（同名專案已覆蓋，進度與修訂履歷已合併）。');
     }catch(e){alert('匯入失敗：'+e.message);}
     input.value='';
   };
@@ -447,12 +517,89 @@ function downloadBlob(content,filename,mime){
 
 /* ── 合併列印 / Excel / Word 匯出 ──
    資料來源是 jrh_records（jrh-core.js 每次「產出計算書 PDF」時順手存下的
-   完整結果面板），依 workflow.html 自己的 TOOLS 清單順序排列，同一個專案
-   下所有已產出過的工具彙整成一份文件，而不是各自獨立 PDF。 */
-function combinedRecords(proj){
+   完整結果面板）。預設依 workflow.html 自己的 TOOLS 清單順序排列、全部
+   納入；使用者可以透過「調整合併內容/順序」自訂排除某些工具、調整順序
+   ——設定存在 jrh_report_config[專案]，格式是 [{code,included},...]。
+   新產出的工具（還沒出現在已存設定裡）預設納入、排在最後，不會因為
+   使用者之前存過設定就悄悄消失。 */
+function getReportConfig(proj){return getJSON('jrh_report_config')[proj];}
+function setReportConfig(proj,config){
+  var all=getJSON('jrh_report_config');
+  all[proj]=config;
+  localStorage.setItem('jrh_report_config',JSON.stringify(all));
+}
+function toolName(code){var t=TOOLS.filter(function(x){return x.code===code;})[0];return t?t.name:code;}
+
+function combinedRecords(proj,includeExcluded){
   var recAll=getJSON('jrh_records')[proj]||{};
-  return TOOLS.filter(function(t){return recAll[t.code];}).map(function(t){
-    return Object.assign({code:t.code,name:t.name},recAll[t.code]);
+  var capturedCodes=TOOLS.filter(function(t){return recAll[t.code];}).map(function(t){return t.code;});
+  var saved=getReportConfig(proj)||[];
+  var config=saved.filter(function(c){return capturedCodes.indexOf(c.code)>=0;});
+  var knownCodes=config.map(function(c){return c.code;});
+  capturedCodes.forEach(function(code){
+    if(knownCodes.indexOf(code)<0)config.push({code:code,included:true});
+  });
+  var use=includeExcluded?config:config.filter(function(c){return c.included;});
+  return use.map(function(c){
+    return Object.assign({code:c.code,name:toolName(c.code),included:c.included},recAll[c.code]);
+  });
+}
+
+function toggleReportConfig(){
+  var box=document.getElementById('reportConfigBox');
+  if(box.style.display==='none'){box.style.display='';renderReportConfig();}
+  else box.style.display='none';
+}
+function renderReportConfig(){
+  var proj=currentProj();
+  var box=document.getElementById('reportConfigBox');
+  if(!proj){box.innerHTML='<div style="font-size:12.5px;color:#999;">請先選擇專案。</div>';return;}
+  var list=combinedRecords(proj,true);
+  if(!list.length){box.innerHTML='<div style="font-size:12.5px;color:#999;">這個專案還沒有任何工具產出過計算書，沒有內容可以調整。</div>';return;}
+  box.innerHTML='<div style="font-size:12.5px;color:#777;margin-bottom:10px;">勾選要納入合併報告/匯出的工具，用 ↑↓ 調整順序。</div>'+
+    '<div id="rcList"></div>'+
+    '<button class="btn btn-gold" id="rcSaveBtn" style="margin-top:10px;">儲存設定</button>';
+  renderRcList(list);
+  document.getElementById('rcSaveBtn').addEventListener('click',function(){
+    var rows=document.querySelectorAll('#rcList [data-code]');
+    var config=[];
+    rows.forEach(function(row){
+      config.push({code:row.dataset.code,included:row.querySelector('input[type=checkbox]').checked});
+    });
+    setReportConfig(proj,config);
+    alert('已儲存合併報告設定。');
+  });
+}
+function renderRcList(list){
+  var wrap=document.getElementById('rcList');
+  wrap.innerHTML=list.map(function(r,i){
+    return '<div data-code="'+r.code+'" style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #eee;">'+
+      '<input type="checkbox" '+(r.included?'checked':'')+' style="width:16px;height:16px;">'+
+      '<span style="flex:1;font-size:13px;">'+escHtml(r.name)+'</span>'+
+      '<button type="button" class="btn btn-line" data-up="'+i+'" style="padding:3px 9px;font-size:12px;" '+(i===0?'disabled':'')+'>↑</button>'+
+      '<button type="button" class="btn btn-line" data-down="'+i+'" style="padding:3px 9px;font-size:12px;" '+(i===list.length-1?'disabled':'')+'>↓</button>'+
+    '</div>';
+  }).join('');
+  function syncFromDom(){
+    wrap.querySelectorAll('[data-code]').forEach(function(row,i){
+      list[i].included=row.querySelector('input[type=checkbox]').checked;
+    });
+  }
+  wrap.querySelectorAll('[data-up]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      syncFromDom();
+      var i=Number(btn.dataset.up);
+      var t=list[i];list[i]=list[i-1];list[i-1]=t;
+      renderRcList(list);
+    });
+  });
+  wrap.querySelectorAll('[data-down]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      syncFromDom();
+      var i=Number(btn.dataset.down);
+      var t=list[i];list[i]=list[i+1];list[i+1]=t;
+      renderRcList(list);
+    });
   });
 }
 
