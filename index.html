@@ -2235,15 +2235,23 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       <button type="button" class="modal-close" onclick="Tools.closeTopupModal()">✕</button>
     </div>
     <div class="modal-body" id="topupFormWrap">
-      <div class="warn" style="background:#FBF1E0;border:1px solid #E3C77E;border-radius:8px;padding:12px 14px;font-size:13px;color:#5C5442;margin-bottom:14px;">
-        目前點數儲值採人工匯款方式：請先聯繫 <a href="mailto:student2173@gmail.com" style="color:#7E641F;text-decoration:underline;">student2173@gmail.com</a> 取得匯款帳號，完成匯款後在下方填寫金額與匯款備註（例如帳號末五碼），我們確認入帳後會手動加點，請留意信箱回覆。
-      </div>
-      <div class="modal-error" id="topupError"></div>
-      <label>匯款金額（新台幣）</label>
-      <input type="number" id="topupAmount" min="1" placeholder="例如 500">
-      <label>匯款備註（帳號末五碼或轉帳時間）</label>
-      <input type="text" id="topupNote" placeholder="方便我們核對入帳">
-      <button type="button" class="modal-submit" onclick="Tools.submitTopupRequest()">送出儲值申請</button>
+      <label>儲值金額（新台幣，1 元 = 1 點）</label>
+      <input type="number" id="ecpayAmount" min="50" max="20000" step="1" placeholder="例如 500">
+      <div class="modal-error" id="ecpayError"></div>
+      <button type="button" class="modal-submit" onclick="Tools.startEcpayCheckout()">信用卡 / ATM / 超商代碼 付款</button>
+      <div style="text-align:center;font-size:11px;color:#9C9686;margin:6px 0 12px;">導向綠界科技（ECPay）安全付款頁面</div>
+      <details style="margin-top:4px;">
+        <summary style="cursor:pointer;font-size:12.5px;color:#6B6557;">改用人工匯款</summary>
+        <div class="warn" style="background:#FBF1E0;border:1px solid #E3C77E;border-radius:8px;padding:12px 14px;font-size:13px;color:#5C5442;margin:10px 0 14px;">
+          請先聯繫 <a href="mailto:student2173@gmail.com" style="color:#7E641F;text-decoration:underline;">student2173@gmail.com</a> 取得匯款帳號，完成匯款後在下方填寫金額與匯款備註（例如帳號末五碼），我們確認入帳後會手動加點，請留意信箱回覆。
+        </div>
+        <div class="modal-error" id="topupError"></div>
+        <label>匯款金額（新台幣）</label>
+        <input type="number" id="topupAmount" min="1" placeholder="例如 500">
+        <label>匯款備註（帳號末五碼或轉帳時間）</label>
+        <input type="text" id="topupNote" placeholder="方便我們核對入帳">
+        <button type="button" class="modal-submit" onclick="Tools.submitTopupRequest()">送出儲值申請</button>
+      </details>
     </div>
     <div class="modal-body" id="topupSuccess" style="display:none;text-align:center;">
       <p style="font-size:14px;">已送出儲值申請，我們確認匯款後會盡快加點，請留意信箱回覆。</p>
@@ -3004,12 +3012,14 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   }
   function closeCreditsModal(){document.getElementById('creditsModal').classList.remove('show');}
 
-  // ── 儲值點數（最陽春版：人工匯款 + 管理員在審核後台手動核可）──
+  // ── 儲值點數：ECPay 正式金流為主，人工匯款作為備援 ──
   function openTopupModal(){
     if(!isLoggedIn()){openAuthModal();return;}
     document.getElementById('topupError').classList.remove('show');
+    document.getElementById('ecpayError').classList.remove('show');
     document.getElementById('topupAmount').value='';
     document.getElementById('topupNote').value='';
+    document.getElementById('ecpayAmount').value='';
     document.getElementById('topupFormWrap').style.display='';
     document.getElementById('topupSuccess').style.display='none';
     document.getElementById('topupModal').classList.add('show');
@@ -3022,7 +3032,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     var note=document.getElementById('topupNote').value.trim();
     if(!amount||amount<=0){errEl.textContent='請輸入正確的匯款金額';errEl.classList.add('show');return;}
     if(!note){errEl.textContent='請填寫匯款備註，方便核對';errEl.classList.add('show');return;}
-    apiFetch('/api/credits/topup-request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount_twd:amount,transfer_note:note})})
+    apiFetch('/api/credits/topup-request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amountTwd:amount,transferNote:note})})
       .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
       .then(function(r){
         if(!r.ok){errEl.textContent=r.data.error||'送出失敗，請稍後再試';errEl.classList.add('show');return;}
@@ -3030,6 +3040,48 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
         document.getElementById('topupSuccess').style.display='';
       })
       .catch(function(){errEl.textContent='無法連線到伺服器';errEl.classList.add('show');});
+  }
+
+  // ── 儲值點數：ECPay 正式金流（信用卡／ATM／超商代碼）──
+  // Builds a real <form> and submits it (not fetch) because ECPay's
+  // checkout page is a full top-level navigation, not an API response.
+  function startEcpayCheckout(){
+    var errEl=document.getElementById('ecpayError');
+    errEl.classList.remove('show');
+    var amount=parseInt(document.getElementById('ecpayAmount').value,10);
+    if(!amount||amount<50||amount>20000){errEl.textContent='請輸入 50~20000 之間的整數金額';errEl.classList.add('show');return;}
+    apiFetch('/api/credits/ecpay/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amountTwd:amount})})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){errEl.textContent=r.data.error||'無法建立訂單，請稍後再試';errEl.classList.add('show');return;}
+        var form=document.createElement('form');
+        form.method='POST';
+        form.action=r.data.actionUrl;
+        form.style.display='none';
+        Object.keys(r.data.fields).forEach(function(key){
+          var input=document.createElement('input');
+          input.type='hidden';
+          input.name=key;
+          input.value=r.data.fields[key];
+          form.appendChild(input);
+        });
+        document.body.appendChild(form);
+        form.submit();
+      })
+      .catch(function(){errEl.textContent='無法連線到伺服器';errEl.classList.add('show');});
+  }
+
+  // After ECPay redirects the browser back (ClientBackURL), the actual
+  // credit is posted async by the server-to-server callback — this is just
+  // a friendly "hang tight" notice, not proof of payment.
+  function checkEcpayReturn(){
+    if(new URLSearchParams(location.search).get('topup')!=='done')return;
+    var url=new URL(location.href);
+    url.searchParams.delete('topup');
+    history.replaceState(null,'',url.pathname+url.search+url.hash);
+    setTimeout(function(){
+      alert('付款已送出，款項確認後點數會自動入帳（通常在數分鐘內），請稍後至「我的點數」查看餘額。');
+    },300);
   }
 
   // ── 審核後台（僅管理員；沿用 checkAdminAndRevealStats 的 403 探測模式）──
@@ -3121,6 +3173,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     openTopupModal:openTopupModal,
     closeTopupModal:closeTopupModal,
     submitTopupRequest:submitTopupRequest,
+    startEcpayCheckout:startEcpayCheckout,
     checkAdminAndRevealReview:checkAdminAndRevealReview,
     openReviewModal:openReviewModal,
     closeReviewModal:closeReviewModal,
@@ -3146,6 +3199,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 
   updateHeaderUI();
   refreshDynamic();
+  checkEcpayReturn();
 })();
 </script>
 
