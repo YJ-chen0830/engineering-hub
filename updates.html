@@ -110,6 +110,8 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
     <h2>已修正的計算錯誤</h2>
     <p>依修正時間排序。標籤說明錯誤的影響方向：<span style="color:#B03A2E;font-weight:700;">不安全方向</span>代表原公式會低估需求或高估容許值；<span style="color:#1A7D3A;font-weight:700;">保守方向</span>代表原公式雖然算錯但結果偏安全（可能造成不必要的浪費，但不影響安全）；<span style="color:#9A6B12;font-weight:700;">規範不符</span>代表與現行規範條文有出入。</p>
 
+    <div id="dynamicFixCards"></div>
+
     <div class="fix-card">
       <div class="fix-head"><span class="fix-tool">rc-slab-design</span><span class="fix-date">2026-07-24</span></div>
       <div class="fix-desc">單向板設計原本只檢查「提供配筋 ≥ 需求配筋」，未驗證拉力控制條件（εt≥0.005）與最大配筋量上限。實測發現一組真實案例會通過原有檢查但實際應變僅 0.004，代表原設計公式所假設的 φ=0.9 並不成立、斷面未真正達到宣稱的彎矩強度。已補上完整驗證。</div>
@@ -187,10 +189,81 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
     <h2>如何回報問題</h2>
     <p>如果你在使用任何工具時，發現計算結果跟手算或其他軟體對不上，或覺得某個公式看起來怪怪的——請透過各工具頁面右下角的「意見回饋」按鈕告訴我們。每一筆回報我們都會實際核對，不會已讀不回。</p>
     <div class="note">本頁僅記錄「真正修正過的計算邏輯錯誤」，不包含介面調整、文案潤飾或新工具上線等一般性更新。所有工具計算結果僅供初步評估與參考，正式設計、送審、施工文件仍須經專業技師複核簽證，詳見<a href="about.html" style="color:#143257;text-decoration:underline;">關於我們</a>頁面之工具使用聲明。</div>
+
+    <details class="note" id="adminPostBox" style="display:none;margin-top:16px;cursor:default;">
+      <summary style="cursor:pointer;font-weight:700;color:#143257;">🔒 管理員：新增公告</summary>
+      <div style="margin-top:12px;display:grid;gap:8px;">
+        <input id="apTool" type="text" placeholder="工具代碼（選填，例如 rc-slab-design）" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;">
+        <input id="apTitle" type="text" placeholder="標題" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;">
+        <textarea id="apBody" placeholder="內容" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;min-height:70px;font-family:inherit;"></textarea>
+        <select id="apSeverity" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;">
+          <option value="info">一般公告</option>
+          <option value="unsafe">不安全方向</option>
+          <option value="conservative">保守方向</option>
+          <option value="compliance">規範不符</option>
+        </select>
+        <button id="apSubmit" style="padding:9px;background:#0A1A33;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">發布公告</button>
+        <div id="apMsg" style="font-size:12px;"></div>
+      </div>
+    </details>
   </section>
 </main>
 
 <footer>© 2025–2026 儒鴻結構土木技師事務所 · 工程計算中心</footer>
+<script>
+(function(){
+  var API_BASE='https://cloud-sync-mvp-production.up.railway.app';
+  var TOKEN_KEY='ectr_token';
+  function token(){return localStorage.getItem(TOKEN_KEY);}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var SEV_LABEL={unsafe:'不安全方向',conservative:'保守方向',compliance:'規範不符',info:'一般公告'};
+
+  function renderCard(a){
+    var d=new Date(a.createdAt);
+    var dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return '<div class="fix-card">'+
+      '<div class="fix-head"><span class="fix-tool">'+esc(a.toolCode||a.title)+'</span><span class="fix-date">'+dateStr+'</span></div>'+
+      '<div class="fix-desc">'+(a.toolCode?'<b>'+esc(a.title)+'</b><br>':'')+esc(a.body)+'</div>'+
+      (a.severity!=='info'?'<span class="fix-tag '+a.severity+'">'+SEV_LABEL[a.severity]+'</span>':'')+
+    '</div>';
+  }
+
+  fetch(API_BASE+'/api/announcements').then(function(res){return res.json();}).then(function(list){
+    var el=document.getElementById('dynamicFixCards');
+    if(list&&list.length)el.innerHTML=list.map(renderCard).join('');
+  }).catch(function(){});
+
+  if(!token())return;
+  var box=document.getElementById('adminPostBox');
+  box.style.display='';
+  document.getElementById('apSubmit').addEventListener('click',function(){
+    var msg=document.getElementById('apMsg');
+    var title=document.getElementById('apTitle').value.trim();
+    var body=document.getElementById('apBody').value.trim();
+    if(!title||!body){msg.style.color='#B03A2E';msg.textContent='請填寫標題與內容';return;}
+    msg.style.color='#9A9382';msg.textContent='發布中…';
+    fetch(API_BASE+'/api/announcements',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},
+      body:JSON.stringify({
+        toolCode:document.getElementById('apTool').value.trim(),
+        title:title,
+        body:body,
+        severity:document.getElementById('apSeverity').value
+      })
+    }).then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){msg.style.color='#B03A2E';msg.textContent=r.data.error||'發布失敗';return;}
+        msg.style.color='#1A7D3A';msg.textContent='✔ 已發布';
+        document.getElementById('dynamicFixCards').insertAdjacentHTML('afterbegin',renderCard(r.data));
+        document.getElementById('apTool').value='';
+        document.getElementById('apTitle').value='';
+        document.getElementById('apBody').value='';
+      })
+      .catch(function(){msg.style.color='#B03A2E';msg.textContent='無法連線到伺服器';});
+  });
+})();
+</script>
 
 </body>
 </html>

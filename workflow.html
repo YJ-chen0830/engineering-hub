@@ -96,14 +96,24 @@
   </div>
   <div class="btn-row">
     <button class="btn btn-gold" onclick="printChecklist()">🖨 列印檢核總表</button>
+    <button class="btn btn-gold" onclick="combinedPrint()">📑 合併列印計算書</button>
+    <button class="btn btn-line" onclick="exportExcel()">⬇ 匯出 Excel</button>
+    <button class="btn btn-line" onclick="exportWord()">⬇ 匯出 Word</button>
+  </div>
+  <div class="btn-row">
     <button class="btn btn-navy" onclick="exportJSON()">⬇ 匯出專案 JSON</button>
     <button class="btn btn-line" onclick="document.getElementById('impFile').click()">⬆ 匯入專案 JSON</button>
     <input type="file" id="impFile" accept=".json" style="display:none" onchange="importJSON(this)">
   </div>
   <div class="note">
-    專案資料儲存在本瀏覽器（localStorage）。換電腦或瀏覽器時，用「匯出 / 匯入」搬移全部專案與進度。<br>
-    在各工具填好專案資訊按「💾 儲存專案」後，這裡就會出現該專案。
+    專案資料儲存在本瀏覽器（localStorage）。換電腦或瀏覽器時，用「匯出 / 匯入」搬移全部專案與進度，或下方登入帳號用「雲端同步」。<br>
+    在各工具填好專案資訊按「💾 儲存專案」後，這裡就會出現該專案；「合併列印」「匯出 Excel/Word」需要先在各工具按過「產出計算書 PDF」，該工具的結果才會被收錄。
   </div>
+</div>
+
+<div class="card no-print" id="teamCard">
+  <h2>👥 團隊帳號 · 雲端同步</h2>
+  <div id="teamBody">載入中…</div>
 </div>
 
 <div class="card no-print">
@@ -423,6 +433,235 @@ document.getElementById('projSel').addEventListener('change',render);
 window.addEventListener('storage',refreshProjects);
 window.addEventListener('pageshow',refreshProjects);
 refreshProjects();
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function stripHtml(html){var d=document.createElement('div');d.innerHTML=html;return d.textContent||'';}
+function downloadBlob(content,filename,mime){
+  var blob=new Blob(['﻿'+content],{type:mime});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ── 合併列印 / Excel / Word 匯出 ──
+   資料來源是 jrh_records（jrh-core.js 每次「產出計算書 PDF」時順手存下的
+   完整結果面板），依 workflow.html 自己的 TOOLS 清單順序排列，同一個專案
+   下所有已產出過的工具彙整成一份文件，而不是各自獨立 PDF。 */
+function combinedRecords(proj){
+  var recAll=getJSON('jrh_records')[proj]||{};
+  return TOOLS.filter(function(t){return recAll[t.code];}).map(function(t){
+    return Object.assign({code:t.code,name:t.name},recAll[t.code]);
+  });
+}
+
+function combinedPrint(){
+  var proj=currentProj();
+  if(!proj){alert('請先選擇專案。');return;}
+  var records=combinedRecords(proj);
+  if(!records.length){alert('這個專案還沒有任何工具產出過計算書——需先在各工具頁按過「產出計算書 PDF」，該工具的結果才會被收錄進來。');return;}
+  var projData=getJSON('jrh_projects')[proj]||{};
+  var sub=[];
+  if(projData['pj-loc'])sub.push('工程地點：'+esc(projData['pj-loc']));
+  if(projData['pj-contractor'])sub.push('承造廠商：'+esc(projData['pj-contractor']));
+  document.getElementById('printArea').innerHTML=
+    '<h2 class="print-title">'+esc(proj)+'　合併計算書</h2>'+
+    '<div class="print-sub">'+sub.join('　｜　')+'</div>'+
+    records.map(function(r,i){
+      return '<div style="'+(i>0?'page-break-before:always;':'')+'margin-top:'+(i>0?'0':'14pt')+';">'+
+        '<h3 style="color:#0b1f3a;font-size:13pt;margin:0 0 4pt;">'+(i+1)+'. '+esc(r.name)+'</h3>'+
+        '<div style="font-size:9pt;color:#888;margin-bottom:10pt;">產出日期：'+esc(r.date||'')+'</div>'+
+        r.resultHtml+
+      '</div>';
+    }).join('');
+  var old=document.title;
+  document.title=proj+'_合併計算書';
+  window.addEventListener('afterprint',function(){document.title=old;},{once:true});
+  window.print();
+}
+
+function exportExcel(){
+  var proj=currentProj();
+  if(!proj){alert('請先選擇專案。');return;}
+  var records=combinedRecords(proj);
+  if(!records.length){alert('這個專案還沒有任何工具產出過計算書。');return;}
+  var rows=records.map(function(r,i){
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.date||'')+'</td><td>'+esc(stripHtml(r.resultHtml)).replace(/\n/g,'<br>')+'</td></tr>';
+  }).join('');
+  var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'+
+    '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>計算書彙整</x:Name></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>'+
+    '<body><table border="1"><tr><th>項次</th><th>工具名稱</th><th>產出日期</th><th>計算結果摘要</th></tr>'+rows+'</table></body></html>';
+  downloadBlob(html,proj+'_計算書彙整.xls','application/vnd.ms-excel');
+}
+
+function exportWord(){
+  var proj=currentProj();
+  if(!proj){alert('請先選擇專案。');return;}
+  var records=combinedRecords(proj);
+  if(!records.length){alert('這個專案還沒有任何工具產出過計算書。');return;}
+  var projData=getJSON('jrh_projects')[proj]||{};
+  var body='<h1>'+esc(proj)+' 合併計算書</h1>'+
+    (projData['pj-loc']?'<p>工程地點：'+esc(projData['pj-loc'])+'</p>':'')+
+    (projData['pj-contractor']?'<p>承造廠商：'+esc(projData['pj-contractor'])+'</p>':'')+
+    records.map(function(r,i){
+      return '<h2>'+(i+1)+'. '+esc(r.name)+'</h2><p style="color:#888;font-size:9pt;">產出日期：'+esc(r.date||'')+'</p>'+r.resultHtml;
+    }).join('');
+  var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'+
+    '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--></head>'+
+    '<body>'+body+'</body></html>';
+  downloadBlob(html,proj+'_合併計算書.doc','application/msword');
+}
+
+/* ── 團隊帳號 + 雲端同步 UI ──
+   jrh-core.js 是 defer 載入，要等它跑完（window.JRH 才會存在）才能呼叫
+   JRH.cloudApi 等函式，所以整段包在 DOMContentLoaded 裡（defer 腳本保證
+   在 DOMContentLoaded 前執行完畢）。 */
+function teamInit(){
+  if(!window.JRH||!window.JRH.isLoggedIn){
+    setTimeout(teamInit,200);
+    return;
+  }
+  var inviteMatch=location.search.match(/[?&]teamInvite=([^&]+)/);
+  if(inviteMatch&&window.JRH.isLoggedIn()){
+    var token=decodeURIComponent(inviteMatch[1]);
+    window.JRH.cloudApi('/api/teams/accept-invite',{method:'POST',body:JSON.stringify({token:token})})
+      .then(function(r){alert('已加入團隊「'+r.teamName+'」！');renderTeam();})
+      .catch(function(e){alert('接受邀請失敗：'+e.message);})
+      .then(function(){
+        var url=new URL(location.href);
+        url.searchParams.delete('teamInvite');
+        history.replaceState(null,'',url.pathname+url.search+url.hash);
+      });
+  }
+  renderTeam();
+}
+
+function renderTeam(){
+  var body=document.getElementById('teamBody');
+  if(!window.JRH.isLoggedIn()){
+    body.innerHTML=
+      '<p style="font-size:13px;color:#777;line-height:1.7;">登入帳號後可以：把專案資料備份/同步到雲端（換裝置、清瀏覽器資料也不會遺失）；或建立/加入團隊，跟同事共用付費點數與雲端專案存檔。</p>'+
+      '<button class="btn btn-navy" id="teamLoginBtn">登入 / 註冊</button>';
+    document.getElementById('teamLoginBtn').addEventListener('click',function(){window.JRH.showLoginBox();});
+    return;
+  }
+  body.innerHTML='<p style="font-size:13px;color:#777;">載入團隊資訊…</p>';
+  window.JRH.cloudApi('/api/teams/me').then(function(r){
+    renderSyncRow(body,r.team);
+    if(!r.team){
+      renderNoTeam(body);
+    }else{
+      renderInTeam(body,r.team);
+    }
+  }).catch(function(e){
+    body.innerHTML='<p style="font-size:13px;color:#c00;">載入失敗：'+esc(e.message)+'</p>';
+  });
+}
+
+function renderSyncRow(body,team){
+  var wrap=document.createElement('div');
+  wrap.style.cssText='padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line);';
+  wrap.innerHTML=
+    '<div style="font-size:13px;color:#555;margin-bottom:8px;">'+
+      (team?'目前資料同步範圍：<b>團隊「'+esc(team.name)+'」共用</b>（團隊任何成員都能看到/編輯）':'目前資料同步範圍：<b>個人雲端備份</b>（只有你自己看得到）')+
+    '</div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-line" id="syncUpBtn">☁️ 同步到雲端</button>'+
+      '<button class="btn btn-line" id="syncDownBtn">⬇️ 從雲端載入</button>'+
+    '</div>'+
+    '<div id="syncMsg" style="font-size:12px;color:#888;margin-top:6px;"></div>';
+  body.innerHTML='';
+  body.appendChild(wrap);
+  var msg=wrap.querySelector('#syncMsg');
+  wrap.querySelector('#syncUpBtn').addEventListener('click',function(){
+    msg.style.color='#888';msg.textContent='同步中…';
+    window.JRH.syncProjectsToCloud(function(done,total){msg.textContent='同步中… ('+done+'/'+total+')';})
+      .then(function(r){msg.style.color='#1a6e35';msg.textContent='✔ 已同步 '+r.count+' 個專案到雲端。';})
+      .catch(function(e){msg.style.color='#c00';msg.textContent=e.message;});
+  });
+  wrap.querySelector('#syncDownBtn').addEventListener('click',function(){
+    if(!confirm('從雲端載入會覆蓋本機同名專案的資料，確定要繼續嗎？'))return;
+    msg.style.color='#888';msg.textContent='載入中…';
+    window.JRH.syncProjectsFromCloud(function(done,total){msg.textContent='載入中… ('+done+'/'+total+')';})
+      .then(function(r){msg.style.color='#1a6e35';msg.textContent='✔ 已從雲端載入 '+r.count+' 個專案。';refreshProjects();})
+      .catch(function(e){msg.style.color='#c00';msg.textContent=e.message;});
+  });
+}
+
+function renderNoTeam(body){
+  var wrap=document.createElement('div');
+  wrap.innerHTML=
+    '<div style="font-size:13px;color:#555;margin-bottom:10px;">你目前沒有團隊。建立團隊後，團隊成員會共用一組付費點數與雲端專案存檔（免費功能，沿用現有點數制，不用額外付費）。</div>'+
+    '<div class="btn-row">'+
+      '<input type="text" id="teamNameInp" placeholder="團隊名稱，例如「儒鴻結構」" style="flex:1;min-width:180px;padding:9px 12px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
+      '<button class="btn btn-gold" id="createTeamBtn">建立團隊</button>'+
+    '</div>'+
+    '<div id="teamCreateMsg" style="font-size:12px;color:#c00;margin-top:6px;"></div>';
+  body.appendChild(wrap);
+  wrap.querySelector('#createTeamBtn').addEventListener('click',function(){
+    var name=wrap.querySelector('#teamNameInp').value.trim();
+    var msg=wrap.querySelector('#teamCreateMsg');
+    if(!name){msg.textContent='請輸入團隊名稱';return;}
+    msg.style.color='#888';msg.textContent='建立中…';
+    window.JRH.cloudApi('/api/teams',{method:'POST',body:JSON.stringify({name:name})})
+      .then(function(){renderTeam();})
+      .catch(function(e){msg.style.color='#c00';msg.textContent=e.message;});
+  });
+}
+
+function renderInTeam(body,team){
+  var wrap=document.createElement('div');
+  var membersHtml=team.members.map(function(m){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #eee;font-size:13px;">'+
+      '<span>'+esc(m.email)+(m.isOwner?' <span style="color:var(--gold);font-weight:700;">· 擁有者</span>':'')+'</span>'+
+      (team.role==='owner'&&!m.isOwner?'<button class="btn btn-line" style="padding:4px 10px;font-size:11.5px;" data-remove="'+m.id+'">移除</button>':'')+
+    '</div>';
+  }).join('');
+  var pendingHtml=(team.pendingInvites||[]).map(function(inv){
+    return '<div style="font-size:12px;color:#999;padding:4px 0;">📧 '+esc(inv.email)+'（邀請中，尚未接受）</div>';
+  }).join('');
+  wrap.innerHTML=
+    '<div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;">團隊「'+esc(team.name)+'」</div>'+
+    '<div style="font-size:12.5px;color:#888;margin-bottom:12px;">團隊共用點數餘額：<b style="color:var(--navy);">'+team.credits+' 點</b></div>'+
+    membersHtml+pendingHtml+
+    (team.role==='owner'?
+      '<div class="btn-row" style="margin-top:14px;">'+
+        '<input type="email" id="inviteEmailInp" placeholder="邀請成員的 Email" style="flex:1;min-width:180px;padding:9px 12px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
+        '<button class="btn btn-gold" id="inviteBtn">寄出邀請</button>'+
+      '</div>'
+      :'')+
+    '<div id="teamActionMsg" style="font-size:12px;color:#c00;margin-top:8px;"></div>'+
+    '<button class="btn btn-line" id="leaveTeamBtn" style="margin-top:10px;">離開團隊</button>';
+  body.appendChild(wrap);
+  var actionMsg=wrap.querySelector('#teamActionMsg');
+  var inviteBtn=wrap.querySelector('#inviteBtn');
+  if(inviteBtn)inviteBtn.addEventListener('click',function(){
+    var email=wrap.querySelector('#inviteEmailInp').value.trim();
+    if(!email){actionMsg.textContent='請輸入 Email';return;}
+    actionMsg.style.color='#888';actionMsg.textContent='寄送中…';
+    window.JRH.cloudApi('/api/teams/invite',{method:'POST',body:JSON.stringify({email:email})})
+      .then(function(){actionMsg.style.color='#1a6e35';actionMsg.textContent='✔ 邀請已寄出。';renderTeam();})
+      .catch(function(e){actionMsg.style.color='#c00';actionMsg.textContent=e.message;});
+  });
+  wrap.querySelectorAll('[data-remove]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      if(!confirm('確定要把這位成員移出團隊嗎？'))return;
+      window.JRH.cloudApi('/api/teams/members/'+btn.dataset.remove+'/remove',{method:'POST'})
+        .then(function(){renderTeam();})
+        .catch(function(e){actionMsg.style.color='#c00';actionMsg.textContent=e.message;});
+    });
+  });
+  wrap.querySelector('#leaveTeamBtn').addEventListener('click',function(){
+    if(!confirm('確定要離開這個團隊嗎？'))return;
+    window.JRH.cloudApi('/api/teams/leave',{method:'POST'})
+      .then(function(){renderTeam();})
+      .catch(function(e){actionMsg.style.color='#c00';actionMsg.textContent=e.message;});
+  });
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',teamInit);
+else teamInit();
 </script>
 </body>
 </html>
