@@ -3018,12 +3018,16 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       .then(function(data){
         loadCredits();
         var history=data.history||[];
-        var head='<div style="margin-bottom:14px;font-size:14px;">目前餘額：<strong>'+data.balance+' 點</strong></div>';
+        var isTeam=data.scope==='team';
+        var head='<div style="margin-bottom:14px;font-size:14px;">'
+          +(isTeam?'團隊共用餘額：':'目前餘額：')+'<strong>'+data.balance+' 點</strong>'
+          +(isTeam?'<div style="font-size:12px;color:#6B6557;margin-top:2px;">👥 這是團隊共用點數池，下方紀錄含所有成員的異動，可用來查核團隊使用狀況</div>':'')
+          +'</div>';
         if(!history.length){body.innerHTML=head+'<div class="mine-empty">還沒有任何點數紀錄。</div>';return;}
         body.innerHTML=head+history.map(function(h){
           var pos=h.amount>0;
           return '<div class="credit-history-row">'
-            +'<div><div>'+escapeHtml(creditTypeLabel[h.type]||h.type)+'</div>'
+            +'<div><div>'+escapeHtml(creditTypeLabel[h.type]||h.type)+(h.byEmail?' <span style="color:#9A7B2A;font-weight:600;">· '+escapeHtml(h.byEmail)+'</span>':'')+'</div>'
             +(h.note?'<div style="font-size:12px;color:#6B6557;">'+escapeHtml(h.note)+'</div>':'')
             +'</div>'
             +'<span class="'+(pos?'credit-amount-pos':'credit-amount-neg')+'">'+(pos?'+':'')+h.amount+'</span>'
