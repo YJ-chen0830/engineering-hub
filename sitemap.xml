@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yj-chen0830.github.io/engineering-hub/</loc>
-    <lastmod>2026-07-19</lastmod>
+    <loc>https://juhongstructural.com/</loc>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://yj-chen0830.github.io/engineering-hub/workflow.html</loc>
-    <lastmod>2026-07-19</lastmod>
+    <loc>https://juhongstructural.com/workflow.html</loc>
+    <lastmod>2026-07-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://yj-chen0830.github.io/engineering-hub/privacy.html</loc>
-    <lastmod>2026-07-19</lastmod>
+    <loc>https://juhongstructural.com/privacy.html</loc>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://yj-chen0830.github.io/engineering-hub/about.html</loc>
-    <lastmod>2026-07-20</lastmod>
+    <loc>https://juhongstructural.com/about.html</loc>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://juhongstructural.com/terms.html</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://juhongstructural.com/updates.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://yj-chen0830.github.io/activated-sludge-design/</loc>
@@ -627,6 +639,18 @@
   <url>
     <loc>https://yj-chen0830.github.io/category-d-hazardous-workplace/</loc>
     <lastmod>2026-07-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://yj-chen0830.github.io/pipe-roof-method/</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://yj-chen0830.github.io/rebar-splice.html/</loc>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
