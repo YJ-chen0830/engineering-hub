@@ -48,7 +48,7 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 .brand-icon{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:6px;background:#0A1A33;font-size:20px;line-height:1;}
 .brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;}
 .brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
-.nav-btns{display:flex;gap:10px;}
+.nav-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 .nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .nav-btn:hover{background:#F8F6F0;border-color:#8C8576;}
 
@@ -228,6 +228,18 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 .mine-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #EFEBE2;}
 .mine-row:last-child{border-bottom:none;}
 .mine-empty{text-align:center;color:#8C8576;font-size:13px;padding:30px 0;}
+.mine-row-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.row-btn{padding:5px 11px;border-radius:4px;border:none;font-size:11.5px;font-weight:600;cursor:pointer;font-family:"Noto Sans TC",sans-serif;white-space:nowrap;}
+.row-btn-approve{background:#E7F0EA;color:#2E6B45;}
+.row-btn-approve:hover{background:#2E6B45;color:#fff;}
+.row-btn-reject{background:#F7E9E5;color:#9A5A4B;}
+.row-btn-reject:hover{background:#9A5A4B;color:#fff;}
+.row-btn-submit{background:#F7EFDB;color:#7E641F;}
+.row-btn-submit:hover{background:#C9A24A;color:#fff;}
+.credit-amount-pos{color:#2E6B45;font-weight:600;}
+.credit-amount-neg{color:#9A5A4B;font-weight:600;}
+.review-section-title{font-family:"Archivo",sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9A7B2A;margin:18px 0 8px;}
+.review-section-title:first-child{margin-top:0;}
 </style>
 </head>
 <body>
@@ -254,9 +266,12 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
         GitHub
       </a>
+      <a href="report.html" class="nav-btn">📄 產出計畫書</a>
       <button type="button" id="addToolBtn" class="nav-btn" onclick="Tools.openAddModal()">＋ 新增工具</button>
       <button type="button" id="mineBtn" class="nav-btn" onclick="Tools.openMineModal()">我的工具</button>
+      <button type="button" id="creditBadge" class="nav-btn" onclick="Tools.openCreditsModal()" style="display:none;">💰 – 點</button>
       <button type="button" id="statsBtn" class="nav-btn" onclick="Tools.openStatsModal()" style="display:none;">📊 使用統計</button>
+      <button type="button" id="reviewBtn" class="nav-btn" onclick="Tools.openReviewModal()" style="display:none;">🗂 審核後台</button>
       <button type="button" id="authSlot" class="nav-btn" onclick="Auth.onAuthSlotClick()">登入</button>
     </div>
   </div>
@@ -2184,6 +2199,60 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
+<!-- ===== 點數紀錄 Modal ===== -->
+<div class="modal-overlay" id="creditsModal">
+  <div class="modal-box modal-wide">
+    <div class="modal-hdr">
+      <h3>💰 我的點數</h3>
+      <button type="button" class="modal-close" onclick="Tools.closeCreditsModal()">✕</button>
+    </div>
+    <div class="modal-body" id="creditsBody" style="max-height:70vh;overflow-y:auto;">
+      <div class="mine-empty">載入中…</div>
+    </div>
+    <div class="modal-body" style="padding-top:0;">
+      <button type="button" class="modal-submit" onclick="Tools.openTopupModal()">儲值點數</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 儲值點數 Modal ===== -->
+<div class="modal-overlay" id="topupModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3>儲值點數</h3>
+      <button type="button" class="modal-close" onclick="Tools.closeTopupModal()">✕</button>
+    </div>
+    <div class="modal-body" id="topupFormWrap">
+      <div class="warn" style="background:#FBF1E0;border:1px solid #E3C77E;border-radius:8px;padding:12px 14px;font-size:13px;color:#5C5442;margin-bottom:14px;">
+        目前點數儲值採人工匯款方式：請先聯繫 <a href="mailto:student2173@gmail.com" style="color:#9A7B2A;">student2173@gmail.com</a> 取得匯款帳號，完成匯款後在下方填寫金額與匯款備註（例如帳號末五碼），我們確認入帳後會手動加點，請留意信箱回覆。
+      </div>
+      <div class="modal-error" id="topupError"></div>
+      <label>匯款金額（新台幣）</label>
+      <input type="number" id="topupAmount" min="1" placeholder="例如 500">
+      <label>匯款備註（帳號末五碼或轉帳時間）</label>
+      <input type="text" id="topupNote" placeholder="方便我們核對入帳">
+      <button type="button" class="modal-submit" onclick="Tools.submitTopupRequest()">送出儲值申請</button>
+    </div>
+    <div class="modal-body" id="topupSuccess" style="display:none;text-align:center;">
+      <p style="font-size:14px;">已送出儲值申請，我們確認匯款後會盡快加點，請留意信箱回覆。</p>
+      <button type="button" class="modal-submit" onclick="Tools.closeTopupModal()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 審核後台 Modal（僅管理員） ===== -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal-box modal-wide">
+    <div class="modal-hdr">
+      <h3>🗂 審核後台</h3>
+      <button type="button" class="modal-close" onclick="Tools.closeReviewModal()">✕</button>
+    </div>
+    <div class="modal-body" id="reviewBody" style="max-height:70vh;overflow-y:auto;">
+      <div class="mine-empty">載入中…</div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <p>© 2025 Ju Hong Structural · 儒鴻結構 &nbsp;|&nbsp;
     <a href="about.html">關於我們</a> &nbsp;|&nbsp;
@@ -2366,15 +2435,33 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
 
   function updateHeaderUI(){
     var slot=document.getElementById('authSlot');
+    var creditBadge=document.getElementById('creditBadge');
     if(isLoggedIn()){
       slot.textContent=getEmail();
       slot.title='點一下登出';
+      creditBadge.style.display='';
+      loadCredits();
     }else{
       slot.textContent='登入';
       slot.title='';
+      creditBadge.style.display='none';
     }
     if(window.Tools&&window.Tools.checkAdminAndRevealStats)window.Tools.checkAdminAndRevealStats();
+    if(window.Tools&&window.Tools.checkAdminAndRevealReview)window.Tools.checkAdminAndRevealReview();
     if(window.Tools&&window.Tools.loadFavorites)window.Tools.loadFavorites();
+  }
+
+  // ── 點數（送審 +1 / 審核通過 +4 / 儲值 / 換算計畫書封面 -5，皆站內折抵不可提現）──
+  function loadCredits(){
+    var badge=document.getElementById('creditBadge');
+    if(!badge)return;
+    apiFetch('/api/credits')
+      .then(function(res){return res.ok?res.json():null;})
+      .then(function(data){
+        if(!data)return;
+        badge.textContent='💰 '+data.balance+' 點';
+      })
+      .catch(function(){});
   }
 
   // ── Auth modal ──
@@ -2627,15 +2714,29 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
         if(!list.length){body.innerHTML='<div class="mine-empty">還沒有提交任何工具。</div>';return;}
         var statusLabel={private:'私人',pending:'審核中',approved:'已上架'};
         body.innerHTML=list.map(function(t){
+          var submitBtn=t.status==='private'
+            ?'<button type="button" class="row-btn row-btn-submit" onclick="Tools.submitForReview(\''+t.id+'\')">提交送審</button>'
+            :'';
           return '<div class="mine-row">'
             +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#8C8576;">'+escapeHtml(t.category||'')+'</div></div>'
-            +'<span class="status-pill status-'+t.status+'">'+(statusLabel[t.status]||t.status)+'</span>'
+            +'<div class="mine-row-actions">'+submitBtn+'<span class="status-pill status-'+t.status+'">'+(statusLabel[t.status]||t.status)+'</span></div>'
             +'</div>';
         }).join('');
       })
       .catch(function(){body.innerHTML='<div class="mine-empty">載入失敗，請稍後再試。</div>';});
   }
   function closeMineModal(){document.getElementById('mineModal').classList.remove('show');}
+
+  function submitForReview(id){
+    Auth.apiFetch('/api/tools/'+id+'/submit',{method:'POST'})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){alert(r.data.error||'送審失敗，請稍後再試');return;}
+        loadCredits();
+        openMineModal();
+      })
+      .catch(function(){alert('無法連線到伺服器');});
+  }
 
   function escapeHtml(s){
     return String(s||'').replace(/[&<>"']/g,function(c){
@@ -2799,6 +2900,121 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   }
   function closeStatsModal(){document.getElementById('statsModal').classList.remove('show');}
 
+  // ── 點數紀錄 Modal ──
+  var creditTypeLabel={submit_bonus:'送審獎勵',approve_bonus:'審核通過獎勵',redeem_report:'兌換計畫書封面',topup:'儲值',admin_adjust:'系統調整'};
+  function openCreditsModal(){
+    if(!isLoggedIn()){openAuthModal();return;}
+    var body=document.getElementById('creditsBody');
+    body.innerHTML='<div class="mine-empty">載入中…</div>';
+    document.getElementById('creditsModal').classList.add('show');
+    apiFetch('/api/credits')
+      .then(function(res){return res.json();})
+      .then(function(data){
+        loadCredits();
+        var history=data.history||[];
+        var head='<div style="margin-bottom:14px;font-size:14px;">目前餘額：<strong>'+data.balance+' 點</strong></div>';
+        if(!history.length){body.innerHTML=head+'<div class="mine-empty">還沒有任何點數紀錄。</div>';return;}
+        body.innerHTML=head+history.map(function(h){
+          var pos=h.amount>0;
+          return '<div class="credit-history-row">'
+            +'<div><div>'+escapeHtml(creditTypeLabel[h.type]||h.type)+'</div>'
+            +(h.note?'<div style="font-size:12px;color:#8C8576;">'+escapeHtml(h.note)+'</div>':'')
+            +'</div>'
+            +'<span class="'+(pos?'credit-amount-pos':'credit-amount-neg')+'">'+(pos?'+':'')+h.amount+'</span>'
+            +'</div>';
+        }).join('');
+      })
+      .catch(function(){body.innerHTML='<div class="mine-empty">載入失敗，請稍後再試。</div>';});
+  }
+  function closeCreditsModal(){document.getElementById('creditsModal').classList.remove('show');}
+
+  // ── 儲值點數（最陽春版：人工匯款 + 管理員在審核後台手動核可）──
+  function openTopupModal(){
+    if(!isLoggedIn()){openAuthModal();return;}
+    document.getElementById('topupError').classList.remove('show');
+    document.getElementById('topupAmount').value='';
+    document.getElementById('topupNote').value='';
+    document.getElementById('topupFormWrap').style.display='';
+    document.getElementById('topupSuccess').style.display='none';
+    document.getElementById('topupModal').classList.add('show');
+  }
+  function closeTopupModal(){document.getElementById('topupModal').classList.remove('show');}
+  function submitTopupRequest(){
+    var errEl=document.getElementById('topupError');
+    errEl.classList.remove('show');
+    var amount=parseInt(document.getElementById('topupAmount').value,10);
+    var note=document.getElementById('topupNote').value.trim();
+    if(!amount||amount<=0){errEl.textContent='請輸入正確的匯款金額';errEl.classList.add('show');return;}
+    if(!note){errEl.textContent='請填寫匯款備註，方便核對';errEl.classList.add('show');return;}
+    apiFetch('/api/credits/topup-request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount_twd:amount,transfer_note:note})})
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){errEl.textContent=r.data.error||'送出失敗，請稍後再試';errEl.classList.add('show');return;}
+        document.getElementById('topupFormWrap').style.display='none';
+        document.getElementById('topupSuccess').style.display='';
+      })
+      .catch(function(){errEl.textContent='無法連線到伺服器';errEl.classList.add('show');});
+  }
+
+  // ── 審核後台（僅管理員；沿用 checkAdminAndRevealStats 的 403 探測模式）──
+  function checkAdminAndRevealReview(){
+    var btn=document.getElementById('reviewBtn');
+    if(!isLoggedIn()){btn.style.display='none';return;}
+    apiFetch('/api/review/tools')
+      .then(function(res){btn.style.display=res.ok?'':'none';})
+      .catch(function(){btn.style.display='none';});
+  }
+
+  function reviewRow(labelHtml,approveFn,rejectFn,approveLabel,rejectLabel){
+    return '<div class="mine-row">'
+      +'<div>'+labelHtml+'</div>'
+      +'<div class="mine-row-actions">'
+      +'<button type="button" class="row-btn row-btn-approve" onclick="'+approveFn+'">'+approveLabel+'</button>'
+      +'<button type="button" class="row-btn row-btn-reject" onclick="'+rejectFn+'">'+rejectLabel+'</button>'
+      +'</div></div>';
+  }
+
+  function openReviewModal(){
+    var body=document.getElementById('reviewBody');
+    body.innerHTML='<div class="mine-empty">載入中…</div>';
+    document.getElementById('reviewModal').classList.add('show');
+    Promise.all([
+      apiFetch('/api/review/tools').then(function(res){return res.ok?res.json():[];}).catch(function(){return [];}),
+      apiFetch('/api/review/topups').then(function(res){return res.ok?res.json():[];}).catch(function(){return [];})
+    ]).then(function(results){
+      var tools=results[0]||[], topups=results[1]||[];
+      var html='<div class="review-section-title">待審工具（'+tools.length+'）</div>';
+      html+=tools.length?tools.map(function(t){
+        return reviewRow(
+          '<strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#8C8576;">'+escapeHtml(t.category||'')+'</div>',
+          "Tools.approveTool('"+t.id+"')","Tools.rejectTool('"+t.id+"')",'通過','退回'
+        );
+      }).join(''):'<div class="mine-empty">目前沒有待審工具。</div>';
+      html+='<div class="review-section-title">待審儲值（'+topups.length+'）</div>';
+      html+=topups.length?topups.map(function(r){
+        return reviewRow(
+          '<strong>NT$ '+r.amount_twd+'</strong>　→　'+r.credits_requested+' 點<div style="font-size:12px;color:#8C8576;">'+escapeHtml(r.transfer_note||'')+'</div>',
+          "Tools.confirmTopup('"+r.id+"')","Tools.rejectTopup('"+r.id+"')",'確認入帳','退回'
+        );
+      }).join(''):'<div class="mine-empty">目前沒有待審儲值申請。</div>';
+      body.innerHTML=html;
+    });
+  }
+  function closeReviewModal(){document.getElementById('reviewModal').classList.remove('show');}
+
+  function approveTool(id){
+    apiFetch('/api/review/tools/'+id+'/approve',{method:'POST'}).then(function(){openReviewModal();});
+  }
+  function rejectTool(id){
+    apiFetch('/api/review/tools/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})}).then(function(){openReviewModal();});
+  }
+  function confirmTopup(id){
+    apiFetch('/api/review/topups/'+id+'/confirm',{method:'POST'}).then(function(){openReviewModal();});
+  }
+  function rejectTopup(id){
+    apiFetch('/api/review/topups/'+id+'/reject',{method:'POST'}).then(function(){openReviewModal();});
+  }
+
   // ── 工具開啟點擊追蹤（事件委派，涵蓋 54 張靜態卡片與動態卡片）──
   document.addEventListener('click',function(e){
     var link=e.target.closest('a.btn-open');
@@ -2820,9 +3036,22 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
     submitAdd:submitAdd,
     openMineModal:openMineModal,
     closeMineModal:closeMineModal,
+    submitForReview:submitForReview,
     openStatsModal:openStatsModal,
     closeStatsModal:closeStatsModal,
     checkAdminAndRevealStats:checkAdminAndRevealStats,
+    openCreditsModal:openCreditsModal,
+    closeCreditsModal:closeCreditsModal,
+    openTopupModal:openTopupModal,
+    closeTopupModal:closeTopupModal,
+    submitTopupRequest:submitTopupRequest,
+    checkAdminAndRevealReview:checkAdminAndRevealReview,
+    openReviewModal:openReviewModal,
+    closeReviewModal:closeReviewModal,
+    approveTool:approveTool,
+    rejectTool:rejectTool,
+    confirmTopup:confirmTopup,
+    rejectTopup:rejectTopup,
     refreshDynamic:refreshDynamic,
     loadFavorites:loadFavorites,
     toggleFavorite:toggleFavorite

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<script>
+(function(){
+  if(location.hostname==='yj-chen0830.github.io'){
+    location.replace('https://juhongstructural.com'+location.pathname.replace(/^\/engineering-hub/,'')+location.search+location.hash);
+  }
+})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>產出計畫書封面 · 工程計算中心</title>
+<meta name="description" content="以點數折抵，產出帶事務所抬頭與簽證免責聲明的正式計畫書封面">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#F8F6F0;color:#211F19;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.nav{max-width:1180px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+.brand-icon{font-size:22px;}
+.brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;}
+.brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
+.back-link{font-size:13px;font-weight:500;color:#143257;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{text-decoration:underline;}
+header{border-bottom:1px solid #E4DFD1;}
+
+main{max-width:640px;margin:0 auto;padding:48px 28px 80px;}
+.eyebrow{font-family:"Archivo",sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9A7B2A;margin-bottom:10px;}
+h1{font-family:"Noto Serif TC",serif;font-size:28px;font-weight:600;color:#0A1A33;margin-bottom:10px;}
+.lede{font-size:14px;line-height:1.9;color:#4B473C;margin-bottom:28px;}
+.cost-badge{display:inline-flex;align-items:center;gap:6px;background:#FBF1E0;border:1px solid #E3C77E;color:#8A5A00;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:28px;}
+
+.card{background:#fff;border:1px solid #E4DFD1;border-radius:10px;padding:26px;}
+.balance-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #EFEBE2;font-size:14px;}
+.balance-row strong{font-size:18px;color:#0A1A33;}
+label{display:block;font-size:12.5px;font-weight:600;color:#4B473C;margin:16px 0 6px;}
+label:first-of-type{margin-top:0;}
+input{width:100%;padding:10px 12px;border:1px solid #CBC5B6;border-radius:5px;font-family:"Noto Sans TC",sans-serif;font-size:14px;color:#211F19;background:#fff;}
+input:focus{outline:none;border-color:#9A7B2A;box-shadow:0 0 0 3px rgba(154,123,42,.13);}
+.submit-btn{width:100%;padding:12px;border:none;border-radius:5px;background:#0A1A33;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-top:22px;}
+.submit-btn:hover{filter:brightness(1.12);}
+.submit-btn:disabled{opacity:.55;cursor:not-allowed;}
+.form-error{display:none;background:#FBEAE6;border:1px solid #E3B3A6;color:#9A5A4B;font-size:12.5px;padding:10px 12px;border-radius:5px;margin-top:16px;}
+.form-error.show{display:block;}
+.form-error a{text-decoration:underline;font-weight:600;}
+
+.login-gate{text-align:center;padding:20px 0;}
+.login-gate p{font-size:14px;color:#4B473C;margin-bottom:18px;line-height:1.8;}
+.login-gate a.submit-btn{display:inline-block;text-decoration:none;width:auto;padding:11px 28px;}
+
+/* ── 封面頁（Step 2） ── */
+.cover{background:#fff;border:1px solid #E4DFD1;border-radius:10px;padding:48px 44px;}
+.cover-head{text-align:center;border-bottom:2px solid #C9A24A;padding-bottom:22px;margin-bottom:28px;}
+.cover-eyebrow{font-family:"Archivo",sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;margin-bottom:8px;}
+.cover-org{font-family:"Noto Serif TC",serif;font-size:22px;font-weight:700;color:#0A1A33;}
+.cover-org-sub{font-size:12px;color:#8C8576;margin-top:4px;}
+.cover-title{font-family:"Noto Serif TC",serif;font-size:26px;font-weight:600;color:#0A1A33;text-align:center;margin:24px 0 32px;}
+.cover-field{display:flex;padding:12px 0;border-bottom:1px solid #EFEBE2;font-size:14px;}
+.cover-field .k{width:120px;flex-shrink:0;color:#8C8576;}
+.cover-field .v{color:#211F19;font-weight:500;}
+.cover-warn{background:#FBF1E0;border:1px solid #E3C77E;border-radius:8px;padding:16px 18px;margin-top:28px;font-size:13px;line-height:1.85;color:#5C5442;}
+.cover-warn strong{color:#8A5A00;}
+.cover-note{margin-top:20px;font-size:12.5px;color:#8C8576;text-align:center;font-style:italic;}
+.cover-actions{display:flex;gap:12px;margin-top:32px;}
+.cover-actions button,.cover-actions a{flex:1;text-align:center;padding:12px;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;}
+.btn-print{background:#0A1A33;color:#fff;border:none;}
+.btn-print:hover{filter:brightness(1.12);}
+.btn-back{background:#fff;color:#4B473C;border:1px solid #CBC5B6;}
+.btn-back:hover{background:#F8F6F0;}
+
+@media print{
+  header,.eyebrow,.lede,.cost-badge,.cover-actions,.back-link{display:none!important;}
+  body{background:#fff;}
+  main{max-width:none;padding:0;}
+  .cover{border:none;padding:0;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">📐</div>
+      <div>
+        <div class="brand-text-sub">Ju Hong Structural</div>
+        <div class="brand-text-main">工程計算中心</div>
+      </div>
+    </a>
+    <a href="index.html" class="back-link">← 返回工具首頁</a>
+  </div>
+</header>
+
+<main>
+  <div id="stepForm">
+    <div class="eyebrow">Formal Cover Sheet</div>
+    <h1>產出計畫書封面</h1>
+    <p class="lede">填寫專案資訊，產出一份帶事務所抬頭、統一編號與技師簽證免責聲明的正式封面頁，可列印或另存 PDF，附在您用工具算出的結果之前一起送審。</p>
+    <div class="cost-badge">💰 每份折抵 5 點</div>
+
+    <div class="card">
+      <div id="loginGate" class="login-gate" style="display:none;">
+        <p>產出計畫書封面需要先登入帳號（用來確認並扣除點數）。<br>請回首頁登入後再回來這裡。</p>
+        <a href="index.html" class="submit-btn">回首頁登入</a>
+      </div>
+
+      <div id="formWrap" style="display:none;">
+        <div class="balance-row">
+          <span>目前點數餘額</span>
+          <strong id="balanceDisplay">– 點</strong>
+        </div>
+        <label>使用的計算工具名稱</label>
+        <input type="text" id="fToolTitle" placeholder="例如：模板支撐計畫設計工具">
+        <label>專案名稱</label>
+        <input type="text" id="fProjectName" placeholder="例如：○○大樓新建工程">
+        <label>簽證技師姓名</label>
+        <input type="text" id="fEngineerName" placeholder="請填寫實際簽證之技師姓名">
+        <label>日期</label>
+        <input type="date" id="fDate">
+        <button type="button" class="submit-btn" id="submitBtn" onclick="submitReport()">產出封面（扣 5 點）</button>
+        <div class="form-error" id="formError"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="stepCover" style="display:none;">
+    <div class="cover" id="coverPrintArea">
+      <div class="cover-head">
+        <div class="cover-eyebrow">Structural Engineering Toolkit</div>
+        <div class="cover-org">儒鴻結構土木技師事務所</div>
+        <div class="cover-org-sub">統一編號 88760791 · 420080 台中市南村路19號</div>
+      </div>
+      <div class="cover-title" id="coverToolTitle">計算書</div>
+      <div class="cover-field"><span class="k">專案名稱</span><span class="v" id="coverProjectName"></span></div>
+      <div class="cover-field"><span class="k">簽證技師</span><span class="v" id="coverEngineerName"></span></div>
+      <div class="cover-field"><span class="k">日期</span><span class="v" id="coverDate"></span></div>
+      <div class="cover-warn">
+        <strong>本封面所附之計算結果僅供參考，不得作為正式設計、施工、送審或任何法律責任之唯一依據。</strong>
+        正式工程設計、計算書用印、施工計畫核備等，仍應由具相關執業資格之技師或工程師，依實際地質、法規、業主需求等條件複核、簽證後方可使用；本站與其開發者不對依賴本頁及所附計算結果所生之任何工程、財務或法律後果負責。
+      </div>
+      <div class="cover-note">請將計算工具產出之結果附於本頁之後，一併送審。</div>
+    </div>
+    <div class="cover-actions">
+      <button type="button" class="btn-print" onclick="window.print()">列印 / 另存 PDF</button>
+      <a href="index.html" class="btn-back">返回首頁</a>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var API_BASE='https://cloud-sync-mvp-production.up.railway.app';
+  var TOKEN_KEY='ectr_token';
+  function getToken(){return localStorage.getItem(TOKEN_KEY);}
+  function isLoggedIn(){return !!getToken();}
+  function apiFetch(path,opts){
+    opts=opts||{};
+    opts.headers=opts.headers||{};
+    var token=getToken();
+    if(token)opts.headers['Authorization']='Bearer '+token;
+    return fetch(API_BASE+path,opts);
+  }
+  if(!isLoggedIn()){
+    document.getElementById('loginGate').style.display='';
+  }else{
+    document.getElementById('formWrap').style.display='';
+    document.getElementById('fDate').value=new Date().toISOString().slice(0,10);
+    apiFetch('/api/credits').then(function(res){return res.ok?res.json():null;})
+      .then(function(data){if(data)document.getElementById('balanceDisplay').textContent=data.balance+' 點';})
+      .catch(function(){});
+  }
+
+  window.submitReport=function(){
+    var errEl=document.getElementById('formError');
+    errEl.classList.remove('show');
+    var toolTitle=document.getElementById('fToolTitle').value.trim();
+    var projectName=document.getElementById('fProjectName').value.trim();
+    var engineerName=document.getElementById('fEngineerName').value.trim();
+    var date=document.getElementById('fDate').value;
+    if(!toolTitle||!projectName||!engineerName||!date){
+      errEl.textContent='請完整填寫所有欄位';
+      errEl.classList.add('show');
+      return;
+    }
+    var btn=document.getElementById('submitBtn');
+    btn.disabled=true;
+    apiFetch('/api/reports',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({tool_title:toolTitle,project_name:projectName,engineer_name:engineerName,project_date:date})
+    })
+      .then(function(res){return res.json().then(function(data){return {ok:res.ok,status:res.status,data:data};});})
+      .then(function(r){
+        btn.disabled=false;
+        if(!r.ok){
+          if(r.status===402){
+            errEl.innerHTML='點數不足，請先 <a href="index.html">回首頁儲值點數</a>。';
+          }else{
+            errEl.textContent=r.data.error||'產出失敗，請稍後再試';
+          }
+          errEl.classList.add('show');
+          return;
+        }
+        document.getElementById('coverToolTitle').textContent=toolTitle;
+        document.getElementById('coverProjectName').textContent=projectName;
+        document.getElementById('coverEngineerName').textContent=engineerName;
+        document.getElementById('coverDate').textContent=date;
+        document.getElementById('stepForm').style.display='none';
+        document.getElementById('stepCover').style.display='';
+        window.scrollTo(0,0);
+      })
+      .catch(function(){
+        btn.disabled=false;
+        errEl.textContent='無法連線到伺服器';
+        errEl.classList.add('show');
+      });
+  };
+})();
+</script>
+</body>
+</html>
