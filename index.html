@@ -40,10 +40,15 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 .brand{display:flex;align-items:center;gap:13px;}
 .brand-icon{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:6px;background:#0A1A33;font-size:20px;line-height:1;}
 .brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#7E641F;}
-.brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
+.brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;white-space:nowrap;}
 .nav-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 .nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .nav-btn:hover{background:#F8F6F0;border-color:#8C8576;}
+@media(max-width:640px){
+  .nav{flex-wrap:wrap;}
+  .brand{flex-shrink:0;}
+  .nav-btns{width:100%;justify-content:flex-start;}
+}
 
 /* ── HERO ── */
 .hero{background-color:#0A1A33;background-image:radial-gradient(620px 320px at 100% 0%,rgba(201,162,74,.16),transparent 62%),linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px;border-bottom:2px solid #C9A24A;}
