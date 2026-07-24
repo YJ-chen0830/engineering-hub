@@ -2791,8 +2791,15 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
           var submitBtn=t.status==='private'
             ?'<button type="button" class="row-btn row-btn-submit" onclick="Tools.submitForReview(\''+t.id+'\')">提交送審</button>'
             :'';
+          // A 'private' tool that was never submitted and one that was
+          // reviewed and sent back look identical without this — the owner
+          // has no way to tell "haven't tried yet" from "admin said no,
+          // here's why" apart from this reason text.
+          var rejectNote=(t.status==='private'&&t.rejectReason)
+            ?'<div style="font-size:12px;color:#9A5A4B;margin-top:4px;">✕ 上次退回原因：'+escapeHtml(t.rejectReason)+'</div>'
+            :'';
           return '<div class="mine-row">'
-            +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div></div>'
+            +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div>'+rejectNote+'</div>'
             +'<div class="mine-row-actions">'+submitBtn+'<span class="status-pill status-'+t.status+'">'+(statusLabel[t.status]||t.status)+'</span></div>'
             +'</div>';
         }).join('');
@@ -3120,10 +3127,17 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       var tools=results[0]||[], topups=results[1]||[];
       var html='<div class="review-section-title">待審工具（'+tools.length+'）</div>';
       html+=tools.length?tools.map(function(t){
-        return reviewRow(
-          '<strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div>',
-          "Tools.approveTool('"+t.id+"')","Tools.rejectTool('"+t.id+"')",'通過','退回'
-        );
+        return '<div class="mine-row" style="flex-wrap:wrap;">'
+          +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div></div>'
+          +'<div class="mine-row-actions">'
+          +'<button type="button" class="row-btn row-btn-approve" onclick="Tools.approveTool(\''+t.id+'\')">通過</button>'
+          +'<button type="button" class="row-btn row-btn-reject" onclick="Tools.toggleRejectReason(\''+t.id+'\')">退回</button>'
+          +'</div>'
+          +'<div id="reject-reason-'+t.id+'" style="display:none;flex-basis:100%;margin-top:8px;">'
+          +'<textarea id="reject-reason-input-'+t.id+'" placeholder="退回原因（會顯示給投稿者看，選填）" style="width:100%;min-height:50px;padding:8px 10px;border:1px solid #E2DDD1;border-radius:6px;font-size:13px;font-family:inherit;box-sizing:border-box;"></textarea>'
+          +'<button type="button" class="row-btn row-btn-reject" style="margin-top:6px;" onclick="Tools.rejectTool(\''+t.id+'\')">確認退回</button>'
+          +'</div>'
+          +'</div>';
       }).join(''):'<div class="mine-empty">目前沒有待審工具。</div>';
       html+='<div class="review-section-title">待審儲值（'+topups.length+'）</div>';
       html+=topups.length?topups.map(function(r){
@@ -3140,8 +3154,18 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   function approveTool(id){
     apiFetch('/api/review/tools/'+id+'/approve',{method:'POST'}).then(function(){openReviewModal();});
   }
+  // First click reveals a reason textarea instead of rejecting immediately
+  // — the button that appears in its place ("確認退回") is what actually
+  // submits, so a stray click doesn't reject someone's tool with zero
+  // chance to explain why.
+  function toggleRejectReason(id){
+    var box=document.getElementById('reject-reason-'+id);
+    if(box)box.style.display=box.style.display==='none'?'':'none';
+  }
   function rejectTool(id){
-    apiFetch('/api/review/tools/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})}).then(function(){openReviewModal();});
+    var input=document.getElementById('reject-reason-input-'+id);
+    var reason=input?input.value.trim():'';
+    apiFetch('/api/review/tools/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason:reason})}).then(function(){openReviewModal();});
   }
   function confirmTopup(id){
     apiFetch('/api/review/topups/'+id+'/confirm',{method:'POST'}).then(function(){openReviewModal();});
@@ -3186,6 +3210,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     closeReviewModal:closeReviewModal,
     approveTool:approveTool,
     rejectTool:rejectTool,
+    toggleRejectReason:toggleRejectReason,
     confirmTopup:confirmTopup,
     rejectTopup:rejectTopup,
     refreshDynamic:refreshDynamic,
