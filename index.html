@@ -168,6 +168,7 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 .badge{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
 .badge-pro{background:#F7EFDB;border:1px solid #E3CE96;color:#7E641F;}
 .badge-py{background:#E8F0FB;border:1px solid #B8CFF5;color:#1A4A9A;}
+.community-badge{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:#F1EDE2;border:1px solid #E2DDD1;color:#6B6557;white-space:nowrap;cursor:help;}
 .card-cat{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#7E641F;}
 .card-title{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;margin:0 0 1px;line-height:1.2;}
 .card-title-en{font-family:"Archivo",sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em;color:#6B6557;}
@@ -2818,6 +2819,12 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   }
 
   // ── 動態公開工具（GET /api/tools，approved only，不需登入）──
+  // Every card this function renders came through the public submit->review
+  // flow (the 104 built-in tools are separate static markup elsewhere on the
+  // page, never routed through here) — so unlike those, nobody has vetted
+  // the underlying formulas beyond the admin's pass/reject call. Flagging
+  // that distinction on the card itself, not just relying on someone reading
+  // terms.html, is what lets a professional user calibrate trust correctly.
   function cardHtml(t){
     var url=t.url||t.repo||'#';
     var langLabel=t.lang||'HTML';
@@ -2825,7 +2832,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     return '<article class="card">'
       +'<div class="card-seal" style="background:#C9A24A;"></div><button type="button" class="star-btn" onclick="Tools.toggleFavorite(this,event)" aria-label="加入我的收藏" title="加入我的收藏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg></button>'
       +'<div class="card-body">'
-      +'<div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:'+langColor+';"></span>'+escapeHtml(langLabel)+'</span></div>'
+      +'<div class="card-top"><span class="card-lang"><span class="lang-dot" style="background:'+langColor+';"></span>'+escapeHtml(langLabel)+'</span><span class="community-badge" title="由使用者投稿，非事務所官方開發，未經第三方審查，請自行評估計算依據">👤 社群投稿</span></div>'
       +'<div class="card-cat">'+escapeHtml((CATEGORY_LABEL[t.category]||t.category||'').toUpperCase())+'</div>'
       +'<div><h3 class="card-title">'+escapeHtml(t.title)+'</h3><div class="card-title-en">'+escapeHtml(t.titleEn||'')+'</div></div>'
       +'<p class="card-desc">'+escapeHtml(t.desc||'')+'</p>'
