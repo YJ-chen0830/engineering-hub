@@ -2474,9 +2474,25 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   // around) — the button just does nothing when tapped, which reads as a
   // bug rather than a platform restriction. Detect and steer to email
   // login instead of letting the user hit a silent dead end.
+  //
+  // Two detection layers:
+  // 1. Named apps we know embed a real (non-Custom-Tabs) WebView often
+  //    enough to matter here — LINE, Facebook, Instagram, Messenger,
+  //    WeChat, WhatsApp, Twitter/X, TikTok. Note some of these (notably
+  //    Instagram/Facebook on iOS) increasingly open links via
+  //    SFSafariViewController instead, which Google *does* allow — those
+  //    cases won't match here and correctly show the normal buttons.
+  // 2. Android's WebView component appends a literal "wv" token to the UA
+  //    whenever a raw (non-Custom-Tabs) WebView is used, regardless of
+  //    which app embedded it — this catches apps we haven't named above.
+  //    No equivalent generic marker exists on iOS (WKWebView's UA is
+  //    close enough to real Safari's that it can't be reliably
+  //    distinguished), so this layer only strengthens Android coverage.
   function isInAppWebView(){
     var ua=navigator.userAgent||'';
-    return /Line\//i.test(ua)||/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)||/Instagram/i.test(ua)||/Messenger/i.test(ua)||/MicroMessenger/i.test(ua);
+    var namedApp=/Line\//i.test(ua)||/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)||/Instagram/i.test(ua)||/Messenger/i.test(ua)||/MicroMessenger/i.test(ua)||/WhatsApp/i.test(ua)||/Twitter/i.test(ua)||/BytedanceWebview|musical_ly/i.test(ua);
+    var androidGenericWebview=/Android/i.test(ua)&&/; ?wv\)/i.test(ua);
+    return namedApp||androidGenericWebview;
   }
 
   function openAuthModal(){
