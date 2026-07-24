@@ -2782,10 +2782,14 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     var body=document.getElementById('mineBody');
     body.innerHTML='<div class="mine-empty">載入中…</div>';
     document.getElementById('mineModal').classList.add('show');
-    Auth.apiFetch('/api/tools/mine')
-      .then(function(res){return res.json();})
-      .then(function(list){
+    Promise.all([
+      Auth.apiFetch('/api/tools/mine').then(function(res){return res.json();}),
+      Auth.apiFetch('/api/tools/mine/stats').then(function(res){return res.ok?res.json():[];}).catch(function(){return [];})
+    ]).then(function(results){
+        var list=results[0], stats=results[1]||[];
         if(!list.length){body.innerHTML='<div class="mine-empty">還沒有提交任何工具。</div>';return;}
+        var statsById={};
+        stats.forEach(function(s){statsById[s.id]=s;});
         var statusLabel={private:'私人',pending:'審核中',approved:'已上架'};
         body.innerHTML=list.map(function(t){
           var submitBtn=t.status==='private'
@@ -2798,8 +2802,12 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
           var rejectNote=(t.status==='private'&&t.rejectReason)
             ?'<div style="font-size:12px;color:#9A5A4B;margin-top:4px;">✕ 上次退回原因：'+escapeHtml(t.rejectReason)+'</div>'
             :'';
+          var s=statsById[t.id];
+          var statsNote=(t.status==='approved'&&s)
+            ?'<div style="font-size:12px;color:#6B6557;margin-top:4px;">👁 累計開啟 '+s.totalClicks+' 次（近 30 天 '+s.clicksLast30d+' 次）</div>'
+            :'';
           return '<div class="mine-row">'
-            +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div>'+rejectNote+'</div>'
+            +'<div><strong>'+escapeHtml(t.title)+'</strong><div style="font-size:12px;color:#6B6557;">'+escapeHtml(t.category||'')+'</div>'+rejectNote+statsNote+'</div>'
             +'<div class="mine-row-actions">'+submitBtn+'<span class="status-pill status-'+t.status+'">'+(statusLabel[t.status]||t.status)+'</span></div>'
             +'</div>';
         }).join('');
