@@ -126,11 +126,21 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 @media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:600px){
   .grid{grid-template-columns:1fr;}
-  .hero h1{font-size:28px;}
+  .hero h1{font-size:22px;}
   .nav{padding:12px 18px;flex-wrap:wrap;row-gap:8px;}
   .hero-inner,.main-pad{padding-left:18px;padding-right:18px;}
   main{padding:24px 18px 60px;}
-  .stats{gap:18px;}.stat-num{font-size:26px;}
+  /* 手機上「上面資訊佔太多畫面」——把行銷用的說明句、標語、統計數字都
+     收起來，只留品牌識別（eyebrow + 標題），把畫面盡快讓給工具本身，
+     尤其是回頭使用者最常用的「我的收藏」跟工具卡片。*/
+  .hero-inner{padding-top:20px;padding-bottom:20px;}
+  .hero h1{margin-bottom:6px;}
+  .hero-sub,.hero-tagline,.stats{display:none;}
+  /* 分類 chips 原本會換行佔好幾列，手機上改成單行左右滑動，
+     跟 App 的分類 tab 列一樣，省下大量垂直空間。*/
+  .chip-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none;}
+  .chip-row::-webkit-scrollbar{display:none;}
+  .chip{flex-shrink:0;}
   /* 專案工作流／贊助支持／GitHub already reachable from the footer —
      hide them here so 新增工具／我的工具／登入 (the actual account
      actions) have room instead of overflowing off-screen. */
@@ -2350,14 +2360,34 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 
   searchInput.addEventListener('input',applyFilters);
 
+  var LAST_CAT_KEY='ectr_last_cat';
+  function activateChip(cat){
+    var btn=chipRow.querySelector('.chip[data-cat="'+cat+'"]');
+    if(!btn)return false;
+    chipRow.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
+    btn.classList.add('active');
+    activeCat=cat;
+    return true;
+  }
   chipRow.addEventListener('click',function(e){
     var btn=e.target.closest('.chip');
     if(!btn)return;
-    chipRow.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
-    btn.classList.add('active');
-    activeCat=btn.dataset.cat;
+    activateChip(btn.dataset.cat);
+    localStorage.setItem(LAST_CAT_KEY,activeCat);
     applyFilters();
   });
+
+  // 回頭的使用者（尤其手機、工地現場）通常是要直接用上次在看的分類或
+  // 「我的收藏」，不是每次都要重新篩選一次——記住上次選的分類，下次
+  // 開站直接還原。我的收藏只在還有登入 token 時還原，避免登出後看到
+  // 一個空的收藏畫面；token 判斷直接讀 localStorage，不等其他 script
+  // 的非同步登入狀態，避免時序問題。
+  (function(){
+    var savedCat=localStorage.getItem(LAST_CAT_KEY);
+    if(!savedCat||savedCat==='all')return;
+    if(savedCat==='__fav__'&&!localStorage.getItem('ectr_token'))return;
+    if(activateChip(savedCat))applyFilters();
+  })();
 
   document.addEventListener('keydown',function(e){
     var tag=(e.target.tagName||'').toLowerCase();
