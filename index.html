@@ -2225,6 +2225,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     <div class="modal-body" style="padding-top:0;">
       <button type="button" class="modal-submit" onclick="Tools.openTopupModal()">儲值點數</button>
     </div>
+    <div class="modal-body" style="padding-top:0;border-top:1px solid #E2DDD1;">
+      <div style="font-size:12px;color:#6B6557;margin-bottom:8px;">如果曾在公用電腦或別人的裝置登入過，可以一次讓所有裝置的登入都失效（含這台）。</div>
+      <button type="button" class="modal-submit" style="background:#fff;border:1px solid #9A5A4B;color:#9A5A4B;" onclick="Auth.logoutAllDevices()">登出所有裝置</button>
+    </div>
   </div>
 </div>
 
@@ -2599,6 +2603,23 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       .catch(function(){showAuthError('無法連線到伺服器');});
   }
 
+  // Bumps token_version server-side, which invalidates every JWT already
+  // issued for this account (including the one this very call used) — so
+  // the local session has to be torn down the same as a normal logout
+  // right after, not kept around expecting it still works.
+  function logoutAllDevices(){
+    if(!confirm('確定要讓所有裝置（含這台）的登入都失效嗎？失效後需要重新登入。'))return;
+    apiFetch('/api/auth/logout-all',{method:'POST'})
+      .then(function(){
+        clearSession();
+        closeCreditsModal();
+        updateHeaderUI();
+        Tools.refreshDynamic();
+        alert('已登出所有裝置，請重新登入。');
+      })
+      .catch(function(){alert('操作失敗，請稍後再試。');});
+  }
+
   function onAuthSlotClick(){
     if(isLoggedIn()){
       clearSession();
@@ -2702,7 +2723,8 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     googleLogin:googleLogin,
     facebookLogin:facebookLogin,
     isLoggedIn:isLoggedIn,
-    apiFetch:apiFetch
+    apiFetch:apiFetch,
+    logoutAllDevices:logoutAllDevices
   };
 
   // ── Tools: submit / mine / dynamic public list ──
