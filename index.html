@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+<script>
+(function(){
+  if(location.hostname==='yj-chen0830.github.io'){
+    location.replace('https://juhongstructural.com'+location.pathname.replace(/^\/engineering-hub/,'')+location.search+location.hash);
+  }
+})();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>工程計算中心 · Ju Hong Structural</title>
@@ -172,6 +179,14 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 /* ── FOOTER ── */
 footer{border-top:1px solid #E2DDD1;padding:26px 40px;text-align:center;font-size:13px;color:#ADA796;}
 footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
+
+/* ── COOKIE BANNER ── */
+.cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:500;background:#0A1A33;color:#E7E2D2;padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;box-shadow:0 -2px 12px rgba(10,26,51,0.25);}
+.cookie-banner p{margin:0;font-size:13px;line-height:1.7;color:#C9C4B4;max-width:70ch;}
+.cookie-banner a{color:#D9B96E;}
+.cookie-banner button{flex-shrink:0;background:#C9A24A;color:#0A1A33;border:none;border-radius:4px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:"Noto Sans TC",sans-serif;}
+.cookie-banner button:hover{background:#D9B96E;}
+@media (max-width:560px){.cookie-banner{padding:14px 16px;justify-content:flex-start;}.cookie-banner button{width:100%;}}
 
 /* ── AUTH / USER MENU ── */
 .user-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;border-radius:999px;border:1px solid #CBC5B6;background:#fff;font-family:"Noto Sans TC",sans-serif;font-size:13px;color:#143257;cursor:pointer;transition:all 160ms;}
@@ -2181,6 +2196,24 @@ footer a{color:#9A7B2A;}footer a:hover{text-decoration:underline;}
   </p>
   <p style="margin-top:6px;font-size:11px;">工具均免費使用；如果覺得有幫助，歡迎小額贊助讓開發持續進行。</p>
 </footer>
+
+<div class="cookie-banner" id="cookieBanner" style="display:none;">
+  <p>本站使用 Cookie 以提供登入功能與網站流量分析（Google Analytics、Google／Facebook 登入），繼續使用本站即表示您同意。詳見<a href="privacy.html">隱私權說明</a>。</p>
+  <button type="button" id="cookieBannerBtn">知道了</button>
+</div>
+<script>
+(function(){
+  var KEY='ectr_cookie_consent';
+  if(!localStorage.getItem(KEY)){
+    var el=document.getElementById('cookieBanner');
+    el.style.display='flex';
+    document.getElementById('cookieBannerBtn').addEventListener('click',function(){
+      localStorage.setItem(KEY,'1');
+      el.style.display='none';
+    });
+  }
+})();
+</script>
 
 <script>
 (function(){
