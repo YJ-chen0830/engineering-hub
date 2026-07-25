@@ -406,7 +406,7 @@ function renderRevisions(){
       '<button class="btn btn-gold" id="addRevBtn">新增修訂紀錄</button>'+
     '</div>';
   document.getElementById('addRevBtn').addEventListener('click',function(){
-    var label=document.getElementById('revLabel').value.trim();
+    var label=document.getElementById('revLabel').value.trim().replace(/^rev(?=[.\s]|$)\.?\s*/i,'');
     var reason=document.getElementById('revReason').value.trim();
     if(!label||!reason){alert('請填寫版次與修訂原因。');return;}
     var all=getJSON('jrh_revisions');
