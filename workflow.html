@@ -723,14 +723,29 @@ function renderSyncRow(body,team){
   wrap.querySelector('#syncUpBtn').addEventListener('click',function(){
     msg.style.color='#888';msg.textContent='同步中…';
     window.JRH.syncProjectsToCloud(function(done,total){msg.textContent='同步中… ('+done+'/'+total+')';})
-      .then(function(r){msg.style.color='#1a6e35';msg.textContent='✔ 已同步 '+r.count+' 個專案到雲端。';})
+      .then(function(r){
+        if(r.failed&&r.failed.length){
+          msg.style.color='#c00';
+          msg.textContent='已同步 '+r.count+'/'+r.total+' 個專案，'+r.failed.length+' 個失敗：'+r.failed.map(function(f){return f.name;}).join('、');
+        }else{
+          msg.style.color='#1a6e35';msg.textContent='✔ 已同步 '+r.count+' 個專案到雲端。';
+        }
+      })
       .catch(function(e){msg.style.color='#c00';msg.textContent=e.message;});
   });
   wrap.querySelector('#syncDownBtn').addEventListener('click',function(){
     if(!confirm('從雲端載入會覆蓋本機同名專案的資料，確定要繼續嗎？'))return;
     msg.style.color='#888';msg.textContent='載入中…';
     window.JRH.syncProjectsFromCloud(function(done,total){msg.textContent='載入中… ('+done+'/'+total+')';})
-      .then(function(r){msg.style.color='#1a6e35';msg.textContent='✔ 已從雲端載入 '+r.count+' 個專案。';refreshProjects();})
+      .then(function(r){
+        refreshProjects();
+        if(r.failed&&r.failed.length){
+          msg.style.color='#c00';
+          msg.textContent='已載入 '+r.count+'/'+r.total+' 個專案，'+r.failed.length+' 個失敗：'+r.failed.map(function(f){return f.name;}).join('、');
+        }else{
+          msg.style.color='#1a6e35';msg.textContent='✔ 已從雲端載入 '+r.count+' 個專案。';
+        }
+      })
       .catch(function(e){msg.style.color='#c00';msg.textContent=e.message;});
   });
 }
