@@ -1,149 +1,74 @@
-# Handoff：工程計算中心（Structural Engineering Toolkit）
+# 工程計算中心（Engineering Hub）
 
-> ⚠ **現況說明（2026-07-24 更新）**：本文件其餘內容是最初的規劃書，**與目前正式站（`index.html`）現況有落差**，交接或協作前請先看這段。
->
-> **已經是真的、正式站上線中：**
-> - 免費工具目錄（105 個工具卡片：103 個瀏覽器工具 + 2 個本機 Python 工具），全部免費，無分級
-> - 真實後端（Railway 代管：`cloud-sync-mvp-production.up.railway.app`），有 JWT 登入、Email／Google／Facebook 登入、忘記密碼皆為真實 API，非 localStorage 模擬
-> - 使用者可送出自訂工具，但送出後永遠是 `private`，**沒有公開送審／審核後台介面**（下面「送審→審核流程」與「審核後台」章節目前完全沒有前端，也沒有 approve/reject API）
->
-> **以下規劃目前都還沒做，甚至原型檔 `工程計算中心.dc.html` 都已經放棄這部分（PRO 卡片文案改成「完全免費·歡迎贊助」）：**
-> - PRO 付費層／點數制（`openPay`、`/api/credits`、`/api/reports` 全部不存在）
-> - 送審→審核 UI（後台的「通過／退回」畫面不存在）
->
-> 換句話說：下面的「需要實作的後端」章節是**尚未執行的規劃**，不是目前系統的規格書。若要重啟這個規劃，第一步是先決定 PRO 付費層到底要不要做、什麼時候做。
+儒鴻結構土木技師事務所（Ju Hong Structural）的結構／大地／水利工程計算工具入口網站。正式網域：[juhongstructural.com](https://juhongstructural.com)。
 
-## Overview
-一個把「部署在 GitHub 上的結構／水利工程計算工具」集中管理的入口網站。使用者可搜尋、分類、收藏工具，一鍵開啟網頁版工具或取得本機 Python 執行指令。系統分為兩層商業模式：
+> 這份文件在 2026-07 大幅重寫過。舊版描述的是一份「改用 Next.js/React 重建」的規劃書，那份規劃連同它參考的原型檔 `工程計算中心.dc.html` 都已經放棄——實際上線的是完全不同、簡單得多的架構：純靜態 HTML/JS + 一個共用的 Node/Express 後端。下面內容是目前真正在跑的系統。
 
-- **免費層**：一般計算器（梁、矩陣、P-M 圖、水力、逕流量…），開源、免登入、瀏覽器直接開。
-- **專業層（PRO）**：計畫書級、須審核、可收費的工具（模板支撐計畫、施工架支撐計畫、鋼筋算料最佳化）。免費試算不限次，**產出可送審的正式計畫書時按份計次收費**。
+## 這是什麼
 
-另含一套「送審 → 審核」流程與「審核後台」：使用者可把自己新增的工具「提交送審」，管理員在後台「通過／退回」。
+104 個獨立的計算工具（每個各自是一個 GitHub Pages 網站）+ 2 個本機 Python 工具，全部免費，集中在這個 hub 站做搜尋、分類、收藏、統一登入。工具本身完全不在這個 repo 裡——這裡只有目錄頁跟共用的帳號/點數/儲存後端。
 
-## About the Design Files
-本包內的 `工程計算中心.dc.html` 是**設計參考稿（以 HTML 製作的高保真原型）**，用來呈現最終外觀與互動行為，**不是要直接搬上線的正式程式碼**。任務是：**在目標環境（建議 Next.js / React）中重建此設計**，沿用該專案既有的元件與慣例；若尚無環境，請選最合適的框架（見下方建議技術棧）實作。
+## 架構：三個各自獨立的 repo
 
-目前原型中所有「跨使用者」功能（送審佇列、審核、付費、公開工具庫）都只用瀏覽器 `localStorage` 模擬，**沒有真正後端**。這份 handoff 的核心工作就是把這些換成真實後端 + API。
+這個生態系分散在三個 git repo，各自獨立 commit/push，沒有 monorepo：
 
-## Fidelity
-**高保真（hifi）**。顏色、字體、間距、互動皆為最終設計，請比照重建。設計語言來自「宏儒營造 Hong Ju / 儒鴻結構」設計系統（深藍 + 金色 + 暖石中性色）。
+| repo | 內容 | 部署方式 |
+|---|---|---|
+| **engineering-hub**（這裡） | 首頁 `index.html`、專案工作流 `workflow.html`、關於我們/條款/更新紀錄等靜態頁 | GitHub Pages，push 後自動生效 |
+| **jrh-core** | `jrh-core.js`，104 個工具頁共用的腳本（登入、PDF封面、免責聲明、雲端同步等），每個工具頁用 `<script src="…jrh-core.js?v=N">` 引入 | GitHub Pages，push 後自動生效（但個別瀏覽器可能快取舊版，見下方「已知雷區」） |
+| **cloud-sync-mvp** | Node/Express + Postgres 後端，`cloud-sync-mvp-production.up.railway.app` | Railway，**push 到 GitHub 不會自動部署**，見下方 |
 
----
+104 個外部工具各自是獨立的 GitHub repo（例如 `shoring`、`RC-Beam-Steel-Design`），這份 README 管不到那些，只涵蓋上面三個。
 
-## 需要實作的後端（本次重點）
+無建置流程，純手寫 HTML/CSS/JS，沒有 npm build/bundler（cloud-sync-mvp 除外，那是 Node 服務）。
 
-原型是純前端。要真正上線可收費、可跨裝置審核，需補上：
+## 部署：兩個容易忘記的雷區
 
-### 1. 資料模型
-```
-Tool {
-  id            string (pk)
-  title         string        // 中文名
-  titleEn       string
-  category      string
-  desc          string
-  tags          string[]
-  lang          'HTML' | 'Python'
-  kind          'web' | 'cli' | 'lib' | 'pro'
-  tier          'free' | 'pro'
-  repo          string (url)
-  url           string|null   // GitHub Pages 等，web/pro 用
-  install       string        // 本機工具用
-  cmd           string
-  note          string
-  price         string|null   // pro：'NT$ 300'
-  priceNote     string|null
-  updated       string        // 'YYYY-MM'
-  status        'private' | 'pending' | 'approved'   // 送審狀態
-  ownerId       string (fk User)                     // 提交者
-  createdAt / updatedAt
-}
+1. **cloud-sync-mvp push GitHub 不會自動部署到 Railway**。改完後端要另外在 `cloud-sync-mvp` 目錄下跑：
+   ```
+   railway up --detach
+   ```
+2. **schema.sql 不會自動套用到正式 Postgres**。改完 schema 要手動套用一次：
+   ```
+   railway variables --service Postgres --kv   # 拿 DATABASE_PUBLIC_URL
+   psql "$DATABASE_PUBLIC_URL" -f schema.sql   # 全部是 IF NOT EXISTS，可重複執行
+   ```
+   `railway` CLI 已經 `railway link` 連好這個專案，在 `cloud-sync-mvp` 目錄下直接可用。
 
-User {
-  id, email, displayName, role: 'user' | 'admin', credits: int
-}
+## 功能總覽（都已上線）
 
-Submission (可併入 Tool.status，或獨立表)
-  toolId, submittedBy, status, reviewedBy, reviewedAt, rejectReason?
+**帳號**：Email/密碼、Google、Facebook 登入；忘記密碼；rate limit；登出所有裝置。
 
-CreditLedger / ReportJob {
-  id, userId, toolId, cost, status, resultUrl, createdAt
-}
+**工具目錄**：104+2 個工具，搜尋/分類/收藏；使用者可投稿新工具（`private → pending → approved`），admin 審核（含退回原因）；社群投稿工具有標籤跟官方工具區隔；投稿者能看自己工具的開啟次數統計。
+
+**PRO 點數系統**：送審 +1、審核通過 +4、儲值（人工匯款或 ECPay 信用卡/ATM/超商代碼）、解鎖個人化 PDF 品牌設定 -5（公司名稱/Logo/技師證號/簽章/簽署欄位標題/自訂免責聲明附加文字，一次性費用永久生效）。
+
+**團隊帳號**（免費，一人最多屬於一個團隊）：邀請成員（Email，7天效期連結）、共用點數池、共用雲端專案存檔、共用 PDF 品牌設定、成員離開時可選擇轉移其投稿工具擁有權、點數紀錄可查每筆是哪位成員的動作。
+
+**專案工作流**（`workflow.html` + jrh-core.js）：104 個工具頁共用的「專案資訊」欄位跨工具自動同步（純 localStorage）；修訂履歷（Rev.A/B/C）；多工具合併列印成一份計算書；匯出 Excel/Word；雲端同步（登入後手動觸發，個人備份或團隊共用）。
+
+**公告系統**：`updates.html` 的「已修正的計算錯誤」區塊，admin 可直接發布新公告（不用改 HTML 重新部署）。
+
+## 本機開發
+
+```bash
+cd cloud-sync-mvp
+export PGDATABASE=jrh_cloud   # 本機 Postgres，跟正式庫完全分開
+psql -d jrh_cloud -f schema.sql
+./start.sh                     # 讀 .env / .jwt_secret，預設 PORT=4001
 ```
 
-### 2. 需要的 API（把前端 localStorage 呼叫換成這些）
-- `GET  /api/tools`                    公開清單（status=approved + 內建）
-- `POST /api/tools`                    新增（預設 status=private，綁 ownerId）
-- `PATCH/DELETE /api/tools/:id`        編輯／刪除（僅 owner）
-- `POST /api/tools/:id/submit`         提交送審 → status=pending
-- `POST /api/tools/:id/withdraw`       取消送審 → status=private
-- `GET  /api/review/queue`            （admin）待審清單 status=pending
-- `POST /api/review/:id/approve`      （admin）→ status=approved
-- `POST /api/review/:id/reject`       （admin）→ status=private (+reason)
-- `POST /api/reports`                  產出計畫書：驗證點數 → 扣點 → 伺服器端跑計算 → 回傳報告
-- `GET/POST /api/credits`              點數餘額／購買（串金流 webhook）
-- Auth：登入 / 目前使用者 / role
+前端（`engineering-hub`、`jrh-core`）純靜態檔，`python3 -m http.server` 開個本機伺服器就能測；但正式站的 CORS 只允許 `yj-chen0830.github.io`／`juhongstructural.com`／`www.juhongstructural.com` 三個網域，本機網址打正式站 API 會被擋（如果要測真的 API 行為，用本機後端或 curl，不要指望瀏覽器打正式站）。
 
-### 3. 付費（PRO 工具）
-- 模式：**按份計次**（點數制）。產出一份正式計畫書扣一次點；免費試算不扣點。
-- 金流：台灣建議 **綠界 ECPay** 或 **藍新 NewebPay**；國際用 **Stripe**。
-- 計算引擎跑在**伺服器端**（保護核心邏輯 IP，同時計量）。原型中 pro 工具的「免費試算」開的是公開 GitHub Pages；正式「產出計畫書」那一步要走 `/api/reports`。
-- ⚠ 法律：計畫書仍須專業技師簽證負責，工具僅為輔助。UI 已含此免責聲明，後端產出的文件也應內含同樣聲明。
+## 已知雷區
 
-### 4. 前端要改接 API 的位置（在 `工程計算中心.dc.html` 的 logic class 內）
-目前這些方法都寫 `localStorage`，換成打上面 API：
-- `componentDidMount()` 讀 `ectr_favs / ectr_recents / ectr_custom_tools` → 改為 `GET /api/tools` + 使用者收藏
-- `persist()` / `persistCustom()` → 對應 PATCH
-- `submitForReview / withdrawReview / approveTool / rejectTool / setStatus` → 對應 submit/withdraw/approve/reject API
-- `submitAdd()` → `POST /api/tools`；`deleteFromEdit / deleteCustom` → `DELETE`
-- `openPay()` 開的付費 modal 的「購買點數」目前是 `alert` → 接 `/api/credits` + 金流
+- **jrh-core.js 有版本快取**：104 個工具頁引入時帶 `?v=N`，改完 jrh-core.js 內容如果需要強制所有瀏覽器立即拿到新版，要記得每個工具頁的引入版本號都要跟著升（目前 104 個工具頁各自維護自己的版本號，沒有集中管理）。
+- **不要把「已具備」跟「已修正」搞混**：這個專案經歷過好幾輪重新查證，同一個功能可能「查證後發現其實早就做了」——改東西之前先實際讀程式碼確認現況，不要單憑印象或舊文件。
+- **team_invites.invited_by 沒有 ON DELETE CASCADE**：如果之後做帳號刪除功能，刪除一個曾經發過邀請的使用者會因為這個外鍵失敗，需要先處理。
 
-### 5. 建議技術棧
-- **Next.js (App Router) + React + TypeScript**
-- **Supabase**（Postgres + Auth + RLS）或 Firebase 存資料與登入；RLS 確保只有 owner 能改自己的工具、只有 admin 能審核
-- **ECPay / NewebPay / Stripe** 金流；point ledger 記帳
-- 部署：Vercel（前端 + API routes）
-- 免費層可與付費層同站；免費工具目錄也可先純靜態（GitHub Pages）上線打品牌
+## 尚未做、需要另外決策的方向
 
----
-
-## Screens / Views（設計細節見原型檔）
-
-### 首頁 / 目錄
-- **Header**（sticky, `rgba(255,255,255,0.86)` + blur10）：左 logo lockup（JU HONG STRUCTURAL 金色 eyebrow + 工程計算中心 深藍 serif）；右「審核後台」（含待審數量金色徽章）+「GitHub」兩顆按鈕。
-- **Hero**：深藍底 `#0A1A33` + 藍圖網格紋 + 右上金色 radial glow，底邊 2px 金線。eyebrow「STRUCTURAL ENGINEERING TOOLKIT」；H1「統一管理與調用您的計算程式」；副文；**slogan「願能讓複雜的工程，多一絲簡單的可能」**（Noto Sans TC, 700, 金色 `#D9B96E`, 前綴一道 28×2px 金線）；搜尋框；三個統計數字（計算工具數 / 分類數 / 最近更新）。
-- **工具區**：最近使用橫捲 chips → 分類 pills + 我的最愛/排序切換 → 三個分組：
-  1. **專業計畫書 PRO**（金色 3px seal，卡片有「專業版 PRO」金色徽章、標價、「產出計畫書」按鈕）
-  2. **瀏覽器工具**（web，「開啟工具」）
-  3. **本機工具 · Python**（cli/lib，「調用程式」開指令 modal）+ 尾端「新增工具」虛線卡
-
-### Modals
-- **調用本機 Python**：安裝指令 + 執行指令（可複製）+ 說明 + 開啟原始碼
-- **產出計畫書（付費）**：PRO 徽章、標價、按份計費說明、剩餘點數、「免費試算 / 購買點數」、技師簽證免責聲明
-- **新增／編輯工具**：完整表單（名稱、英文名、分類、執行方式、GitHub 連結、網址、安裝／執行指令、說明、標籤）；編輯時多「公開工具庫狀態」區塊（提交送審／取消送審）+ footer 刪除鍵（受 `allowDelete` 權限控制）
-- **審核後台**：待審清單，每筆可「通過 / 退回」，點 repo 連結開 GitHub
-
-## Design Tokens
-- 深藍 navy：`#0A1A33`（hero/深底）、`#0E2546`/`#143257`（按鈕）
-- 金色 gold：`#C9A24A`（accent/seal/focus）、`#D9B96E`（暗底金字）、`#9A7B2A`/`#7E641F`（金字於淺底）
-- 暖石中性：底 `#F8F6F0`、文字 `#211F19`/`#4B473C`/`#6B6557`/`#8C8576`、邊框 `#E2DDD1`/`#EFEBE2`/`#CBC5B6`、卡片白 `#FFFFFF`
-- 語意：綠（通過/web）`#2E6B45`、紅褐（刪除/退回）`#9A5A4B`、藍點（React/程式碼）`#295892`
-- 字體：Display＝Noto Serif TC；內文/UI＝Noto Sans TC；eyebrow/數字＝Archivo（大寫 tracking 0.1–0.18em）
-- 圓角：2/4/6px（rectilinear）；pills 用於標籤/篩選
-- 陰影：navy-tinted `rgba(10,26,51,…)`；卡片 hover 上移 3px
-- Focus ring：`0 0 0 3px rgba(201,162,74,0.45)` 金色
-- Motion：120–320ms，`cubic-bezier(0.2,0,0.1,1)` / `(0.16,1,0.3,1)`，無彈跳
-
-## Assets
-- Logo：`assets/logo-j-mark-light.png`（儒鴻結構 J，反白，用於深藍 tile）
-- 藍圖網格：hero 背景用 CSS `linear-gradient` 疊出，無需外部圖
-- 圖示：Lucide 風格 inline SVG（2px stroke）
-
-## Interactions & State
-- 狀態：`query, category, favOnly, sort, favs[], recents[], customTools[], modalId, payId, addOpen, editId, reviewOpen, form{}`
-- 收藏/最近使用/自訂工具目前存 localStorage（`ectr_*`）——上線改後端
-- 工具 props（tweak）：`accent`(gold/navy)、`density`(comfortable/compact)、`showRecent`(bool)、`allowDelete`(bool，共用時可禁止刪除)
-
-## Files
-- `工程計算中心.dc.html` — 完整高保真原型（Design Component；template + logic class）。所有畫面、資料、互動都在此檔，是重建的唯一參考來源。
+- 帳號刪除功能——`tools.owner_id` 是 `ON DELETE CASCADE`，真的刪帳號會連帶砍掉使用者已上架的公開工具，牽涉資料保留政策，需要先決定要匿名保留還是真的砍。
+- ECPay 正式金鑰（商家帳號審核中，目前用官方沙盒環境）。
+- 104 個外部工具各自的內容/公式依據標註、版本號——這些要逐一進到各自的 repo 才能做。
+- README 曾經規劃過的「模板支撐計畫／施工架支撐計畫／鋼筋算料最佳化」三個真正付費的 PRO 工具，目前完全沒有動工，只是討論過方向。
