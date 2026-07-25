@@ -820,7 +820,12 @@ else teamInit();
 // "帳號" button) but logging in/out there doesn't reload the page, so
 // without this the team card silently keeps showing stale "not logged in"
 // state until the user manually refreshes.
-window.addEventListener('jrh:login',renderTeam);
+// teamInit() (not just renderTeam()) — a real invite flow is "click email
+// link while logged out, then log in" and teamInit() is what actually
+// re-checks the URL for ?teamInvite= and attempts acceptance; it wasn't
+// processed on page load because isLoggedIn() was false at the time, so
+// login alone has to re-trigger that check, not just refresh the card.
+window.addEventListener('jrh:login',teamInit);
 window.addEventListener('jrh:logout',renderTeam);
 </script>
 </body>
