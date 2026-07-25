@@ -816,6 +816,12 @@ function renderInTeam(body,team){
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',teamInit);
 else teamInit();
+// jrh-core.js's login/logout box lives on this same page (via the FAB
+// "帳號" button) but logging in/out there doesn't reload the page, so
+// without this the team card silently keeps showing stale "not logged in"
+// state until the user manually refreshes.
+window.addEventListener('jrh:login',renderTeam);
+window.addEventListener('jrh:logout',renderTeam);
 </script>
 </body>
 </html>
