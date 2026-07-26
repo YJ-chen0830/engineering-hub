@@ -205,6 +205,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,26,51,.55);z-index:100;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;}
 .modal-overlay.show{display:flex;}
+body.modal-open{overflow:hidden;}
 .modal-box{background:#fff;border-radius:8px;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(10,26,51,.28);}
 .modal-box.modal-wide{max-width:640px;}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #E2DDD1;}
@@ -2081,7 +2082,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </main>
 
 <!-- ===== 登入 / 註冊 Modal ===== -->
-<div class="modal-overlay" id="authModal">
+<div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
   <div class="modal-box">
     <div class="modal-hdr">
       <h3 id="authModalTitle">登入</h3>
@@ -2125,10 +2126,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 新增工具 Modal ===== -->
-<div class="modal-overlay" id="addToolModal">
+<div class="modal-overlay" id="addToolModal" role="dialog" aria-modal="true" aria-labelledby="addToolModalTitle">
   <div class="modal-box modal-wide">
     <div class="modal-hdr">
-      <h3>新增工具</h3>
+      <h3 id="addToolModalTitle">新增工具</h3>
       <button type="button" class="modal-close" onclick="Tools.closeAddModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -2187,10 +2188,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 我的工具 Modal ===== -->
-<div class="modal-overlay" id="mineModal">
+<div class="modal-overlay" id="mineModal" role="dialog" aria-modal="true" aria-labelledby="mineModalTitle">
   <div class="modal-box modal-wide">
     <div class="modal-hdr">
-      <h3>我的工具</h3>
+      <h3 id="mineModalTitle">我的工具</h3>
       <button type="button" class="modal-close" onclick="Tools.closeMineModal()">✕</button>
     </div>
     <div class="modal-body" id="mineBody">
@@ -2200,10 +2201,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 使用統計 Modal（僅管理員） ===== -->
-<div class="modal-overlay" id="statsModal">
+<div class="modal-overlay" id="statsModal" role="dialog" aria-modal="true" aria-labelledby="statsModalTitle">
   <div class="modal-box modal-wide">
     <div class="modal-hdr">
-      <h3>📊 工具使用統計</h3>
+      <h3 id="statsModalTitle">📊 工具使用統計</h3>
       <button type="button" class="modal-close" onclick="Tools.closeStatsModal()">✕</button>
     </div>
     <div class="modal-body" id="statsBody" style="max-height:70vh;overflow-y:auto;">
@@ -2213,10 +2214,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 點數紀錄 Modal ===== -->
-<div class="modal-overlay" id="creditsModal">
+<div class="modal-overlay" id="creditsModal" role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
   <div class="modal-box modal-wide">
     <div class="modal-hdr">
-      <h3>💰 我的點數</h3>
+      <h3 id="creditsModalTitle">💰 我的點數</h3>
       <button type="button" class="modal-close" onclick="Tools.closeCreditsModal()">✕</button>
     </div>
     <div class="modal-body" id="creditsBody" style="max-height:70vh;overflow-y:auto;">
@@ -2233,10 +2234,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 儲值點數 Modal ===== -->
-<div class="modal-overlay" id="topupModal">
+<div class="modal-overlay" id="topupModal" role="dialog" aria-modal="true" aria-labelledby="topupModalTitle">
   <div class="modal-box">
     <div class="modal-hdr">
-      <h3>儲值點數</h3>
+      <h3 id="topupModalTitle">儲值點數</h3>
       <button type="button" class="modal-close" onclick="Tools.closeTopupModal()">✕</button>
     </div>
     <div class="modal-body" id="topupFormWrap">
@@ -2266,10 +2267,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 </div>
 
 <!-- ===== 審核後台 Modal（僅管理員） ===== -->
-<div class="modal-overlay" id="reviewModal">
+<div class="modal-overlay" id="reviewModal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
   <div class="modal-box modal-wide">
     <div class="modal-hdr">
-      <h3>🗂 審核後台</h3>
+      <h3 id="reviewModalTitle">🗂 審核後台</h3>
       <button type="button" class="modal-close" onclick="Tools.closeReviewModal()">✕</button>
     </div>
     <div class="modal-body" id="reviewBody" style="max-height:70vh;overflow-y:auto;">
@@ -3318,6 +3319,53 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     if(e.key==='Escape'){
       document.querySelectorAll('.modal-overlay.show').forEach(function(o){o.classList.remove('show');});
     }
+  });
+
+  // ── Modal a11y: focus management + scroll lock + Tab trap ──
+  // Every one of the 7 modals here just toggles the same 'show' class
+  // (open functions add it, close functions / backdrop-click / Escape
+  // above all remove it) — so rather than touching all 14 open/close call
+  // sites individually, this observes that one shared signal and handles
+  // focus/scroll-lock/Tab-trapping generically for whichever modal is
+  // currently open. This also closes the "Escape both clears the search
+  // box and closes a modal" overlap noted elsewhere: once a modal is open,
+  // Tab can no longer reach the search input at all, so it can never be
+  // document.activeElement while a modal is showing.
+  var modalReturnFocus=null;
+  function focusableIn(box){
+    return Array.prototype.filter.call(
+      box.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'),
+      function(el){return el.offsetParent!==null;}
+    );
+  }
+  document.querySelectorAll('.modal-overlay').forEach(function(overlay){
+    var wasShown=false;
+    new MutationObserver(function(){
+      var shown=overlay.classList.contains('show');
+      if(shown&&!wasShown){
+        modalReturnFocus=document.activeElement;
+        document.body.classList.add('modal-open');
+        var box=overlay.querySelector('.modal-box');
+        var first=box&&focusableIn(box)[0];
+        if(first)first.focus();
+      }else if(!shown&&wasShown){
+        if(!document.querySelector('.modal-overlay.show'))document.body.classList.remove('modal-open');
+        if(modalReturnFocus&&modalReturnFocus.focus)modalReturnFocus.focus();
+        modalReturnFocus=null;
+      }
+      wasShown=shown;
+    }).observe(overlay,{attributes:true,attributeFilter:['class']});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Tab')return;
+    var overlay=document.querySelector('.modal-overlay.show');
+    if(!overlay)return;
+    var box=overlay.querySelector('.modal-box');
+    var items=box&&focusableIn(box);
+    if(!items||!items.length)return;
+    var first=items[0],last=items[items.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
   });
 
   updateHeaderUI();
