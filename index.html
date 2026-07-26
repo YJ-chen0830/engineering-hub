@@ -2911,6 +2911,15 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   // 不是另外發明一套id系統。
   var favoriteUrls=null; // null＝尚未載入（或未登入）；已登入時是 Set<url>
 
+  // A favorite is keyed on the "開啟工具" link's URL, but link.href always
+  // includes a trailing slash for a bare-origin/path (browser URL-parsing
+  // behavior), and if a card's static href in the markup or an external
+  // repo's URL ever gains/loses one, the same tool would compare as two
+  // different keys — a match that used to light up the star silently stops
+  // working. Stripping one trailing slash here (applied consistently on
+  // every read/write of the set) makes that comparison robust to it.
+  function normalizeFavUrl(u){return typeof u==='string'?u.replace(/\/$/,''):u;}
+
   // Every card's star button ships with the same static aria-label="加入我的
   // 收藏" (only makes sense for the not-yet-favorited state) — this updates
   // it, plus title and aria-pressed, to actually reflect current state
@@ -2927,7 +2936,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       var link=card.querySelector('.btn-open');
       var btn=card.querySelector('.star-btn');
       if(!link||!btn)return;
-      var isFav=!!(favoriteUrls&&favoriteUrls.has(link.href));
+      var isFav=!!(favoriteUrls&&favoriteUrls.has(normalizeFavUrl(link.href)));
       btn.classList.toggle('is-fav',isFav);
       setFavAria(btn,isFav);
     });
@@ -2949,7 +2958,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     apiFetch('/api/favorites')
       .then(function(res){return res.json();})
       .then(function(list){
-        favoriteUrls=new Set(list.map(function(f){return f.toolUrl;}));
+        favoriteUrls=new Set(list.map(function(f){return normalizeFavUrl(f.toolUrl);}));
         markFavoriteCards();
         if(window.HubSearch)window.HubSearch.rescan();
       })
@@ -2974,7 +2983,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     btn.classList.toggle('is-fav',!wasFav);
     setFavAria(btn,!wasFav);
     if(!favoriteUrls)favoriteUrls=new Set();
-    if(wasFav)favoriteUrls.delete(url);else favoriteUrls.add(url);
+    if(wasFav)favoriteUrls.delete(normalizeFavUrl(url));else favoriteUrls.add(normalizeFavUrl(url));
     if(window.HubSearch)window.HubSearch.rescan();
 
     var req=wasFav
@@ -2987,7 +2996,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     req.catch(function(){
       btn.classList.toggle('is-fav',wasFav);
       setFavAria(btn,wasFav);
-      if(wasFav)favoriteUrls.add(url);else favoriteUrls.delete(url);
+      if(wasFav)favoriteUrls.add(normalizeFavUrl(url));else favoriteUrls.delete(normalizeFavUrl(url));
       if(window.HubSearch)window.HubSearch.rescan();
     });
   }
@@ -3206,8 +3215,15 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   }
   function closeReviewModal(){document.getElementById('reviewModal').classList.remove('show');}
 
+  // A failed admin action here previously had no .catch() at all — on a
+  // network error the modal just sat there with no feedback, and the admin
+  // (the site owner) had no way to tell "it didn't go through" from "it's
+  // just slow", especially since these actions move real money/credits.
+  function reviewActionFailed(err){
+    alert('操作失敗：'+((err&&err.message)||'無法連線到伺服器，請稍後再試'));
+  }
   function approveTool(id){
-    apiFetch('/api/review/tools/'+id+'/approve',{method:'POST'}).then(function(){openReviewModal();});
+    apiFetch('/api/review/tools/'+id+'/approve',{method:'POST'}).then(function(){openReviewModal();}).catch(reviewActionFailed);
   }
   // First click reveals a reason textarea instead of rejecting immediately
   // — the button that appears in its place ("確認退回") is what actually
@@ -3220,13 +3236,13 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   function rejectTool(id){
     var input=document.getElementById('reject-reason-input-'+id);
     var reason=input?input.value.trim():'';
-    apiFetch('/api/review/tools/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason:reason})}).then(function(){openReviewModal();});
+    apiFetch('/api/review/tools/'+id+'/reject',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reason:reason})}).then(function(){openReviewModal();}).catch(reviewActionFailed);
   }
   function confirmTopup(id){
-    apiFetch('/api/review/topups/'+id+'/confirm',{method:'POST'}).then(function(){openReviewModal();});
+    apiFetch('/api/review/topups/'+id+'/confirm',{method:'POST'}).then(function(){openReviewModal();}).catch(reviewActionFailed);
   }
   function rejectTopup(id){
-    apiFetch('/api/review/topups/'+id+'/reject',{method:'POST'}).then(function(){openReviewModal();});
+    apiFetch('/api/review/topups/'+id+'/reject',{method:'POST'}).then(function(){openReviewModal();}).catch(reviewActionFailed);
   }
 
   // ── 工具開啟點擊追蹤（事件委派，涵蓋 54 張靜態卡片與動態卡片）──
