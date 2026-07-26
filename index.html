@@ -2863,7 +2863,13 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   // that distinction on the card itself, not just relying on someone reading
   // terms.html, is what lets a professional user calibrate trust correctly.
   function cardHtml(t){
-    var url=t.url||t.repo||'#';
+    // escapeHtml(url) below only neutralizes markup characters, not the URL
+    // scheme itself — a submitted tool with url="javascript:alert(1)" would
+    // still render as a clickable javascript: link. Community-submitted tools
+    // only ever legitimately point at an http(s) page, so anything else falls
+    // back to a harmless '#'.
+    var rawUrl=t.url||t.repo||'#';
+    var url=/^https?:\/\//i.test(rawUrl)?rawUrl:'#';
     var langLabel=t.lang||'HTML';
     var langColor=langLabel==='Python'?'#3572A5':'#f1e05a';
     return '<article class="card">'

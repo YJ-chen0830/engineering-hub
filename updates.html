@@ -221,10 +221,14 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
   function renderCard(a){
     var d=new Date(a.createdAt);
     var dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    // severity comes straight from the API response — whitelisting against
+    // the known keys (rather than just esc()-ing) also closes off an
+    // unrecognized value silently rendering "undefined" as the label.
+    var severity=Object.prototype.hasOwnProperty.call(SEV_LABEL,a.severity)?a.severity:'info';
     return '<div class="fix-card">'+
       '<div class="fix-head"><span class="fix-tool">'+esc(a.toolCode||a.title)+'</span><span class="fix-date">'+dateStr+'</span></div>'+
       '<div class="fix-desc">'+(a.toolCode?'<b>'+esc(a.title)+'</b><br>':'')+esc(a.body)+'</div>'+
-      (a.severity!=='info'?'<span class="fix-tag '+a.severity+'">'+SEV_LABEL[a.severity]+'</span>':'')+
+      (severity!=='info'?'<span class="fix-tag '+severity+'">'+SEV_LABEL[severity]+'</span>':'')+
     '</div>';
   }
 
