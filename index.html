@@ -229,7 +229,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 #googleBtnContainer{max-width:400px;}
 .oauth-btn:hover{background:#F8F6F0;}
 .modal-switch{text-align:center;font-size:12.5px;color:#6B6557;margin-top:16px;}
-.modal-switch a{color:#7E641F;font-weight:600;cursor:pointer;text-decoration:underline;}
+.modal-switch button{color:#7E641F;font-weight:600;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;}
 .status-pill{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
 .status-private{background:#EFEBE2;color:#6B6557;}
 .status-pending{background:#F7EFDB;color:#7E641F;}
@@ -2118,7 +2118,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       <button type="button" class="modal-submit" id="authSubmitBtn" onclick="Auth.submitPassword()">登入</button>
       <div class="modal-switch">
         <span id="authSwitchText">還沒有帳號？</span>
-        <a onclick="Auth.toggleMode()" id="authSwitchLink">註冊一個</a>
+        <button type="button" onclick="Auth.toggleMode()" id="authSwitchLink">註冊一個</button>
       </div>
     </div>
   </div>
@@ -2905,12 +2905,25 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   // 不是另外發明一套id系統。
   var favoriteUrls=null; // null＝尚未載入（或未登入）；已登入時是 Set<url>
 
+  // Every card's star button ships with the same static aria-label="加入我的
+  // 收藏" (only makes sense for the not-yet-favorited state) — this updates
+  // it, plus title and aria-pressed, to actually reflect current state
+  // instead of always claiming "not favorited" regardless of reality.
+  function setFavAria(btn,isFav){
+    var label=isFav?'從收藏移除':'加入我的收藏';
+    btn.setAttribute('aria-label',label);
+    btn.setAttribute('title',label);
+    btn.setAttribute('aria-pressed',isFav?'true':'false');
+  }
+
   function markFavoriteCards(){
     document.querySelectorAll('.card').forEach(function(card){
       var link=card.querySelector('.btn-open');
       var btn=card.querySelector('.star-btn');
       if(!link||!btn)return;
-      btn.classList.toggle('is-fav',!!(favoriteUrls&&favoriteUrls.has(link.href)));
+      var isFav=!!(favoriteUrls&&favoriteUrls.has(link.href));
+      btn.classList.toggle('is-fav',isFav);
+      setFavAria(btn,isFav);
     });
   }
 
@@ -2953,6 +2966,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
 
     // 樂觀更新畫面，失敗再改回來——收藏這種輕量操作不值得讓使用者等 API。
     btn.classList.toggle('is-fav',!wasFav);
+    setFavAria(btn,!wasFav);
     if(!favoriteUrls)favoriteUrls=new Set();
     if(wasFav)favoriteUrls.delete(url);else favoriteUrls.add(url);
     if(window.HubSearch)window.HubSearch.rescan();
@@ -2966,6 +2980,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
         })});
     req.catch(function(){
       btn.classList.toggle('is-fav',wasFav);
+      setFavAria(btn,wasFav);
       if(wasFav)favoriteUrls.add(url);else favoriteUrls.delete(url);
       if(window.HubSearch)window.HubSearch.rescan();
     });
