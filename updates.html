@@ -235,7 +235,15 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
 
   if(!token())return;
   var box=document.getElementById('adminPostBox');
-  box.style.display='';
+  // Showing this purely because a token exists let any logged-in non-admin
+  // see the "🔒 管理員：新增公告" UI (the backend's requireAdmin still
+  // correctly blocked the actual POST, so nothing was ever at risk — this
+  // was a display-only inconsistency). Probe an admin-only endpoint first,
+  // same 403-detection pattern index.html already uses for its own
+  // admin-only UI reveals.
+  fetch(API_BASE+'/api/review/tools',{headers:{Authorization:'Bearer '+token()}})
+    .then(function(res){if(res.ok)box.style.display='';})
+    .catch(function(){});
   document.getElementById('apSubmit').addEventListener('click',function(){
     var msg=document.getElementById('apMsg');
     var title=document.getElementById('apTitle').value.trim();
