@@ -298,7 +298,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     <div class="stats">
       <div><div class="stat-num">105</div><div class="stat-label">計算工具</div></div>
       <div class="stat-div"></div>
-      <div><div class="stat-num">5</div><div class="stat-label">工具分類</div></div>
+      <div><div class="stat-num">7</div><div class="stat-label">工具分類</div></div>
       <div class="stat-div"></div>
       <div><div class="stat-num">2025</div><div class="stat-label">持續更新</div></div>
     </div>
@@ -327,8 +327,8 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
         <button class="chip" data-cat="python">本機工具 · Python 2</button>
       </div>
       <div class="view-toggle" id="viewToggle">
-        <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
-        <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+        <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       </div>
     </div>
   </div>
@@ -2181,7 +2181,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
       <input type="text" id="atTags" placeholder="ACI 318-19, 基礎, 承載力">
 
       <button type="button" class="modal-submit" onclick="Tools.submitAdd()">加入我的清單</button>
-      <div class="field-hint" style="margin-top:10px;text-align:center;">送出後為私人工具，僅你自己看得到（目前尚未提供公開送審功能）</div>
+      <div class="field-hint" style="margin-top:10px;text-align:center;">送出後為私人工具，僅你自己看得到。之後可以到「我的工具」提交送審，通過後會公開顯示給所有人</div>
     </div>
   </div>
 </div>
@@ -2425,7 +2425,11 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     var KEY='ectr_view_mode';
     function apply(mode){
       document.body.classList.toggle('view-list',mode==='list');
-      toggle.querySelectorAll('.view-btn').forEach(function(b){b.classList.toggle('active',b.dataset.view===mode);});
+      toggle.querySelectorAll('.view-btn').forEach(function(b){
+        var active=b.dataset.view===mode;
+        b.classList.toggle('active',active);
+        b.setAttribute('aria-pressed',active?'true':'false');
+      });
     }
     apply(localStorage.getItem(KEY)||'grid');
     toggle.addEventListener('click',function(e){
@@ -2561,7 +2565,14 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     document.getElementById('authSwitchText').textContent=authMode==='login'?'還沒有帳號？':'已經有帳號了？';
     document.getElementById('authSwitchLink').textContent=authMode==='login'?'註冊一個':'直接登入';
     document.getElementById('authForgotRow').style.display=authMode==='login'?'':'none';
-    document.getElementById('authError').classList.remove('show');
+    var authErrorEl=document.getElementById('authError');
+    authErrorEl.classList.remove('show');
+    // forgotPassword()'s success message sets these inline (green) instead
+    // of going through showAuthError() — clear them here too so a future
+    // code path that re-shows this box without calling showAuthError()
+    // first can't inherit stale "success" styling.
+    authErrorEl.style.color='';
+    authErrorEl.style.background='';
   }
 
   function showAuthError(msg){
@@ -2590,6 +2601,12 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     var email=document.getElementById('authEmail').value.trim();
     var password=document.getElementById('authPassword').value;
     if(!email||!password){showAuthError('請輸入 email 與密碼');return;}
+    // Mirrors the backend's own validation (isValidEmail / password.length>=8
+    // in auth.js) — catching an obviously-malformed input here means a
+    // round trip to the server isn't needed just to learn what the
+    // "至少 8 碼" placeholder already promised.
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showAuthError('email 格式錯誤');return;}
+    if(authMode==='signup'&&password.length<8){showAuthError('密碼需至少 8 碼');return;}
     var path=authMode==='login'?'/api/auth/login':'/api/auth/signup';
     apiFetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:password})})
       .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
@@ -2728,7 +2745,7 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
   };
 
   // ── Tools: submit / mine / dynamic public list ──
-  var CATEGORY_LABEL={progress:'進度管理',construction:'施工計劃書',structure:'結構計算',hydraulics:'水利計算',materials:'材料 & 數值工具'};
+  var CATEGORY_LABEL={progress:'進度管理',construction:'施工計劃書',structure:'結構計算',hydraulics:'水利計算',environmental:'環工計算',materials:'材料 & 數值工具',python:'本機工具 · Python'};
 
   function openAddModal(){
     if(!Auth.isLoggedIn()){
@@ -3108,7 +3125,10 @@ footer a{color:#7E641F;text-decoration:underline;text-decoration-color:rgba(126,
     errEl.classList.remove('show');
     var amount=parseInt(document.getElementById('topupAmount').value,10);
     var note=document.getElementById('topupNote').value.trim();
-    if(!amount||amount<=0){errEl.textContent='請輸入正確的匯款金額';errEl.classList.add('show');return;}
+    // Matches credits.js's MAX_MANUAL_TOPUP_TWD — deliberately far above
+    // ECPay's $20,000 checkout cap (manual transfer is the fallback for
+    // large amounts), just enough of a ceiling to catch an obvious typo.
+    if(!amount||amount<=0||amount>10000000){errEl.textContent='請輸入 1~10,000,000 之間的正確匯款金額';errEl.classList.add('show');return;}
     if(!note){errEl.textContent='請填寫匯款備註，方便核對';errEl.classList.add('show');return;}
     apiFetch('/api/credits/topup-request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amountTwd:amount,transferNote:note})})
       .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
