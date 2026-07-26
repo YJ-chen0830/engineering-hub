@@ -2108,9 +2108,9 @@ body.modal-open{overflow:hidden;}
 
       <div class="modal-divider">或使用 email</div>
 
-      <label>Email</label>
+      <label for="authEmail">Email</label>
       <input type="email" id="authEmail" placeholder="you@example.com">
-      <label>密碼</label>
+      <label for="authPassword">密碼</label>
       <input type="password" id="authPassword" placeholder="至少 8 碼">
       <div id="authForgotRow" style="text-align:right;margin-top:-8px;">
         <button type="button" onclick="Auth.forgotPassword()" style="font-size:12.5px;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;color:inherit;">忘記密碼？</button>
@@ -2135,13 +2135,13 @@ body.modal-open{overflow:hidden;}
     <div class="modal-body">
       <div class="modal-error" id="addToolError"></div>
 
-      <label>工具名稱 *</label>
+      <label for="atTitle">工具名稱 *</label>
       <input type="text" id="atTitle" placeholder="例如：基樁承載力計算">
-      <label>英文名稱</label>
+      <label for="atTitleEn">英文名稱</label>
       <input type="text" id="atTitleEn" placeholder="Pile Capacity Calc">
       <div class="modal-row">
         <div>
-          <label>分類</label>
+          <label for="atCategory">分類</label>
           <input type="text" id="atCategory" list="atCatList" placeholder="選擇或自訂">
           <datalist id="atCatList">
             <option value="progress">進度管理</option>
@@ -2152,7 +2152,7 @@ body.modal-open{overflow:hidden;}
           </datalist>
         </div>
         <div>
-          <label>執行方式</label>
+          <label for="atKind">執行方式</label>
           <select id="atKind" onchange="Tools.onKindChange()">
             <option value="web">網頁版（瀏覽器直接開）</option>
             <option value="cli">本機 Python · 指令稿</option>
@@ -2160,25 +2160,25 @@ body.modal-open{overflow:hidden;}
           </select>
         </div>
       </div>
-      <label>GitHub 連結 *</label>
+      <label for="atRepo">GitHub 連結 *</label>
       <input type="text" id="atRepo" placeholder="https://github.com/USER/REPO">
       <div id="atWebFields">
-        <label>開啟網址</label>
+        <label for="atUrl">開啟網址</label>
         <input type="text" id="atUrl" placeholder="https://user.github.io/repo/（留空則開 GitHub）">
       </div>
       <div id="atLocalFields" class="modal-row" style="display:none;">
         <div>
-          <label>安裝指令</label>
+          <label for="atInstall">安裝指令</label>
           <input type="text" id="atInstall" placeholder="pip install -r requirements.txt">
         </div>
         <div>
-          <label>執行指令</label>
+          <label for="atCmd">執行指令</label>
           <input type="text" id="atCmd" placeholder="python main.py">
         </div>
       </div>
-      <label>說明</label>
+      <label for="atDesc">說明</label>
       <input type="text" id="atDesc" placeholder="這個工具做什麼、依據哪個規範">
-      <label>標籤（逗號分隔）</label>
+      <label for="atTags">標籤（逗號分隔）</label>
       <input type="text" id="atTags" placeholder="ACI 318-19, 基礎, 承載力">
 
       <button type="button" class="modal-submit" onclick="Tools.submitAdd()">加入我的清單</button>
@@ -2241,7 +2241,7 @@ body.modal-open{overflow:hidden;}
       <button type="button" class="modal-close" onclick="Tools.closeTopupModal()">✕</button>
     </div>
     <div class="modal-body" id="topupFormWrap">
-      <label>儲值金額（新台幣，1 元 = 1 點）</label>
+      <label for="ecpayAmount">儲值金額（新台幣，1 元 = 1 點）</label>
       <input type="number" id="ecpayAmount" min="50" max="20000" step="1" placeholder="例如 500">
       <div class="modal-error" id="ecpayError"></div>
       <button type="button" class="modal-submit" onclick="Tools.startEcpayCheckout()">信用卡 / ATM / 超商代碼 付款</button>
@@ -2252,9 +2252,9 @@ body.modal-open{overflow:hidden;}
           請先聯繫 <a href="mailto:student2173@gmail.com" style="color:#7E641F;text-decoration:underline;">student2173@gmail.com</a> 取得匯款帳號，完成匯款後在下方填寫金額與匯款備註（例如帳號末五碼），我們確認入帳後會手動加點，請留意信箱回覆。
         </div>
         <div class="modal-error" id="topupError"></div>
-        <label>匯款金額（新台幣）</label>
+        <label for="topupAmount">匯款金額（新台幣）</label>
         <input type="number" id="topupAmount" min="1" placeholder="例如 500">
-        <label>匯款備註（帳號末五碼或轉帳時間）</label>
+        <label for="topupNote">匯款備註（帳號末五碼或轉帳時間）</label>
         <input type="text" id="topupNote" placeholder="方便我們核對入帳">
         <button type="button" class="modal-submit" onclick="Tools.submitTopupRequest()">送出儲值申請</button>
       </details>
@@ -2302,7 +2302,12 @@ body.modal-open{overflow:hidden;}
   if(!localStorage.getItem(KEY)){
     var el=document.getElementById('cookieBanner');
     el.style.display='flex';
-    document.getElementById('cookieBannerBtn').addEventListener('click',function(){
+    var btn=document.getElementById('cookieBannerBtn');
+    // Without this, a keyboard user landing on a fresh page has to Tab
+    // through the entire page (nav, hero, every tool card) before ever
+    // reaching this banner's own button.
+    btn.focus();
+    btn.addEventListener('click',function(){
       localStorage.setItem(KEY,'1');
       el.style.display='none';
     });
@@ -2478,7 +2483,13 @@ body.modal-open{overflow:hidden;}
     var token=getToken();
     if(token)opts.headers['Authorization']='Bearer '+token;
     return fetch(API_BASE+path,opts).then(function(res){
-      if(res.status===401&&token){clearSession();updateHeaderUI();}
+      // Only fires once per actual session expiry: token is captured above
+      // before the request, so once clearSession() runs, any further calls
+      // in flight already have an empty token and skip this branch instead
+      // of alerting repeatedly. Without this, a user mid-action (favoriting
+      // a card, submitting a tool) would just silently see themselves
+      // logged out with no explanation for why their click didn't work.
+      if(res.status===401&&token){clearSession();updateHeaderUI();alert('登入已過期，請重新登入。');}
       return res;
     });
   }
@@ -2509,9 +2520,14 @@ body.modal-open{overflow:hidden;}
       .then(function(res){return res.ok?res.json():null;})
       .then(function(data){
         if(!data)return;
-        badge.textContent='💰 '+data.balance+' 點';
+        // Defensive display cap — an extreme balance (shouldn't happen
+        // given the backend's own caps, but this is the nav bar, not worth
+        // trusting blindly) would otherwise stretch the badge and break the
+        // header layout.
+        var bal=Number(data.balance)||0;
+        badge.textContent='💰 '+(bal>999999?'999,999+':bal.toLocaleString('en-US'))+' 點';
       })
-      .catch(function(){});
+      .catch(function(e){console.warn('loadCredits failed',e);});
   }
 
   // ── Auth modal ──
@@ -2920,7 +2936,7 @@ body.modal-open{overflow:hidden;}
     fetch(API_BASE+'/api/tools')
       .then(function(res){return res.json();})
       .then(renderDynamic)
-      .catch(function(){/* silently skip — static 54 tools still work fine */});
+      .catch(function(e){console.warn('refreshDynamic failed — static tools still work fine',e);});
   }
 
   // ── 我的收藏（★）──
@@ -2980,7 +2996,7 @@ body.modal-open{overflow:hidden;}
         markFavoriteCards();
         if(window.HubSearch)window.HubSearch.rescan();
       })
-      .catch(function(){});
+      .catch(function(e){console.warn('loadFavorites failed',e);});
   }
 
   function toggleFavorite(btn,evt){

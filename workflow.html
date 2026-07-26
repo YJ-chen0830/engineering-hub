@@ -90,7 +90,7 @@
   <div class="proj-row">
     <select id="projSel" aria-label="選擇專案"></select>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" id="progBar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
       <span class="progress-text" id="progText">0 / 0</span>
     </div>
   </div>
@@ -357,6 +357,9 @@ function render(){
     list.innerHTML='<div class="empty">尚未建立任何專案。<br>請先到任一工具（如 <a href="https://yj-chen0830.github.io/scaffold/">施工架計算</a>）填寫專案資訊並按「💾 儲存專案」。</div>';
     document.getElementById('progFill').style.width='0%';
     document.getElementById('progText').textContent='0 / '+TOOLS.length;
+    var progBar0=document.getElementById('progBar');
+    progBar0.setAttribute('aria-valuemax',TOOLS.length);
+    progBar0.setAttribute('aria-valuenow','0');
     return;
   }
   var done=0;
@@ -374,6 +377,9 @@ function render(){
   var pct=Math.round(done/TOOLS.length*100);
   document.getElementById('progFill').style.width=pct+'%';
   document.getElementById('progText').textContent=done+' / '+TOOLS.length;
+  var progBar=document.getElementById('progBar');
+  progBar.setAttribute('aria-valuemax',TOOLS.length);
+  progBar.setAttribute('aria-valuenow',done);
   renderRevisions();
   var rcBox=document.getElementById('reportConfigBox');
   if(rcBox&&rcBox.style.display!=='none')renderReportConfig();
