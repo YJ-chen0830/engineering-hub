@@ -3289,10 +3289,15 @@ body.modal-open{overflow:hidden;}
     var card=link.closest('.card');
     var section=link.closest('.section');
     var titleEl=card?card.querySelector('.card-title'):null;
+    // The link opens in a new tab (target="_blank"), but the click also
+    // starts this page's own navigation-adjacent lifecycle in some browsers
+    // — without keepalive, that can abort the request before it's sent,
+    // silently under-counting exactly the clicks this exists to measure.
     fetch(API_BASE+'/api/tool-clicks',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({url:link.href,title:titleEl?titleEl.textContent:'',category:section?section.dataset.cat:''})
+      body:JSON.stringify({url:link.href,title:titleEl?titleEl.textContent:'',category:section?section.dataset.cat:''}),
+      keepalive:true
     }).catch(function(){});
   });
 

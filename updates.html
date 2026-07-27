@@ -237,10 +237,13 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
     '</div>';
   }
 
-  fetch(API_BASE+'/api/announcements').then(function(res){return res.json();}).then(function(list){
+  fetch(API_BASE+'/api/announcements').then(function(res){
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return res.json();
+  }).then(function(list){
     var el=document.getElementById('dynamicFixCards');
     if(list&&list.length)el.innerHTML=list.map(renderCard).join('');
-  }).catch(function(){});
+  }).catch(function(e){console.warn('載入公告失敗',e);});
 
   if(!token())return;
   var box=document.getElementById('adminPostBox');
