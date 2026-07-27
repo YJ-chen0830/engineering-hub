@@ -128,6 +128,11 @@
   </div>
 </div>
 
+<div class="card no-print" id="overviewCard">
+  <h2>📊 專案總覽</h2>
+  <div id="overviewBody"></div>
+</div>
+
 <div class="card no-print" id="revCard">
   <h2>📝 修訂履歷</h2>
   <div id="revBody"></div>
@@ -362,6 +367,61 @@ function refreshProjects(){
     if(keep&&projects.indexOf(keep)>=0)sel.value=keep;
   }
   render();
+  renderOverview();
+}
+
+/* ── 專案總覽 ──
+   下拉選單一次只能看一個專案，累積存了幾十個專案的使用者完全看不到自己
+   累積了多少工作——這是把「用越久累積越多」變成看得見、值得留住的東西
+   （而不只是分散存在 localStorage 裡使用者自己都不知道有多少），依最後
+   更新時間排序，點一列直接切換到那個專案。 */
+function renderOverview(){
+  var body=document.getElementById('overviewBody');
+  var names=Object.keys(getJSON('jrh_projects'));
+  if(!names.length){
+    body.innerHTML='<div class="empty" style="padding:10px;">尚未建立任何專案，開始使用後這裡會累積顯示所有專案的完成度與最後更新時間。</div>';
+    return;
+  }
+  var wfAll=getJSON('jrh_wf');
+  var revAll=getJSON('jrh_revisions');
+  var rows=names.map(function(name){
+    var wf=wfAll[name]||{};
+    var doneCount=Object.keys(wf).length;
+    var revs=revAll[name]||[];
+    var dates=Object.keys(wf).map(function(c){return wf[c]&&wf[c].date;}).concat(revs.map(function(r){return r.date;})).filter(Boolean);
+    dates.sort();
+    var lastDate=dates.length?dates[dates.length-1]:null;
+    return {name:name,doneCount:doneCount,revCount:revs.length,lastDate:lastDate};
+  });
+  rows.sort(function(a,b){
+    if(a.lastDate&&b.lastDate)return a.lastDate<b.lastDate?1:-1;
+    if(a.lastDate)return -1;
+    if(b.lastDate)return 1;
+    return a.name<b.name?-1:1;
+  });
+  var current=currentProj();
+  body.innerHTML='<div style="overflow-x:auto;"><table><thead><tr>'+
+    '<th>專案名稱</th><th style="width:16%;">完成度</th><th style="width:12%;">修訂次數</th><th style="width:18%;">最後更新</th>'+
+    '</tr></thead><tbody>'+
+    rows.map(function(r){
+      var isCurrent=r.name===current;
+      return '<tr class="overview-row" data-proj="'+esc(r.name)+'" style="cursor:pointer;'+(isCurrent?'background:#fdf6e3;':'')+'">'+
+        '<td>'+esc(r.name)+(isCurrent?' <span style="color:var(--gold);font-weight:700;font-size:11px;">· 目前選擇</span>':'')+'</td>'+
+        '<td>'+r.doneCount+' / '+TOOLS.length+'</td>'+
+        '<td>'+r.revCount+'</td>'+
+        '<td>'+(r.lastDate?esc(r.lastDate):'－')+'</td>'+
+      '</tr>';
+    }).join('')+
+    '</tbody></table></div>'+
+    '<div class="note" style="margin-top:10px;">點任一列可切換到該專案。</div>';
+  body.querySelectorAll('.overview-row').forEach(function(row){
+    row.addEventListener('click',function(){
+      document.getElementById('projSel').value=row.dataset.proj;
+      render();
+      renderOverview();
+      row.scrollIntoView({block:'nearest'});
+    });
+  });
 }
 
 function render(){
@@ -436,6 +496,7 @@ function renderRevisions(){
     all[proj].push({rev:label,reason:reason,date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')});
     localStorage.setItem('jrh_revisions',JSON.stringify(all));
     renderRevisions();
+    renderOverview();
   });
 }
 
@@ -544,7 +605,7 @@ function importJSON(input){
   reader.readAsText(file);
 }
 
-document.getElementById('projSel').addEventListener('change',render);
+document.getElementById('projSel').addEventListener('change',function(){render();renderOverview();});
 window.addEventListener('storage',refreshProjects);
 window.addEventListener('pageshow',refreshProjects);
 refreshProjects();

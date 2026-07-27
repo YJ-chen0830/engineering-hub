@@ -302,6 +302,8 @@ body.modal-open{overflow:hidden;}
       <div><div class="stat-num">7</div><div class="stat-label">工具分類</div></div>
       <div class="stat-div"></div>
       <div><div class="stat-num">2025</div><div class="stat-label">持續更新</div></div>
+      <div class="stat-div" id="usageStatDiv" style="display:none;"></div>
+      <div id="usageStatBlock" style="display:none;"><div class="stat-num" id="usageStatNum">–</div><div class="stat-label">累計工具開啟次數</div></div>
     </div>
   </div>
 </section>
@@ -2939,6 +2941,25 @@ body.modal-open{overflow:hidden;}
       .catch(function(e){console.warn('refreshDynamic failed — static tools still work fine',e);});
   }
 
+  // ── 首頁信任訊號：累計工具開啟次數 ──
+  // Reads a single aggregate count from a public, unauthenticated endpoint
+  // (never the per-tool breakdown, which stays admin-only) — a real,
+  // honestly-labeled usage number is cheap social proof for a first-time
+  // visitor deciding whether to trust these calculators. Hidden until the
+  // number is actually in hand so there's no "0 累計使用" flash before the
+  // request resolves.
+  function loadUsageStat(){
+    fetch(API_BASE+'/api/tool-clicks/public-total')
+      .then(function(res){return res.ok?res.json():null;})
+      .then(function(data){
+        if(!data||!data.total)return;
+        document.getElementById('usageStatNum').textContent=data.total.toLocaleString('en-US');
+        document.getElementById('usageStatDiv').style.display='';
+        document.getElementById('usageStatBlock').style.display='';
+      })
+      .catch(function(e){console.warn('loadUsageStat failed',e);});
+  }
+
   // ── 我的收藏（★）──
   // 105個靜態卡片沒有穩定的資料庫id，唯一穩定的識別是「開啟工具」連結本
   // 身（跟 tool_clicks 用的識別方式一樣），所以收藏是用 tool_url 當 key，
@@ -3392,6 +3413,7 @@ body.modal-open{overflow:hidden;}
   updateHeaderUI();
   refreshDynamic();
   checkEcpayReturn();
+  loadUsageStat();
 })();
 </script>
 
