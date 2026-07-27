@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>專案工作流中心 | JRH Engineering Hub</title>
+<meta name="description" content="一案多計算書進度管理：追蹤單一工程專案下各計算書的產出狀態，合併列印、匯出 Excel/Word，並管理團隊帳號與雲端同步。">
+<link rel="canonical" href="https://juhongstructural.com/workflow.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="專案工作流中心 · Ju Hong Structural">
+<meta property="og:description" content="一案多計算書進度管理：追蹤單一工程專案下各計算書的產出狀態，合併列印、匯出 Excel/Word，並管理團隊帳號與雲端同步。">
+<meta property="og:url" content="https://juhongstructural.com/workflow.html">
+<meta property="og:image" content="https://juhongstructural.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="專案工作流中心 · Ju Hong Structural">
+<meta name="twitter:description" content="一案多計算書進度管理：追蹤單一工程專案下各計算書的產出狀態，合併列印、匯出 Excel/Word，並管理團隊帳號與雲端同步。">
+<meta name="twitter:image" content="https://juhongstructural.com/og-image.png">
 <style>
   :root{--navy:#0b1f3a;--navy2:#13284a;--gold:#c9a14a;--gold2:#e0bf6e;--bg:#f5f3ee;--ink:#1c2530;--line:#d8d2c2;}
   *{box-sizing:border-box;}
@@ -80,7 +95,7 @@
     <h1>📁 專案工作流中心</h1>
     <span>Project Workflow · 一案多計算書進度管理</span>
   </div>
-  <a href="https://yj-chen0830.github.io/engineering-hub/">← 回工具中心</a>
+  <a href="index.html">← 回工具中心</a>
 </header>
 <main>
 
@@ -228,7 +243,7 @@
     <thead><tr><th style="width:8%">項次</th><th>計算書名稱</th><th style="width:18%">狀態</th><th style="width:20%">產出日期</th><th style="width:20%">備註</th></tr></thead>
     <tbody id="pt-body"></tbody>
   </table>
-  <div style="margin-top:20pt;font-size:8pt;color:#888;">本表由 JRH Engineering Hub 專案工作流中心產出 · https://yj-chen0830.github.io/engineering-hub/</div>
+  <div style="margin-top:20pt;font-size:8pt;color:#888;">本表由 JRH Engineering Hub 專案工作流中心產出 · https://juhongstructural.com/</div>
 </div>
 
 </main>
@@ -343,7 +358,7 @@ function refreshProjects(){
   if(!projects.length){
     sel.innerHTML='<option value="">（尚無已存專案）</option>';
   }else{
-    sel.innerHTML=projects.map(function(n){return '<option>'+n.replace(/</g,'&lt;')+'</option>';}).join('');
+    sel.innerHTML=projects.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
     if(keep&&projects.indexOf(keep)>=0)sel.value=keep;
   }
   render();
@@ -369,8 +384,8 @@ function render(){
     var href=t.url+'?proj='+encodeURIComponent(proj);
     return '<div class="tool-row'+(rec?' done':'')+'">'+
       '<div class="tool-status">'+(rec?'✅':'⬜')+'</div>'+
-      '<div class="tool-info"><div class="tool-name">'+t.name+'</div>'+
-      '<div class="tool-date">'+(rec?'已產出 · '+rec.date:'尚未產出')+'</div></div>'+
+      '<div class="tool-info"><div class="tool-name">'+esc(t.name)+'</div>'+
+      '<div class="tool-date">'+(rec?'已產出 · '+esc(rec.date):'尚未產出')+'</div></div>'+
       '<a class="tool-open" href="'+href+'" target="_blank" rel="noopener">'+(rec?'重新開啟':'開始計算')+' →</a>'+
       '</div>';
   }).join('');
@@ -442,7 +457,7 @@ function printChecklist(){
         '<thead><tr><th style="width:8%">項次</th><th>計算書名稱</th><th style="width:18%">狀態</th><th style="width:20%">產出日期</th><th style="width:20%">備註</th></tr></thead>'+
         '<tbody id="pt-body"></tbody>'+
       '</table>'+
-      '<div style="margin-top:20pt;font-size:8pt;color:#888;">本表由 JRH Engineering Hub 專案工作流中心產出 · https://yj-chen0830.github.io/engineering-hub/</div>';
+      '<div style="margin-top:20pt;font-size:8pt;color:#888;">本表由 JRH Engineering Hub 專案工作流中心產出 · https://juhongstructural.com/</div>';
   }
   document.getElementById('pt-title').textContent=proj+'　計算書檢核總表';
   var sub=[];
