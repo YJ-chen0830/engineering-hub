@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>平台更新日誌 · 工程計算中心 · Ju Hong Structural</title>
+<meta name="description" content="工程計算中心平台本身的功能與架構更新紀錄——新功能、修正、維運調整，跟計算公式修正紀錄分開記錄。">
+<link rel="canonical" href="https://juhongstructural.com/changelog.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="平台更新日誌 · 工程計算中心">
+<meta property="og:description" content="新功能、修正、維運調整——平台本身的更新紀錄。">
+<meta property="og:url" content="https://juhongstructural.com/changelog.html">
+<meta property="og:image" content="https://juhongstructural.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="平台更新日誌 · 工程計算中心">
+<meta name="twitter:description" content="新功能、修正、維運調整——平台本身的更新紀錄。">
+<meta name="twitter:image" content="https://juhongstructural.com/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#F8F6F0;color:#211F19;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.nav{max-width:1180px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+.brand-icon{font-size:22px;}
+.brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9A7B2A;}
+.brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;}
+.back-link{font-size:13px;font-weight:500;color:#143257;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.back-link:hover{text-decoration:underline;}
+header{border-bottom:1px solid #E4DFD1;}
+
+.hero{background:linear-gradient(135deg,#0A1A33,#143257);padding:56px 28px 44px;}
+.hero-inner{max-width:760px;margin:0 auto;}
+.hero-eyebrow{font-family:"Archivo",sans-serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#D9B96E;margin-bottom:14px;}
+.hero h1{font-family:"Noto Serif TC",serif;font-size:34px;line-height:1.3;font-weight:600;color:#fff;letter-spacing:-.01em;margin:0 0 14px;}
+.hero p{font-size:15px;line-height:1.9;color:#C9C4B4;max-width:60ch;}
+
+main{max-width:760px;margin:0 auto;padding:48px 28px 80px;}
+section{margin-bottom:44px;}
+h2{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600;color:#0A1A33;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #C9A24A;}
+p{font-size:14.5px;line-height:1.95;color:#3A362E;margin-bottom:12px;}
+p:last-child{margin-bottom:0;}
+
+.fix-card{background:#fff;border:1px solid #E4DFD1;border-radius:10px;padding:18px 22px;margin-bottom:12px;}
+.fix-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+.fix-title{font-family:"Archivo",sans-serif;font-size:14px;font-weight:700;color:#143257;}
+.fix-date{font-size:11.5px;color:#9A9382;font-variant-numeric:tabular-nums;}
+.fix-desc{font-size:13.5px;line-height:1.8;color:#3A362E;}
+.fix-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;margin-bottom:8px;}
+.fix-tag.feature{background:#E8F5EC;color:#1A7D3A;}
+.fix-tag.fix{background:#FBF3E2;color:#9A6B12;}
+.fix-tag.security{background:#EDE8F5;color:#5B4B95;}
+.fix-tag.infra{background:#E6EEF5;color:#1F5C8C;}
+
+.note{background:#FBF7EC;border-left:3px solid #C9A24A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:13px;line-height:1.85;color:#5C5442;}
+
+footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-size:12px;color:#9A9382;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">📐</div>
+      <div>
+        <div class="brand-text-sub">Ju Hong Structural</div>
+        <div class="brand-text-main">工程計算中心</div>
+      </div>
+    </a>
+    <a href="index.html" class="back-link">← 返回工具首頁</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Platform Changelog</div>
+    <h1>平台更新日誌</h1>
+    <p>這裡記錄工程計算中心「平台本身」的功能與架構更新——新功能上線、問題修正、維運與架構調整。如果你要找的是「計算公式的修正紀錄」，請見<a href="updates.html" style="color:#D9B96E;text-decoration:underline;">品質與更新紀錄</a>頁面，那邊是分開記錄的。</p>
+  </div>
+</div>
+
+<main>
+  <section>
+    <h2>更新紀錄</h2>
+    <p style="font-size:12.5px;color:#9A9382;margin-bottom:16px;">依發布時間排序。標記為「資安性強化」的項目基於揭露原則刻意不公開技術細節——即使問題已經修正，公開具體描述曾經存在什麼弱點，本身就是額外的風險。</p>
+
+    <div id="dynamicUpdateCards"></div>
+
+    <div class="fix-card">
+      <div class="fix-head"><span class="fix-title">平台更新日誌上線</span><span class="fix-date">2026-07</span></div>
+      <span class="fix-tag infra">維運/架構</span>
+      <div class="fix-desc">新增這個頁面，往後平台功能與架構層級的變更會記錄在這裡，跟計算公式修正紀錄分開呈現。</div>
+    </div>
+
+    <details class="note" id="adminPostBox" style="display:none;margin-top:16px;cursor:default;">
+      <summary style="cursor:pointer;font-weight:700;color:#143257;">🔒 管理員：新增更新紀錄</summary>
+      <div style="margin-top:12px;display:grid;gap:8px;">
+        <input id="apTitle" type="text" placeholder="標題" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;">
+        <textarea id="apBody" placeholder="內容（分類選「資安性強化」時，這裡的內容不會顯示在公開頁面上，僅供內部存檔）" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;min-height:70px;font-family:inherit;"></textarea>
+        <select id="apCategory" style="padding:8px 10px;border:1px solid #E4DFD1;border-radius:6px;font-size:13px;">
+          <option value="feature">✅ 新功能</option>
+          <option value="fix">🔧 修正</option>
+          <option value="security">🔒 資安性強化</option>
+          <option value="infra">⚙️ 維運/架構</option>
+        </select>
+        <button id="apSubmit" style="padding:9px;background:#0A1A33;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">發布</button>
+        <div id="apMsg" style="font-size:12px;"></div>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer>© 2025–2026 儒鴻結構土木技師事務所 · 工程計算中心</footer>
+<script>
+(function(){
+  var API_BASE='https://cloud-sync-mvp-production.up.railway.app';
+  var TOKEN_KEY='ectr_token';
+  function token(){return localStorage.getItem(TOKEN_KEY);}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var CAT_LABEL={feature:'✅ 新功能',fix:'🔧 修正',security:'🔒 資安性強化',infra:'⚙️ 維運/架構'};
+  var CAT_CLASS={feature:'feature',fix:'fix',security:'security',infra:'infra'};
+
+  function renderCard(a){
+    var d=new Date(a.createdAt);
+    var dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    // Whitelist against known categories rather than trust the API value
+    // directly (same reasoning as updates.html's severity handling) — an
+    // unrecognized value falls back to 'feature' rather than rendering
+    // "undefined" or an unstyled tag.
+    var category=Object.prototype.hasOwnProperty.call(CAT_LABEL,a.category)?a.category:'feature';
+    // security entries never render body content here, full stop — this
+    // isn't about trusting whoever filled in the admin form to remember not
+    // to type specifics, the frontend itself refuses to show it regardless
+    // of what's actually stored server-side. A public changelog must not
+    // become a map of what used to be exploitable.
+    var desc=category==='security'
+      ? '本次更新包含資安性強化，基於揭露原則不公開技術細節。'
+      : esc(a.body);
+    return '<div class="fix-card">'+
+      '<div class="fix-head"><span class="fix-title">'+esc(a.title)+'</span><span class="fix-date">'+dateStr+'</span></div>'+
+      '<span class="fix-tag '+CAT_CLASS[category]+'">'+CAT_LABEL[category]+'</span>'+
+      '<div class="fix-desc">'+desc+'</div>'+
+    '</div>';
+  }
+
+  fetch(API_BASE+'/api/platform-updates').then(function(res){
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return res.json();
+  }).then(function(list){
+    var el=document.getElementById('dynamicUpdateCards');
+    if(list&&list.length)el.innerHTML=list.map(renderCard).join('');
+  }).catch(function(e){console.warn('載入平台更新日誌失敗',e);});
+
+  if(!token())return;
+  var box=document.getElementById('adminPostBox');
+  // Probe an admin-only endpoint before revealing the post form — same
+  // pattern updates.html/index.html already use, not just "has a token".
+  fetch(API_BASE+'/api/review/tools',{headers:{Authorization:'Bearer '+token()}})
+    .then(function(res){if(res.ok)box.style.display='';})
+    .catch(function(){});
+  document.getElementById('apSubmit').addEventListener('click',function(){
+    var msg=document.getElementById('apMsg');
+    var title=document.getElementById('apTitle').value.trim();
+    var body=document.getElementById('apBody').value.trim();
+    if(!title||!body){msg.style.color='#B03A2E';msg.textContent='請填寫標題與內容';return;}
+    msg.style.color='#9A9382';msg.textContent='發布中…';
+    fetch(API_BASE+'/api/platform-updates',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+token()},
+      body:JSON.stringify({
+        title:title,
+        body:body,
+        category:document.getElementById('apCategory').value
+      })
+    }).then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+      .then(function(r){
+        if(!r.ok){msg.style.color='#B03A2E';msg.textContent=r.data.error||'發布失敗';return;}
+        msg.style.color='#1A7D3A';msg.textContent='✔ 已發布';
+        document.getElementById('dynamicUpdateCards').insertAdjacentHTML('afterbegin',renderCard(r.data));
+        document.getElementById('apTitle').value='';
+        document.getElementById('apBody').value='';
+      })
+      .catch(function(){msg.style.color='#B03A2E';msg.textContent='無法連線到伺服器';});
+  });
+})();
+</script>
+</body>
+</html>
