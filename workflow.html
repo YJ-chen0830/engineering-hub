@@ -482,7 +482,7 @@ function renderRevisions(){
   }).reverse().join('') : '<div style="font-size:12.5px;color:#999;padding:6px 0;">這個專案還沒有修訂紀錄。</div>';
   body.innerHTML=listHtml+
     '<div class="btn-row" style="margin-top:12px;">'+
-      '<input type="text" id="revLabel" placeholder="版次，例如 A" style="width:90px;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
+      '<input type="text" id="revLabel" placeholder="版次代號，如 A（不用加Rev.）" style="width:150px;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
       '<input type="text" id="revReason" placeholder="修訂原因" style="flex:1;min-width:180px;padding:8px 10px;border:1.5px solid var(--line);border-radius:7px;font-size:13px;">'+
       '<button class="btn btn-gold" id="addRevBtn">新增修訂紀錄</button>'+
     '</div>';
