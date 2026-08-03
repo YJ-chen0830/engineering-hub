@@ -3218,14 +3218,27 @@ body.modal-open{overflow:hidden;}
     document.getElementById('statsModal').classList.add('show');
     Promise.all([
       Auth.apiFetch('/api/tool-clicks/summary'),
-      Auth.apiFetch('/api/cta-clicks/summary')
+      Auth.apiFetch('/api/cta-clicks/summary'),
+      Auth.apiFetch('/api/hire-requests')
     ]).then(function(results){
-      if(results[0].status===403||results[1].status===403){body.innerHTML='<div class="mine-empty">權限不足。</div>';return null;}
-      return Promise.all([results[0].json(),results[1].json()]);
+      if(results[0].status===403||results[1].status===403||results[2].status===403){body.innerHTML='<div class="mine-empty">權限不足。</div>';return null;}
+      return Promise.all([results[0].json(),results[1].json(),results[2].json()]);
     }).then(function(data){
       if(!data)return;
-      var toolList=data[0],ctaList=data[1];
-      var html='<div class="review-section-title">委託專業服務漏斗</div>';
+      var toolList=data[0],ctaList=data[1],hireList=data[2];
+      var html='<div class="review-section-title">委託服務留言（'+hireList.length+'）</div>';
+      html+=hireList.length?hireList.map(function(r){
+        return '<div class="mine-row" style="flex-wrap:wrap;align-items:flex-start;">'
+          +'<div style="flex:1;min-width:0;">'
+          +'<strong>'+escapeHtml(r.name||'（未留姓名）')+'</strong>'
+          +'　·　'+escapeHtml(r.contact)
+          +'<div style="font-size:12px;color:#6B6557;margin-top:2px;">'
+          +(r.tool?escapeHtml(r.tool)+'　·　':'')+new Date(r.created_at).toLocaleString('zh-TW')
+          +'</div>'
+          +'<div style="font-size:13px;color:#333;margin-top:6px;white-space:pre-wrap;">'+escapeHtml(r.message)+'</div>'
+          +'</div></div>';
+      }).join(''):'<div class="mine-empty">目前還沒有任何委託留言。</div>';
+      html+='<div class="review-section-title">委託專業服務漏斗</div>';
       html+=ctaList.length
         ?statsTable(ctaList,'動作',function(r){return ctaLabel[r.cta]||r.cta;})
         :'<div class="mine-empty">目前還沒有任何紀錄。</div>';
