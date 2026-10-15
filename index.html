@@ -128,6 +128,41 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
 /* ── SECTION ── */
 .section{margin-bottom:48px;}
 .section-hdr{display:flex;align-items:center;gap:13px;margin-bottom:18px;}
+/* ── 可收合分類 ── 標頭整條可點；收合時變成一列精簡的分類條。搜尋或選了
+   分類（body.is-filtering）時一律展開，避免符合的工具被藏起來。*/
+.section-hdr[role="button"]{cursor:pointer;border-radius:10px;padding:10px 12px;margin-left:-12px;margin-right:-12px;transition:background 140ms;}
+.section-hdr[role="button"]:hover{background:#F1EDE2;}
+.section-hdr[role="button"]:focus-visible{outline:2px solid #9A7B2A;outline-offset:2px;}
+.sec-chevron{margin-left:auto;flex-shrink:0;width:30px;height:30px;border-radius:999px;border:1px solid #E2DDD1;background:#fff;display:flex;align-items:center;justify-content:center;color:#6B6557;transition:transform 180ms;}
+.sec-chevron svg{width:15px;height:15px;}
+.section.is-collapsed .sec-chevron{transform:rotate(-90deg);}
+body:not(.is-filtering) .section.is-collapsed{margin-bottom:10px;}
+body:not(.is-filtering) .section.is-collapsed .section-hdr{margin-bottom:0;background:#fff;border:1px solid #E2DDD1;margin-left:0;margin-right:0;}
+body:not(.is-filtering) .section.is-collapsed .section-hdr:hover{border-color:#9A7B2A;background:#fff;}
+body:not(.is-filtering) .section.is-collapsed .grid{display:none;}
+body.is-filtering .sec-chevron{display:none;}
+.collapse-all-btn{flex-shrink:0;height:32px;padding:0 12px;border-radius:5px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;}
+.collapse-all-btn:hover{border-color:#8C8576;}
+body.is-filtering .collapse-all-btn{visibility:hidden;}
+
+/* ── 我的最愛 / 最近開啟 ── */
+.fav-panel{margin-bottom:28px;display:flex;flex-direction:column;gap:18px;}
+.fav-panel[hidden],.fav-row[hidden],.fav-row-hint[hidden]{display:none;}
+body.is-filtering .fav-panel{display:none;}
+.fav-row-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.fav-row-title{font-family:"Noto Serif TC",serif;font-size:17px;font-weight:600;color:#0A1A33;margin:0;}
+.fav-row-hint{font-size:12px;color:#8C8576;}
+.fav-login-link{border:none;background:none;padding:0;font:inherit;color:#9A7B2A;text-decoration:underline;cursor:pointer;}
+.fav-clear{border:none;background:none;padding:0;font-size:12px;color:#8C8576;cursor:pointer;text-decoration:underline;}
+.fav-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.fav-item{display:flex;align-items:stretch;border:1px solid #E2DDD1;border-radius:9px;background:#fff;overflow:hidden;transition:border-color 140ms,box-shadow 140ms;}
+.fav-item:hover{border-color:#9A7B2A;box-shadow:0 2px 10px rgba(10,26,51,.06);}
+.fav-link{flex:1;min-width:0;display:block;padding:10px 12px;text-decoration:none;color:inherit;}
+.fav-link-title{display:block;font-size:14px;font-weight:700;color:#0A1A33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fav-link-cat{display:block;font-size:11.5px;color:#8C8576;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fav-unstar{flex-shrink:0;width:38px;border:none;border-left:1px solid #EFEBE2;background:none;color:#C9A24A;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.fav-unstar:hover{background:#FBF7EC;}
+.fav-unstar svg{width:16px;height:16px;fill:currentColor;}
 .section-icon{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:#0A1A33;flex-shrink:0;}
 .section-title{font-family:"Noto Serif TC",serif;font-size:20px;font-weight:600;color:#0A1A33;}
 .section-meta{font-family:"Archivo",sans-serif;font-size:12px;font-weight:600;color:#7E641F;}
@@ -380,6 +415,7 @@ body.modal-open{overflow:hidden;}
         <button class="chip" data-cat="materials">材料 &amp; 數值工具 8</button>
         <button class="chip" data-cat="python">本機工具 · Python 2</button>
       </div>
+      <button type="button" class="collapse-all-btn" id="collapseAllBtn">全部展開</button>
       <div class="view-toggle" id="viewToggle">
         <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
         <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
@@ -499,6 +535,24 @@ body.modal-open{overflow:hidden;}
 </section>
 
 <main>
+
+<!-- ── 我的最愛 / 最近開啟 ── (rendered by Tools.renderFavPanel; hidden while empty) -->
+<section class="fav-panel" id="favPanel" hidden>
+  <div class="fav-row" id="favRow" hidden>
+    <div class="fav-row-head">
+      <h2 class="fav-row-title">★ 我的最愛</h2>
+      <span class="fav-row-hint" id="favLocalHint" hidden>收藏存在這台裝置上，<button type="button" class="fav-login-link" onclick="Auth.onAuthSlotClick()">登入</button>後可跨裝置同步</span>
+    </div>
+    <div class="fav-list" id="favList"></div>
+  </div>
+  <div class="fav-row" id="recentRow" hidden>
+    <div class="fav-row-head">
+      <h2 class="fav-row-title">🕘 最近開啟</h2>
+      <button type="button" class="fav-clear" id="recentClear">清除</button>
+    </div>
+    <div class="fav-list" id="recentList"></div>
+  </div>
+</section>
 
 <div class="no-results" id="noResults">
   <div class="no-results-title">找不到符合的工具</div>
@@ -2614,7 +2668,7 @@ body.modal-open{overflow:hidden;}
   (function(){
     var savedCat=localStorage.getItem(LAST_CAT_KEY);
     if(!savedCat||savedCat==='all')return;
-    if(savedCat==='__fav__'&&!localStorage.getItem('ectr_token'))return;
+    if(savedCat==='__fav__'&&!localStorage.getItem('ectr_token')&&!localStorage.getItem('ectr_local_favs'))return;
     if(activateChip(savedCat))applyFilters();
   })();
 
@@ -2672,6 +2726,68 @@ body.modal-open{overflow:hidden;}
 </script>
 
 <!-- ===== Google Identity Services / Facebook SDK ===== -->
+<script>
+// 可收合分類：預設全部收合，只看到分類標頭；展開狀態記在本機。
+// 搜尋／選分類時由 CSS（body.is-filtering）強制全部展開，這裡不用管。
+(function(){
+  var KEY='ectr_open_cats';
+  var CHEVRON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+  var sections=Array.prototype.slice.call(document.querySelectorAll('main .section[data-cat]'));
+  var open;
+  try{open=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){open=[];}
+  if(!Array.isArray(open))open=[];
+  var allBtn=document.getElementById('collapseAllBtn');
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(open));}catch(e){}}
+  function setOpen(sec,isOpen){
+    sec.classList.toggle('is-collapsed',!isOpen);
+    sec.querySelector('.section-hdr').setAttribute('aria-expanded',isOpen?'true':'false');
+  }
+  function refreshAllBtn(){
+    var anyCollapsed=sections.some(function(sec){return sec.classList.contains('is-collapsed');});
+    allBtn.textContent=anyCollapsed?'全部展開':'全部收合';
+  }
+  function toggle(sec){
+    var cat=sec.dataset.cat;
+    var isOpen=sec.classList.contains('is-collapsed');
+    setOpen(sec,isOpen);
+    open=open.filter(function(c){return c!==cat;});
+    if(isOpen)open.push(cat);
+    save();refreshAllBtn();
+  }
+
+  sections.forEach(function(sec){
+    var hdr=sec.querySelector('.section-hdr');
+    var grid=sec.querySelector('.grid');
+    if(!hdr||!grid)return;
+    if(!grid.id)grid.id='grid-'+sec.dataset.cat;
+    hdr.setAttribute('role','button');
+    hdr.setAttribute('tabindex','0');
+    hdr.setAttribute('aria-controls',grid.id);
+    var chev=document.createElement('span');chev.className='sec-chevron';chev.setAttribute('aria-hidden','true');chev.innerHTML=CHEVRON;
+    hdr.appendChild(chev);
+    setOpen(sec,open.indexOf(sec.dataset.cat)>=0);
+    hdr.addEventListener('click',function(e){
+      if(document.body.classList.contains('is-filtering'))return;
+      if(e.target.closest('a,button'))return;
+      toggle(sec);
+    });
+    hdr.addEventListener('keydown',function(e){
+      if(e.key!=='Enter'&&e.key!==' ')return;
+      if(document.body.classList.contains('is-filtering'))return;
+      e.preventDefault();toggle(sec);
+    });
+  });
+
+  allBtn.addEventListener('click',function(){
+    var expand=sections.some(function(sec){return sec.classList.contains('is-collapsed');});
+    sections.forEach(function(sec){setOpen(sec,expand);});
+    open=expand?sections.map(function(sec){return sec.dataset.cat;}):[];
+    save();refreshAllBtn();
+  });
+  refreshAllBtn();
+})();
+</script>
 <script>
 // 最新更新：changelog.html 是唯一的資料來源（靜態卡片帶 data-date），
 // 再合併管理員從後台發布的動態公告，取最新 3 則。兩邊都載入失敗時
@@ -3207,6 +3323,7 @@ body.modal-open{overflow:hidden;}
     document.getElementById('dynamicMeta').textContent=list.length+' 項';
     section.style.display=list.length?'':'none';
     markFavoriteCards();
+    renderFavPanel();
     if(window.HubSearch)window.HubSearch.rescan();
   }
 
@@ -3275,47 +3392,78 @@ body.modal-open{overflow:hidden;}
 
   function updateFavChipVisibility(){
     var chip=document.getElementById('favChip');
-    if(chip)chip.style.display=isLoggedIn()?'':'none';
+    if(chip)chip.style.display=(isLoggedIn()||(favoriteUrls&&favoriteUrls.size))?'':'none';
+  }
+
+  // 未登入也能收藏：存在這台裝置的 localStorage，登入後自動併入帳號
+  // （伺服器上已有的不重送），全部成功才清掉本機那份，失敗就留著下次再併。
+  var LOCAL_FAV_KEY='ectr_local_favs';
+  function readJson(key){
+    try{var v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}
+  }
+  function writeJson(key,v){try{localStorage.setItem(key,JSON.stringify(v));}catch(e){}}
+  function favPayload(card,url){
+    var titleEl=card&&card.querySelector('.card-title');
+    var catEl=card&&card.querySelector('.card-cat');
+    return {toolUrl:url,toolTitle:titleEl?titleEl.textContent:'',category:catEl?catEl.textContent:''};
+  }
+
+  function favoritesChanged(){
+    markFavoriteCards();
+    updateFavChipVisibility();
+    renderFavPanel();
+    if(window.HubSearch)window.HubSearch.rescan();
   }
 
   function loadFavorites(){
-    updateFavChipVisibility();
+    var local=readJson(LOCAL_FAV_KEY);
     if(!isLoggedIn()){
-      favoriteUrls=null;
-      markFavoriteCards();
-      if(window.HubSearch)window.HubSearch.rescan();
+      favoriteUrls=new Set(local.map(function(f){return normalizeFavUrl(f.toolUrl);}));
+      favoritesChanged();
       return;
     }
     apiFetch('/api/favorites')
       .then(function(res){return res.json();})
       .then(function(list){
         favoriteUrls=new Set(list.map(function(f){return normalizeFavUrl(f.toolUrl);}));
-        markFavoriteCards();
-        if(window.HubSearch)window.HubSearch.rescan();
+        var toMerge=local.filter(function(f){return !favoriteUrls.has(normalizeFavUrl(f.toolUrl));});
+        toMerge.forEach(function(f){favoriteUrls.add(normalizeFavUrl(f.toolUrl));});
+        favoritesChanged();
+        if(!local.length)return;
+        Promise.all(toMerge.map(function(f){
+          return apiFetch('/api/favorites',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(f)})
+            .then(function(res){if(!res.ok)throw new Error('HTTP '+res.status);});
+        })).then(function(){localStorage.removeItem(LOCAL_FAV_KEY);})
+          .catch(function(e){console.warn('merge local favorites failed',e);});
       })
       .catch(function(e){console.warn('loadFavorites failed',e);});
   }
 
   function toggleFavorite(btn,evt){
     if(evt)evt.stopPropagation();
-    if(!isLoggedIn()){
-      openAuthModal();
-      return;
-    }
     var card=btn.closest('.card');
     var link=card&&card.querySelector('.btn-open');
     if(!link)return;
     var url=link.href;
+    var wasFav=btn.classList.contains('is-fav');
+
+    if(!isLoggedIn()){
+      var local=readJson(LOCAL_FAV_KEY).filter(function(f){return normalizeFavUrl(f.toolUrl)!==normalizeFavUrl(url);});
+      if(!wasFav)local.push(favPayload(card,url));
+      writeJson(LOCAL_FAV_KEY,local);
+      favoriteUrls=new Set(local.map(function(f){return normalizeFavUrl(f.toolUrl);}));
+      favoritesChanged();
+      return;
+    }
     var titleEl=card.querySelector('.card-title');
     var catEl=card.querySelector('.card-cat');
-    var wasFav=btn.classList.contains('is-fav');
 
     // 樂觀更新畫面，失敗再改回來——收藏這種輕量操作不值得讓使用者等 API。
     btn.classList.toggle('is-fav',!wasFav);
     setFavAria(btn,!wasFav);
     if(!favoriteUrls)favoriteUrls=new Set();
     if(wasFav)favoriteUrls.delete(normalizeFavUrl(url));else favoriteUrls.add(normalizeFavUrl(url));
-    if(window.HubSearch)window.HubSearch.rescan();
+    favoritesChanged();
 
     var req=wasFav
       ? apiFetch('/api/favorites',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({toolUrl:url})})
@@ -3328,9 +3476,75 @@ body.modal-open{overflow:hidden;}
       btn.classList.toggle('is-fav',wasFav);
       setFavAria(btn,wasFav);
       if(wasFav)favoriteUrls.add(normalizeFavUrl(url));else favoriteUrls.delete(normalizeFavUrl(url));
-      if(window.HubSearch)window.HubSearch.rescan();
+      favoritesChanged();
     });
   }
+
+  // ── 最近開啟（只存本機，最多 8 筆）──
+  var RECENT_KEY='ectr_recent_tools', RECENT_MAX=8;
+  function rememberRecent(url){
+    var key=normalizeFavUrl(url);
+    var list=readJson(RECENT_KEY).filter(function(u){return u!==key;});
+    list.unshift(key);
+    writeJson(RECENT_KEY,list.slice(0,RECENT_MAX));
+    renderFavPanel();
+  }
+
+  // 面板的資料直接取自頁面上的工具卡片（標題、分類、連結），不另外維護
+  // 一份清單；找不到對應卡片的網址（例如工具已下架）就略過。
+  var STAR_SVG='<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>';
+  function cardsByUrl(){
+    var map={};
+    document.querySelectorAll('.card').forEach(function(card){
+      var link=card.querySelector('.btn-open');
+      if(link)map[normalizeFavUrl(link.href)]=card;
+    });
+    return map;
+  }
+  function panelItem(card,withUnstar){
+    var link=card.querySelector('.btn-open');
+    var titleEl=card.querySelector('.card-title');
+    var catEl=card.querySelector('.card-cat');
+    var section=card.closest('.section');
+    var item=document.createElement('div');item.className='fav-item';
+    var a=document.createElement('a');a.className='fav-link';
+    a.href=link.href;a.target='_blank';a.rel='noopener';
+    a.dataset.title=titleEl?titleEl.textContent:'';
+    a.dataset.cat=section?section.dataset.cat:'';
+    var t=document.createElement('span');t.className='fav-link-title';t.textContent=a.dataset.title;
+    var c=document.createElement('span');c.className='fav-link-cat';c.textContent=catEl?catEl.textContent:'';
+    a.appendChild(t);a.appendChild(c);item.appendChild(a);
+    if(withUnstar){
+      var b=document.createElement('button');b.type='button';b.className='fav-unstar';
+      b.setAttribute('aria-label','從收藏移除：'+a.dataset.title);b.title='從收藏移除';
+      b.innerHTML=STAR_SVG;
+      b.addEventListener('click',function(){
+        var star=card.querySelector('.star-btn');
+        if(star)toggleFavorite(star);
+      });
+      item.appendChild(b);
+    }
+    return item;
+  }
+  function renderFavPanel(){
+    var panel=document.getElementById('favPanel');
+    if(!panel)return;
+    var map=cardsByUrl();
+    var favCards=favoriteUrls?Array.from(favoriteUrls).map(function(u){return map[u];}).filter(Boolean):[];
+    var recentCards=readJson(RECENT_KEY).map(function(u){return map[u];}).filter(Boolean);
+    var favList=document.getElementById('favList');favList.textContent='';
+    favCards.forEach(function(card){favList.appendChild(panelItem(card,true));});
+    var recentList=document.getElementById('recentList');recentList.textContent='';
+    recentCards.forEach(function(card){recentList.appendChild(panelItem(card,false));});
+    document.getElementById('favRow').hidden=!favCards.length;
+    document.getElementById('favLocalHint').hidden=isLoggedIn();
+    document.getElementById('recentRow').hidden=!recentCards.length;
+    panel.hidden=!favCards.length&&!recentCards.length;
+  }
+  document.getElementById('recentClear').addEventListener('click',function(){
+    localStorage.removeItem(RECENT_KEY);
+    renderFavPanel();
+  });
 
   // ── 使用統計（僅管理員）──
   // No client-visible "am I admin" flag exists (JWT only carries
@@ -3594,11 +3808,12 @@ body.modal-open{overflow:hidden;}
 
   // ── 工具開啟點擊追蹤（事件委派，涵蓋 54 張靜態卡片與動態卡片）──
   document.addEventListener('click',function(e){
-    var link=e.target.closest('a.btn-open');
+    var link=e.target.closest('a.btn-open, a.fav-link');
     if(!link)return;
     var card=link.closest('.card');
     var section=link.closest('.section');
     var titleEl=card?card.querySelector('.card-title'):null;
+    rememberRecent(link.href);
     // The link opens in a new tab (target="_blank"), but the click also
     // starts this page's own navigation-adjacent lifecycle in some browsers
     // — without keepalive, that can abort the request before it's sent,
@@ -3606,7 +3821,11 @@ body.modal-open{overflow:hidden;}
     fetch(API_BASE+'/api/tool-clicks',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({url:link.href,title:titleEl?titleEl.textContent:'',category:section?section.dataset.cat:''}),
+      body:JSON.stringify({
+        url:link.href,
+        title:titleEl?titleEl.textContent:(link.dataset.title||''),
+        category:section?section.dataset.cat:(link.dataset.cat||'')
+      }),
       keepalive:true
     }).catch(function(){});
   });
@@ -3638,7 +3857,8 @@ body.modal-open{overflow:hidden;}
     rejectTopup:rejectTopup,
     refreshDynamic:refreshDynamic,
     loadFavorites:loadFavorites,
-    toggleFavorite:toggleFavorite
+    toggleFavorite:toggleFavorite,
+    renderFavPanel:renderFavPanel
   };
 
   document.querySelectorAll('.modal-overlay').forEach(function(overlay){
