@@ -37,26 +37,38 @@ a{text-decoration:none;color:inherit;}
 /* ── TOP BAR ── */
 header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid #E2DDD1;}
 .nav{max-width:1200px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
-.brand{display:flex;align-items:center;gap:13px;}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none;flex-shrink:0;}
 .brand-icon{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:6px;background:#0A1A33;font-size:20px;line-height:1;}
 .brand-text-sub{font-family:"Archivo",sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#7E641F;}
 .brand-text-main{font-family:"Noto Serif TC",serif;font-size:19px;font-weight:600;color:#0A1A33;letter-spacing:-.01em;white-space:nowrap;}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;min-width:0;}
+.nav-link{position:relative;display:inline-flex;align-items:center;padding:8px 12px;border-radius:5px;color:#143257;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;transition:background 140ms;}
+.nav-link:hover{background:#F1EDE2;}
+.nav-link-muted{color:#8A6D1F;}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:#C0392B;margin-left:5px;display:inline-block;}
+.nav-dot[hidden]{display:none;}
 .nav-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
 .nav-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:4px;border:1px solid #CBC5B6;background:#fff;color:#143257;font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:500;transition:all 160ms;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .nav-btn:hover{background:#F8F6F0;border-color:#8C8576;}
+@media(max-width:1080px){
+  .nav{flex-wrap:wrap;row-gap:6px;}
+  .nav-links{order:3;flex-basis:100%;margin:0 -12px;}
+}
 @media(max-width:640px){
-  .nav{flex-wrap:wrap;}
-  .brand{flex-shrink:0;}
   .nav-btns{width:100%;justify-content:flex-start;}
+  /* 導覽連結改單行左右滑動，跟分類 chips 一樣，不換行佔高度。*/
+  .nav-links{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -6px;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-link{padding:6px 10px;font-size:13px;}
 }
 
 /* ── HERO ── */
 .hero{background-color:#0A1A33;background-image:radial-gradient(620px 320px at 100% 0%,rgba(201,162,74,.16),transparent 62%),linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px;border-bottom:2px solid #C9A24A;}
-.hero-inner{max-width:1200px;margin:0 auto;padding:50px 40px 44px;}
+.hero-inner{max-width:1200px;margin:0 auto;padding:38px 40px 34px;}
 .hero-eyebrow{font-family:"Archivo",sans-serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#D9B96E;margin-bottom:14px;}
 .hero h1{font-family:"Noto Serif TC",serif;font-size:42px;line-height:1.1;font-weight:600;color:#fff;letter-spacing:-.02em;margin:0 0 10px;}
 .hero-sub{font-size:16px;line-height:1.6;color:#C2D2E6;max-width:520px;margin:0 0 20px;}
-.hero-tagline{display:flex;align-items:center;gap:12px;margin-bottom:30px;}
+.hero-tagline{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
 .hero-tagline span:first-child{width:24px;height:2px;background:#C9A24A;display:inline-block;flex-shrink:0;}
 .hero-tagline-text{font-family:"Archivo",sans-serif;font-size:14px;font-weight:700;letter-spacing:.04em;color:#D9B96E;}
 .stats{display:flex;gap:36px;}
@@ -67,10 +79,10 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.88);backdro
 /* ── TOOLBAR (search + category filter) ── */
 .toolbar{position:sticky;top:0;z-index:15;background:rgba(248,246,240,.94);backdrop-filter:blur(8px);border-bottom:1px solid #E2DDD1;}
 .toolbar-inner{max-width:1200px;margin:0 auto;padding:16px 40px;display:flex;flex-direction:column;gap:12px;}
-.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #CBC5B6;border-radius:6px;padding:0 14px;height:44px;max-width:480px;transition:border-color 160ms,box-shadow 160ms;}
+.search-box{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #CBC5B6;border-radius:8px;padding:0 16px;height:50px;max-width:640px;transition:border-color 160ms,box-shadow 160ms;}
 .search-box:focus-within{border-color:#9A7B2A;box-shadow:0 0 0 3px rgba(154,123,42,.13);}
 .search-box svg{flex-shrink:0;color:#8C8576;}
-.search-box input{flex:1;border:none;outline:none;background:transparent;font-family:"Noto Sans TC",sans-serif;font-size:14px;color:#211F19;min-width:0;}
+.search-box input{flex:1;border:none;outline:none;background:transparent;font-family:"Noto Sans TC",sans-serif;font-size:15px;color:#211F19;min-width:0;}
 .search-box input::placeholder{color:#ADA796;}
 .search-kbd{flex-shrink:0;font-family:"Archivo",sans-serif;font-size:11px;color:#ADA796;border:1px solid #E2DDD1;border-radius:4px;padding:2px 6px;}
 .toolbar-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;}
@@ -141,16 +153,33 @@ main{max-width:1200px;margin:0 auto;padding:36px 40px 80px;}
   .chip-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none;}
   .chip-row::-webkit-scrollbar{display:none;}
   .chip{flex-shrink:0;}
-  /* 專案工作流／贊助支持／GitHub already reachable from the footer —
-     hide them here so 新增工具／我的工具／登入 (the actual account
-     actions) have room instead of overflowing off-screen. */
-  .nav-btns .nav-btn:nth-child(1),
-  .nav-btns .nav-btn:nth-child(2),
-  .nav-btns .nav-btn:nth-child(3){display:none;}
   .nav-btns{flex-wrap:wrap;gap:8px;row-gap:8px;justify-content:flex-end;}
   .nav-btns .nav-btn{padding:7px 11px;font-size:12.5px;}
   #authSlot{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;}
 }
+
+/* ── LATEST UPDATES ── */
+.latest-updates{background:#fff;border-bottom:1px solid #E2DDD1;}
+.latest-updates[hidden]{display:none;}
+.lu-inner{max-width:1200px;margin:0 auto;padding:20px 40px 22px;}
+.lu-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.lu-title{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:600;color:#0A1A33;margin:0;}
+.lu-more{font-size:13px;font-weight:600;color:#9A7B2A;text-decoration:none;white-space:nowrap;}
+.lu-more:hover{text-decoration:underline;}
+.lu-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.lu-item a{display:block;height:100%;padding:12px 15px;border:1px solid #E2DDD1;border-radius:9px;text-decoration:none;color:inherit;transition:border-color 140ms,box-shadow 140ms;}
+.lu-item a:hover{border-color:#9A7B2A;box-shadow:0 2px 10px rgba(10,26,51,.06);}
+.lu-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;color:#9A9382;font-variant-numeric:tabular-nums;}
+.lu-tag{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px;background:#E6EEF5;color:#1F5C8C;}
+.lu-tag.feature{background:#E8F5EC;color:#1A7D3A;}
+.lu-tag.fix{background:#FBF3E2;color:#9A6B12;}
+.lu-tag.security{background:#EDE8F5;color:#5B4B95;}
+.lu-new{font-size:10px;font-weight:800;letter-spacing:.06em;color:#fff;background:#C0392B;border-radius:3px;padding:1px 5px;}
+.lu-item-title{font-size:14px;font-weight:700;color:#0A1A33;line-height:1.45;}
+@media(max-width:860px){.lu-list{grid-template-columns:1fr;}.lu-inner{padding:16px 18px 18px;}}
+/* 一旦開始搜尋或選了分類，結果要緊接在搜尋框下面——把首頁的導覽性
+   區塊（最新更新、常見工作流程）收起來，不要擋在中間。*/
+body.is-filtering .latest-updates,body.is-filtering .workflows-preview{display:none;}
 
 /* ── WORKFLOWS PREVIEW ──
    107 tools presented flat is a lot to scan cold — these curated chains
@@ -283,26 +312,22 @@ body.modal-open{overflow:hidden;}
 <!-- ── TOP BAR ── -->
 <header>
   <div class="nav">
-    <div class="brand">
+    <a href="index.html" class="brand" aria-label="工程計算中心首頁">
       <div class="brand-icon">📐</div>
       <div>
         <div class="brand-text-sub">Ju Hong Structural</div>
         <div class="brand-text-main">工程計算中心</div>
       </div>
-    </div>
+    </a>
+    <nav class="nav-links" aria-label="主要導覽">
+      <a href="#toolbar" class="nav-link" data-focus-search>🔍 找工具</a>
+      <a href="workflow.html" class="nav-link">📁 專案工作流</a>
+      <a href="changelog.html" class="nav-link">🆕 更新日誌<span class="nav-dot" id="navNewDot" hidden></span></a>
+      <a href="about.html" class="nav-link">關於我們</a>
+      <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener" class="nav-link nav-link-muted">♥ 贊助</a>
+    </nav>
     <div class="nav-btns">
-      <a href="workflow.html" class="nav-btn" style="background:#143257;color:#fff;border-color:#143257;">
-        📁 專案工作流
-      </a>
-      <a href="https://ko-fi.com/yjchen0830" target="_blank" rel="noopener" class="nav-btn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-6.7-4.35-9.3-8.2C1.1 10.4 1.7 7 4.6 5.7c2.2-1 4.6-.2 5.9 1.6L12 9l1.5-1.7c1.3-1.8 3.7-2.6 5.9-1.6 2.9 1.3 3.5 4.7 1.9 7.1C18.7 16.65 12 21 12 21z"/></svg>
-        贊助支持
-      </a>
-      <a href="https://github.com/YJ-chen0830" target="_blank" rel="noopener" class="nav-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.34 9.34 0 0 1 12 6.84c.85 0 1.71.12 2.51.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
-        GitHub
-      </a>
-      <button type="button" id="addToolBtn" class="nav-btn" onclick="Tools.openAddModal()">＋ 新增工具</button>
+      <button type="button" id="addToolBtn" class="nav-btn" onclick="Tools.openAddModal()">＋ 投稿工具</button>
       <button type="button" id="mineBtn" class="nav-btn" onclick="Tools.openMineModal()">我的工具</button>
       <button type="button" id="creditBadge" class="nav-btn" onclick="Tools.openCreditsModal()" style="display:none;">💰 – 點</button>
       <button type="button" id="statsBtn" class="nav-btn" onclick="Tools.openStatsModal()" style="display:none;">📊 使用統計</button>
@@ -331,6 +356,47 @@ body.modal-open{overflow:hidden;}
       <div class="stat-div" id="usageStatDiv" style="display:none;"></div>
       <div id="usageStatBlock" style="display:none;"><div class="stat-num" id="usageStatNum">–</div><div class="stat-label">累計工具開啟次數</div></div>
     </div>
+  </div>
+</section>
+
+<!-- ── TOOLBAR: SEARCH + CATEGORY FILTER ── -->
+<div class="toolbar" id="toolbar">
+  <div class="toolbar-inner">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="toolSearch" placeholder="搜尋工具名稱、標籤、關鍵字…" autocomplete="off">
+      <span class="search-kbd">/</span>
+      <span class="search-result-count" id="searchCount"></span>
+    </div>
+    <div class="toolbar-row">
+      <div class="chip-row" id="chipRow">
+        <button class="chip active" data-cat="all">全部 108</button>
+        <button class="chip chip-fav" data-cat="__fav__" id="favChip" style="display:none;">⭐ 我的收藏</button>
+        <button class="chip" data-cat="progress">進度管理 8</button>
+        <button class="chip" data-cat="construction">施工計劃書 20</button>
+        <button class="chip" data-cat="structure">結構計算 45</button>
+        <button class="chip" data-cat="hydraulics">水利計算 15</button>
+        <button class="chip" data-cat="environmental">環工計算 8</button>
+        <button class="chip" data-cat="materials">材料 &amp; 數值工具 8</button>
+        <button class="chip" data-cat="python">本機工具 · Python 2</button>
+      </div>
+      <div class="view-toggle" id="viewToggle">
+        <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+        <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LATEST UPDATES ── (filled by script from changelog.html + the
+     platform-updates API; stays hidden if neither loads) -->
+<section class="latest-updates" id="latestUpdates" hidden>
+  <div class="lu-inner">
+    <div class="lu-head">
+      <h2 class="lu-title">最新更新</h2>
+      <a class="lu-more" href="changelog.html">完整更新日誌 →</a>
+    </div>
+    <ul class="lu-list" id="latestUpdatesList"></ul>
   </div>
 </section>
 
@@ -431,35 +497,6 @@ body.modal-open{overflow:hidden;}
     <a class="wf-preview-more" href="workflow.html">在專案工作流中心保存進度、合併多項工具的計算結果 →</a>
   </div>
 </section>
-
-<!-- ── TOOLBAR: SEARCH + CATEGORY FILTER ── -->
-<div class="toolbar" id="toolbar">
-  <div class="toolbar-inner">
-    <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="toolSearch" placeholder="搜尋工具名稱、標籤、關鍵字…" autocomplete="off">
-      <span class="search-kbd">/</span>
-      <span class="search-result-count" id="searchCount"></span>
-    </div>
-    <div class="toolbar-row">
-      <div class="chip-row" id="chipRow">
-        <button class="chip active" data-cat="all">全部 108</button>
-        <button class="chip chip-fav" data-cat="__fav__" id="favChip" style="display:none;">⭐ 我的收藏</button>
-        <button class="chip" data-cat="progress">進度管理 8</button>
-        <button class="chip" data-cat="construction">施工計劃書 20</button>
-        <button class="chip" data-cat="structure">結構計算 45</button>
-        <button class="chip" data-cat="hydraulics">水利計算 15</button>
-        <button class="chip" data-cat="environmental">環工計算 8</button>
-        <button class="chip" data-cat="materials">材料 &amp; 數值工具 8</button>
-        <button class="chip" data-cat="python">本機工具 · Python 2</button>
-      </div>
-      <div class="view-toggle" id="viewToggle">
-        <button type="button" class="view-btn active" data-view="grid" aria-label="方塊檢視" title="方塊檢視" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
-        <button type="button" class="view-btn" data-view="list" aria-label="列表檢視" title="列表檢視" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <main>
 
@@ -2546,6 +2583,7 @@ body.modal-open{overflow:hidden;}
     });
     countEl.textContent=favMode?('顯示 '+visibleTotal+' 項收藏工具'):((q||activeCat!=='all')?('顯示 '+visibleTotal+' / '+currentTotal()+' 項工具'):'');
     noResults.classList.toggle('show',visibleTotal===0);
+    document.body.classList.toggle('is-filtering',!!q||activeCat!=='all');
     noResults.querySelector('.no-results-title').textContent=favMode?'還沒有收藏任何工具':'找不到符合的工具';
   }
 
@@ -2595,6 +2633,14 @@ body.modal-open{overflow:hidden;}
   setHeaderOffset();
   window.addEventListener('resize',setHeaderOffset);
 
+  document.querySelectorAll('[data-focus-search]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      document.getElementById('toolbar').scrollIntoView({behavior:'smooth',block:'start'});
+      searchInput.focus({preventScroll:true});
+    });
+  });
+
   // ── 檢視模式（方塊／列表）── pure CSS toggle, no backend, remembered
   // per-browser so a returning visitor keeps their choice.
   (function(){
@@ -2626,6 +2672,66 @@ body.modal-open{overflow:hidden;}
 </script>
 
 <!-- ===== Google Identity Services / Facebook SDK ===== -->
+<script>
+// 最新更新：changelog.html 是唯一的資料來源（靜態卡片帶 data-date），
+// 再合併管理員從後台發布的動態公告，取最新 3 則。兩邊都載入失敗時
+// 區塊維持隱藏，不顯示空殼。全部用 textContent 寫入，不拼 HTML。
+(function(){
+  var API_BASE='https://cloud-sync-mvp-production.up.railway.app';
+  var SHOW=3, NEW_DAYS=14;
+  var TAG_LABEL={feature:'新功能',fix:'修正',security:'資安性強化',infra:'維運/架構'};
+  function fromChangelogPage(){
+    return fetch('changelog.html').then(function(r){return r.ok?r.text():'';}).then(function(html){
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      return Array.prototype.map.call(doc.querySelectorAll('.fix-card[data-date]'),function(card){
+        var tag=card.querySelector('.fix-tag');
+        var cat=tag?(['feature','fix','security','infra'].filter(function(c){return tag.classList.contains(c);})[0]||'feature'):'feature';
+        var title=card.querySelector('.fix-title');
+        return {date:card.getAttribute('data-date'),title:title?title.textContent:'',category:cat};
+      });
+    }).catch(function(){return [];});
+  }
+  function fromApi(){
+    return fetch(API_BASE+'/api/platform-updates').then(function(r){return r.ok?r.json():[];}).then(function(list){
+      return (list||[]).map(function(a){
+        var d=new Date(a.createdAt);
+        return {
+          date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
+          title:String(a.title||''),
+          category:Object.prototype.hasOwnProperty.call(TAG_LABEL,a.category)?a.category:'feature'
+        };
+      });
+    }).catch(function(){return [];});
+  }
+  Promise.all([fromChangelogPage(),fromApi()]).then(function(r){
+    var seen={};
+    var items=r[1].concat(r[0]).filter(function(it){
+      if(!it.title||!it.date)return false;
+      var k=it.date+'|'+it.title;
+      if(seen[k])return false;
+      seen[k]=true;return true;
+    }).sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;}).slice(0,SHOW);
+    if(!items.length)return;
+    var list=document.getElementById('latestUpdatesList');
+    var now=Date.now(), anyNew=false;
+    items.forEach(function(it){
+      var li=document.createElement('li');li.className='lu-item';
+      var a=document.createElement('a');a.href='changelog.html';
+      var meta=document.createElement('div');meta.className='lu-meta';
+      var date=document.createElement('span');date.textContent=it.date;meta.appendChild(date);
+      var tag=document.createElement('span');tag.className='lu-tag '+it.category;tag.textContent=TAG_LABEL[it.category];meta.appendChild(tag);
+      if(now-new Date(it.date+'T00:00:00').getTime()<NEW_DAYS*864e5){
+        var nw=document.createElement('span');nw.className='lu-new';nw.textContent='NEW';meta.appendChild(nw);anyNew=true;
+      }
+      var t=document.createElement('div');t.className='lu-item-title';t.textContent=it.title;
+      a.appendChild(meta);a.appendChild(t);li.appendChild(a);list.appendChild(li);
+    });
+    document.getElementById('latestUpdates').hidden=false;
+    if(anyNew)document.getElementById('navNewDot').hidden=false;
+    if(window.HubSearch)window.HubSearch.rescan();
+  });
+})();
+</script>
 <script src="https://accounts.google.com/gsi/client?hl=zh-TW" async defer></script>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 

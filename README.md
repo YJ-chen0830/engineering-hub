@@ -60,6 +60,10 @@ psql -d jrh_cloud -f schema.sql
 
 前端（`engineering-hub`、`jrh-core`）純靜態檔，`python3 -m http.server` 開個本機伺服器就能測；但正式站的 CORS 只允許 `yj-chen0830.github.io`／`juhongstructural.com`／`www.juhongstructural.com` 三個網域，本機網址打正式站 API 會被擋（如果要測真的 API 行為，用本機後端或 curl，不要指望瀏覽器打正式站）。
 
+## 更新日誌怎麼維護
+
+`changelog.html` 裡的靜態卡片（`<div class="fix-card" data-date="YYYY-MM-DD">`）是平台更新日誌的唯一來源。首頁「最新更新」區塊會自動讀這一頁，加上管理員從後台發的動態公告，取最新 3 則顯示，14 天內的項目會標 NEW，頂端「更新日誌」旁也會出現紅點。所以有使用者看得到的變更時，**在 `changelog.html` 最上面加一張卡片就好**，首頁不用改。只寫使用者感受得到的重點，不要逐條抄 commit。
+
 ## 已知雷區
 
 - **jrh-core.js 有版本快取**：104 個工具頁引入時帶 `?v=N`，改完 jrh-core.js 內容如果需要強制所有瀏覽器立即拿到新版，要記得每個工具頁的引入版本號都要跟著升（目前 104 個工具頁各自維護自己的版本號，沒有集中管理）。

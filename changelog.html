@@ -65,6 +65,8 @@ p:last-child{margin-bottom:0;}
 .fix-tag.security{background:#EDE8F5;color:#5B4B95;}
 .fix-tag.infra{background:#E6EEF5;color:#1F5C8C;}
 
+.month-label{font-family:"Archivo","Noto Sans TC",sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;color:#9A7B2A;margin:22px 0 10px;}
+.fix-desc kbd{font-family:"Archivo",monospace;font-size:11.5px;border:1px solid #CBC5B6;border-bottom-width:2px;border-radius:4px;padding:0 5px;background:#F8F6F0;}
 .note{background:#FBF7EC;border-left:3px solid #C9A24A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:13px;line-height:1.85;color:#5C5442;}
 
 footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-size:12px;color:#9A9382;}
@@ -96,14 +98,114 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
 <main>
   <section>
     <h2>更新紀錄</h2>
-    <p style="font-size:12.5px;color:#9A9382;margin-bottom:16px;">依發布時間排序。標記為「資安性強化」的項目基於揭露原則刻意不公開技術細節——即使問題已經修正，公開具體描述曾經存在什麼弱點，本身就是額外的風險。</p>
+    <p style="font-size:12.5px;color:#9A9382;margin-bottom:16px;">由新到舊排列，只列出使用者看得到的重點變更。標記為「資安性強化」的項目基於揭露原則刻意不公開技術細節——即使問題已經修正，公開具體描述曾經存在什麼弱點，本身就是額外的風險。</p>
 
     <div id="dynamicUpdateCards"></div>
 
-    <div class="fix-card">
-      <div class="fix-head"><span class="fix-title">平台更新日誌上線</span><span class="fix-date">2026-07</span></div>
-      <span class="fix-tag infra">維運/架構</span>
-      <div class="fix-desc">新增這個頁面，往後平台功能與架構層級的變更會記錄在這裡，跟計算公式修正紀錄分開呈現。</div>
+    <div class="month-label">2026 年 10 月</div>
+    <div class="fix-card" data-date="2026-10-14">
+      <div class="fix-head"><span class="fix-title">新增 StructNode 結構分析平台</span><span class="fix-date">2026-10-14</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">「結構計算」分類新增 StructNode：線彈性 2D/3D 桁架與構架分析，提供建模精靈、載重組合與可列印的分析報告。</div>
+    </div>
+
+    <div class="month-label">2026 年 9 月</div>
+    <div class="fix-card" data-date="2026-09-14">
+      <div class="fix-head"><span class="fix-title">新增施工日誌產生器、三格照片黏貼表</span><span class="fix-date">2026-09-14</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">兩項工地文書工具上架：快速產生施工日誌，以及可直接列印的三格照片黏貼表。</div>
+    </div>
+
+    <div class="month-label">2026 年 7 月</div>
+    <div class="fix-card" data-date="2026-07-31">
+      <div class="fix-head"><span class="fix-title">首頁新增「常見工作流程」</span><span class="fix-date">2026-07-31</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">7 組常見的多工具串接情境（例如：載重組合 → RC 梁／柱／剪力牆設計）直接放在首頁，點任一節點就能開啟該工具。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-28">
+      <div class="fix-head"><span class="fix-title">平台更新日誌頁面上線</span><span class="fix-date">2026-07-28</span></div>
+      <span class="fix-tag infra">⚙️ 維運/架構</span>
+      <div class="fix-desc">新增這個頁面，平台功能與架構層級的變更記錄在這裡，跟計算公式修正紀錄分開呈現。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-27">
+      <div class="fix-head"><span class="fix-title">首頁顯示累計使用次數、工作流專案總覽</span><span class="fix-date">2026-07-27</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">首頁顯示所有工具的累計開啟次數；專案工作流頁面新增專案總覽，一眼看出各專案的進度。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-26">
+      <div class="fix-head"><span class="fix-title">無障礙操作全面改善</span><span class="fix-date">2026-07-26</span></div>
+      <span class="fix-tag fix">🔧 修正</span>
+      <div class="fix-desc">全站 7 個對話框補上正確的焦點管理，登入切換、收藏按鈕等改為可用鍵盤操作，表單欄位與標籤正確關聯，螢幕閱讀器使用者也能順利操作。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-26">
+      <div class="fix-head"><span class="fix-title">資安性強化</span><span class="fix-date">2026-07-26</span></div>
+      <span class="fix-tag security">🔒 資安性強化</span>
+      <div class="fix-desc">本次更新包含資安性強化，基於揭露原則不公開技術細節。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-24">
+      <div class="fix-head"><span class="fix-title">團隊帳號、雲端同步與合併列印</span><span class="fix-date">2026-07-24</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">專案工作流支援團隊帳號（共用點數、雲端專案存檔、PDF 品牌設定）、修訂履歷（Rev.A/B/C），並可把多個工具的計算結果合併列印成一份計算書，或匯出 Excel／Word。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-24">
+      <div class="fix-head"><span class="fix-title">PRO 點數與線上儲值</span><span class="fix-date">2026-07-24</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">投稿工具與審核通過可獲得點數；點數可用來解鎖個人化 PDF 品牌設定（公司名稱、Logo、技師證號、簽章）。儲值支援信用卡／ATM／超商代碼。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-24">
+      <div class="fix-head"><span class="fix-title">投稿工具體驗改善</span><span class="fix-date">2026-07-24</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">「我的工具」可看到審核退回原因與已上架工具的開啟次數；社群投稿的工具會加上標籤，與官方工具區隔。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-24">
+      <div class="fix-head"><span class="fix-title">手機版排版優化</span><span class="fix-date">2026-07-24</span></div>
+      <span class="fix-tag fix">🔧 修正</span>
+      <div class="fix-desc">手機上縮小首頁資訊欄、分類改成單行左右滑動，並記住上次選的分類；在 LINE／IG／FB 內建瀏覽器中登入時，會引導改用 Email 登入。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-24">
+      <div class="fix-head"><span class="fix-title">「品質與更新紀錄」頁面上線</span><span class="fix-date">2026-07-24</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">公開說明計算公式的覆核流程，以及已修正過的計算錯誤清單。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-22">
+      <div class="fix-head"><span class="fix-title">登入新增「忘記密碼」</span><span class="fix-date">2026-07-22</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">Email 帳號可透過信件重設密碼。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-21">
+      <div class="fix-head"><span class="fix-title">服務條款與工具整併</span><span class="fix-date">2026-07-21</span></div>
+      <span class="fix-tag infra">⚙️ 維運/架構</span>
+      <div class="fix-desc">新增服務條款頁與自訂 404 頁；功能重疊的工具合併（平曲線／豎曲線、側向載重樁、風險評估矩陣），讓工具清單更精簡。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-20">
+      <div class="fix-head"><span class="fix-title">收藏工具、方塊／列表檢視、關於我們</span><span class="fix-date">2026-07-20</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">登入後可用 ★ 收藏常用工具；工具清單可切換方塊或列表檢視；新增事務所介紹與聯絡方式頁面。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-18">
+      <div class="fix-head"><span class="fix-title">工具擴充至 104 個</span><span class="fix-date">2026-07-18</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">7/17–7/18 兩天新增 50 項工具，涵蓋環工、大地、水文、捷運與電廠基礎設施、橋梁道路、專案管控與勞工安全。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-14">
+      <div class="fix-head"><span class="fix-title">會員登入與工具投稿</span><span class="fix-date">2026-07-14</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">支援 Email、Google、Facebook 登入；登入後可以投稿自己的計算工具，經審核後上架。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-12">
+      <div class="fix-head"><span class="fix-title">即時搜尋與分類篩選</span><span class="fix-date">2026-07-12</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">首頁可依名稱、標籤、關鍵字即時搜尋工具（按 <kbd>/</kbd> 快速聚焦），並依分類篩選。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-08">
+      <div class="fix-head"><span class="fix-title">專案工作流中心</span><span class="fix-date">2026-07-08</span></div>
+      <span class="fix-tag feature">✅ 新功能</span>
+      <div class="fix-desc">依專案追蹤各項計算書的進度，支援檢核清單列印與 JSON 匯出／匯入。</div>
+    </div>
+    <div class="fix-card" data-date="2026-07-03">
+      <div class="fix-head"><span class="fix-title">工程計算中心上線</span><span class="fix-date">2026-07-03</span></div>
+      <span class="fix-tag infra">⚙️ 維運/架構</span>
+      <div class="fix-desc">把分散在各個 GitHub 網頁的計算工具集中到同一個入口，分類整理、一鍵開啟。</div>
     </div>
 
     <details class="note" id="adminPostBox" style="display:none;margin-top:16px;cursor:default;">
@@ -136,7 +238,7 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
 
   function renderCard(a){
     var d=new Date(a.createdAt);
-    var dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    var dateStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     // Whitelist against known categories rather than trust the API value
     // directly (same reasoning as updates.html's severity handling) — an
     // unrecognized value falls back to 'feature' rather than rendering
@@ -150,7 +252,7 @@ footer{border-top:1px solid #E4DFD1;padding:24px 28px;text-align:center;font-siz
     var desc=category==='security'
       ? '本次更新包含資安性強化，基於揭露原則不公開技術細節。'
       : esc(a.body);
-    return '<div class="fix-card">'+
+    return '<div class="fix-card" data-date="'+dateStr+'">'+
       '<div class="fix-head"><span class="fix-title">'+esc(a.title)+'</span><span class="fix-date">'+dateStr+'</span></div>'+
       '<span class="fix-tag '+CAT_CLASS[category]+'">'+CAT_LABEL[category]+'</span>'+
       '<div class="fix-desc">'+desc+'</div>'+
